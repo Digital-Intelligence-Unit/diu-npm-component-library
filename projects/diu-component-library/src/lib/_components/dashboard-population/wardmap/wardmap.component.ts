@@ -14,13 +14,15 @@ import {
 import * as d3 from "d3";
 import * as d3zoom from "d3-zoom";
 import { APIService } from "../../../_services/api.service";
-import { iWardDetails } from "../lookups";
+import { speedDialFabAnimations } from "../../diu-angular-speed-dial/animations";
+import { iWardDetails, iPointOfInterest } from "../lookups";
 
 @Component({
     selector: "app-wardmap",
     templateUrl: "./wardmap.component.html",
     styleUrls: ["./wardmap.component.scss"],
     encapsulation: ViewEncapsulation.None,
+    animations: speedDialFabAnimations,
 })
 export class WardmapComponent implements OnInit, OnChanges {
     @ViewChild("mapGraph", { static: false }) mapGraph: ElementRef;
@@ -59,6 +61,73 @@ export class WardmapComponent implements OnInit, OnChanges {
     trigger: boolean;
     loading = true;
 
+    fabButtons = [
+        {
+            icon: "refresh",
+            tooltip: "Clear Extras",
+            datatype: "refresh",
+        },
+        {
+            icon: "location_city",
+            tooltip: "Toggle Cities & Towns",
+            datatype: "place",
+        },
+        {
+            icon: "local_hospital",
+            tooltip: "Toggle Hospitals",
+            datatype: "hospital",
+        },
+        {
+            icon: "local_pharmacy",
+            tooltip: "Toggle Pharmacies",
+            datatype: "local_pharmacy",
+        },
+        {
+            icon: "more_time",
+            tooltip: "Toggle Out Of Hours Practice",
+            datatype: "OOH_Practice",
+        },
+        {
+            icon: "transfer_within_a_station",
+            tooltip: "Toggle Walk in Centre",
+            datatype: "WIC_Practice",
+        },
+        {
+            icon: "healing",
+            tooltip: "Toggle Urgent Emergency Care",
+            datatype: "Urgent_Emergency_Care",
+        },
+    ];
+    buttons = [];
+    fabTogglerState = "inactive";
+    pointsofinterest: iPointOfInterest[];
+    POITypes = [];
+    gpPractices: any = {};
+    gpPracticeTypes = {
+        0: "Other",
+        1: "WIC_Practice",
+        2: "OOH_Practice",
+        3: "WIC_OOH_Practice",
+        4: "GP_Practice",
+        8: "Public_Health_Service",
+        9: "Community_Health_Service",
+        10: "Hospital_Service",
+        11: "Optometry_Service",
+        12: "Urgent_Emergency_Care",
+        13: "Hospice",
+        14: "Care_Home_Nursing_Home",
+        15: "Border_Force",
+        16: "Young_Offender_Institution",
+        17: "Secure_Training_Centre",
+        18: "Secure_Childrens_Home",
+        19: "Immigration_Removal_Centre",
+        20: "Court",
+        21: "Police_Custody",
+        22: "Sexual_Assault_Referral_Centre_(SARC)",
+        24: "Other_Justice_Estate",
+        25: "Prison",
+    };
+
     url = `https://api.nhs-bi-platform.co.uk/`;
     @HostListener("window:resize", ["$event"])
     onResize() {
@@ -92,6 +161,10 @@ export class WardmapComponent implements OnInit, OnChanges {
                 this.ICSboundaries = res[0];
                 if (this.g) this.addBoundaries();
             }
+        });
+        this.apiService.getGPPracticesPopMini().subscribe((data: any[]) => {
+            this.gpPractices = data;
+            console.log(this);
         });
     }
 
@@ -361,5 +434,170 @@ export class WardmapComponent implements OnInit, OnChanges {
 
     closesvgtooltip() {
         this.svgtooltip.transition().duration(200).style("opacity", 0).style("z-index", -1);
+    }
+
+    updatePOI(type: string) {
+        if (this.pointsofinterest === undefined) {
+            this.apiService.getPointsOfInterest().subscribe((res: iPointOfInterest[]) => {
+                this.pointsofinterest = res;
+                this.addGPPracticesToPointsOfInterest();
+                this.updatePOI(type);
+            });
+            return;
+        }
+        console.log(type);
+        let removeflag = false;
+        if (this.POITypes.includes(type)) {
+            removeflag = true;
+            this.POITypes.splice(this.POITypes.indexOf(type), 1);
+        } else {
+            this.POITypes.push(type);
+        }
+        if (removeflag) {
+            switch (type) {
+                case "place":
+                    this.g
+                        .selectAll("text")
+                        .filter((x: any) => {
+                            return x.type === "place";
+                        })
+                        .remove();
+                    break;
+                default:
+                    this.g
+                        .selectAll("image." + type)
+                        .filter((x: any) => {
+                            return x.type === type;
+                        })
+                        .remove();
+                    break;
+            }
+            return;
+        }
+        const data = this.pointsofinterest.filter((x) => x.type === type);
+        let widthHeight = "15px";
+        if (data.length > 0) {
+            switch (type) {
+                case "place":
+                    this.g
+                        .selectAll("text")
+                        .data(data)
+                        .enter()
+                        .append("text")
+                        .attr("x", (d) => {
+                            console.log(d);
+                            return this.projection([d.longitude, d.latitude])[0];
+                        })
+                        .attr("y", (d) => {
+                            return this.projection([d["longitude"], d["latitude"]])[1];
+                        })
+                        .attr("data-type", (d) => {
+                            return d.type;
+                        })
+                        .attr("text-anchor", "middle")
+                        .attr("dominant-baseline", "middle")
+                        .attr("fill", () => {
+                            return "rgb(173, 0, 156)";
+                        })
+                        .style("font-size", "12px")
+                        .style("font-weight", "bold")
+                        .text((d) => {
+                            return d.name.toString().toUpperCase();
+                        })
+                        .exit();
+                    break;
+                default:
+                    switch (type) {
+                        case "local_pharmacy":
+                            widthHeight = "10px";
+                            break;
+                    }
+                    this.g
+                        .selectAll("image." + type)
+                        .data(data)
+                        .enter()
+                        .append("image")
+                        .attr("class", (d) => {
+                            return d.type;
+                        })
+                        .attr("x", (d) => {
+                            return this.projection([d.longitude, d.latitude])[0] - 4;
+                        })
+                        .attr("y", (d) => {
+                            return this.projection([d["longitude"], d["latitude"]])[1] - 4;
+                        })
+                        .attr("data-type", (d) => {
+                            return d.type;
+                        })
+                        .attr("text-anchor", "middle")
+                        .attr("dominant-baseline", "middle")
+                        .attr("href", "../../../assets/images/" + type + ".png")
+                        .attr("width", widthHeight)
+                        .attr("height", widthHeight)
+                        // .attr("filter", "url(#solid)")
+                        .exit();
+                    break;
+            }
+        }
+    }
+
+    displayPOItooltip(tooltip: iPointOfInterest) {
+        let output = "<h4>" + tooltip.name + "</h4>";
+        if (tooltip.postcode) {
+            output += "<p>" + tooltip.postcode + "</p>";
+        }
+        if (tooltip.link) {
+            output += "<a href='" + tooltip.link + "' target='_blank'>Click for more info</a>";
+        }
+        return output;
+    }
+
+    removeAllPOIs() {
+        this.g.selectAll("circle").remove();
+        this.removePlaces();
+        this.POITypes = [];
+    }
+
+    removePlaces() {
+        this.g.selectAll("text").remove();
+        this.g.selectAll("image").remove();
+    }
+
+    clickEvents(button: string) {
+        switch (button) {
+            case "refresh":
+                this.removeAllPOIs();
+                break;
+            default:
+                this.updatePOI(button);
+                break;
+        }
+        this.hideItems();
+    }
+
+    showItems() {
+        this.fabTogglerState = "active";
+        this.buttons = this.fabButtons;
+    }
+
+    hideItems() {
+        this.fabTogglerState = "inactive";
+        this.buttons = [];
+    }
+
+    onToggleFab() {
+        this.buttons.length ? this.hideItems() : this.showItems();
+    }
+
+    addGPPracticesToPointsOfInterest() {
+        if (this.gpPractices.length > 0) {
+            this.gpPractices.forEach((gpPractice) => {
+                const prescribedSetting = gpPractice.prescribing_setting;
+                delete gpPractice.prescribing_setting;
+                gpPractice.type = this.gpPracticeTypes[prescribedSetting];
+                this.pointsofinterest.push(gpPractice);
+            });
+            console.log(this);
+        }
     }
 }
