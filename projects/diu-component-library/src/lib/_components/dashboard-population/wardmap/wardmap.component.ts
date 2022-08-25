@@ -164,7 +164,6 @@ export class WardmapComponent implements OnInit, OnChanges {
         });
         this.apiService.getGPPracticesPopMini().subscribe((data: any[]) => {
             this.gpPractices = data;
-            console.log(this);
         });
     }
 
@@ -445,7 +444,6 @@ export class WardmapComponent implements OnInit, OnChanges {
             });
             return;
         }
-        console.log(type);
         let removeflag = false;
         if (this.POITypes.includes(type)) {
             removeflag = true;
@@ -485,7 +483,6 @@ export class WardmapComponent implements OnInit, OnChanges {
                         .enter()
                         .append("text")
                         .attr("x", (d) => {
-                            console.log(d);
                             return this.projection([d.longitude, d.latitude])[0];
                         })
                         .attr("y", (d) => {
@@ -597,7 +594,6 @@ export class WardmapComponent implements OnInit, OnChanges {
                 gpPractice.type = this.gpPracticeTypes[prescribedSetting];
                 this.pointsofinterest.push(gpPractice);
             });
-            console.log(this);
         }
     }
 }
