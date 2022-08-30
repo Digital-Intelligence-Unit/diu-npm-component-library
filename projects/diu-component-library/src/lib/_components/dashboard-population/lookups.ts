@@ -25,14 +25,3 @@ export interface iWardDetails {
     image: string;
     icp: string;
 }
-
-export interface iPointOfInterest {
-    type: string;
-    name: string;
-    link: string;
-    postcode?: string;
-    wardcode?: string;
-    regionpath?: any;
-    latitude: number;
-    longitude: number;
-}

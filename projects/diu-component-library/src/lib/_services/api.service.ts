@@ -450,10 +450,6 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "gppractices");
     }
 
-    public getGPPracticesPopMini() {
-        return this.http.get(this.baseUrl + "gppractices/pop_mini");
-    }
-
     // GRANDINDEX
 
     /**
