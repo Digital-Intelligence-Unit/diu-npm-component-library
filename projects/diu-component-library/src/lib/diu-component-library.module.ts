@@ -25,7 +25,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { DivRowComponent } from "./_components/_layouts/div-row.component";
 import { DivColComponent } from "./_components/_layouts/div-col.component";
 import { ProfileFullComponent } from "./_components/profile-full/profile-full.component";
-import { MDBBootstrapModule } from "angular-bootstrap-md";
+import { CarouselModule as MdbCarouselModule } from "angular-bootstrap-md";
 import { CarouselComponent } from "./_components/carousel/carousel.component";
 import { TabsComponent } from "./_components/tabs/tabs.component";
 import { FormWithTableComponent } from "./_components/form-with-table/form-with-table.component";
@@ -94,7 +94,7 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         HttpClientModule,
         CommonModule,
         FlexLayoutModule,
-        MDBBootstrapModule,
+        MdbCarouselModule,
         NgxTwitterTimelineModule,
         GalleryModule,
     ],
