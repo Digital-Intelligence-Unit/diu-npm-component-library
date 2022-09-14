@@ -2,18 +2,30 @@
 <div fxLayout="row wrap" style="margin-top: 10px 0 0">
     <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="center center">
         <mat-card style="width: 100%; margin-bottom: 0">
-            <mat-card-header (click)="visible = !visible">
+            <mat-card-header (click)="settings.display = !settings.display">
                 <mat-card-title-group>
                     <mat-card-title style="padding-top: 2px; padding-left: 15px">Latest News (NHS Twitter)</mat-card-title>
                 </mat-card-title-group>
                 <div fxFlex></div>
-
                 <div fxLayoutAlign="center center">
                     <button mat-icon-button color="accent" title="Collapse">
                         <mat-icon>swap_vertical_circle</mat-icon>
                     </button>
                 </div>
             </mat-card-header>
+            <mat-card-content>
+                <button class="nav left" mat-mini-fab color="primary" [disabled]="settings.index === 0" (click)="previousSlide()">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+                <div fxLayout="row wrap" fxLayoutGap="15px" *ngIf="settings.display && !isIE" fxLayoutAlign="center top">
+                    <div *ngFor="let feed of twitterfeeds.slice(settings.index, settings.numCols); let i = index" fxFlex>
+                        <iframe class="w-100" frameborder="0" height="600" [srcdoc]="feed.html"></iframe>
+                    </div>
+                </div>
+                <button class="nav right" mat-mini-fab color="primary" [disabled]="(settings.index + settings.numCols + 1) === settings.total" (click)="nextSlide()">
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
+            </mat-card-content>
         </mat-card>
     </div>
 </div>
@@ -29,24 +41,4 @@
             </mat-card-content>
         </mat-card>
     </div>
-</div>
-
-<div fxLayout="row wrap" style="margin-bottom: 10px" *ngIf="visible && !isIE" fxLayoutAlign="center top">
-    <button mat-mini-fab color="primary" [disabled]="displayed === 0" (click)="decreaseDisplayed()" style="margin-top: 20px">
-        <mat-icon>chevron_left</mat-icon>
-    </button>
-    <div *ngFor="let feed of twitterfeeds; let i = index" [fxHide]="elementOutOfRange(i, cols)">
-        <mat-card>
-            <mat-card-content>
-                <ngx-twitter-timeline
-                    [data]="{ sourceType: 'url', url: 'https://twitter.com/' + feed.destination }"
-                    [opts]="{ tweetLimit: 5 }"
-                >
-                </ngx-twitter-timeline>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    <button mat-mini-fab color="primary" [disabled]="getRightState()" (click)="increaseDisplayed()" style="margin-top: 20px">
-        <mat-icon>chevron_right</mat-icon>
-    </button>
 </div>
