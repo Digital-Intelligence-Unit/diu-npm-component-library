@@ -24,18 +24,16 @@
                     </li>
                     <li>
                         <div class="message-center">
-                            <perfect-scrollbar>
-                                <a (click)="launchAlertPopup(message)" *ngFor="let message of arrAlerts">
-                                    <div class="round round-{{ message.status }}">
-                                        <i [class]="message.icon"></i>
-                                    </div>
-                                    <div class="mail-content">
-                                        <h5>{{ message.name }}</h5>
-                                        <span class="mail-desc">{{ message.message }}</span>
-                                        <span class="time">{{ message.startdate | date: "dd/MM/yyyy HH:mm:ss" }}</span>
-                                    </div>
-                                </a>
-                            </perfect-scrollbar>
+                            <a (click)="launchAlertPopup(message)" *ngFor="let message of arrAlerts">
+                                <div class="round round-{{ message.status }}">
+                                    <i [class]="message.icon"></i>
+                                </div>
+                                <div class="mail-content">
+                                    <h5>{{ message.name }}</h5>
+                                    <span class="mail-desc">{{ message.message }}</span>
+                                    <span class="time">{{ message.startdate | date: "dd/MM/yyyy HH:mm:ss" }}</span>
+                                </div>
+                            </a>
                         </div>
                     </li>
                 </ul>

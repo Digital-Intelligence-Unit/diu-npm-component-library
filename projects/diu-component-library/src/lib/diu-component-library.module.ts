@@ -32,7 +32,6 @@ import { FormWithTableComponent } from "./_components/form-with-table/form-with-
 import { ProfileInstallsComponent } from "./_components/profile-full/profile-installs.component";
 import { ProfileTeamsComponent } from "./_components/profile-full/profile-teams.component";
 import { DashboardTwitterComponent } from "./_components/dashboard-twitter/dashboard-twitter.component";
-import { NgxTwitterTimelineModule } from "ngx-twitter-timeline";
 import { SizeDetectorComponent } from "./_components/size-detector/size-detector.component";
 import { ResizeService } from "../lib/_services/resize.service";
 import { DashboardPopulationComponent } from "./_components/dashboard-population/dashboard-population.component";
@@ -95,7 +94,6 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         CommonModule,
         FlexLayoutModule,
         MdbCarouselModule,
-        NgxTwitterTimelineModule,
         GalleryModule,
     ],
     exports: [
