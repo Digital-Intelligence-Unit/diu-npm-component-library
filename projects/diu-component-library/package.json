@@ -39,8 +39,6 @@
         "jwt-decode": "^3.1.2",
         "moment-timezone": "^0.5.33",
         "ngx-image-uploader-next": "^1.0.4",
-        "ngx-perfect-scrollbar": "^10.1.1",
-        "ngx-twitter-timeline": "^0.1.5",
         "rxjs": "^6.4.0",
         "rxjs-compat": "^6.6.7",
         "sass": "1.43.4",

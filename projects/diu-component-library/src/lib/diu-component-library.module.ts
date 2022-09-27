@@ -25,14 +25,13 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { DivRowComponent } from "./_components/_layouts/div-row.component";
 import { DivColComponent } from "./_components/_layouts/div-col.component";
 import { ProfileFullComponent } from "./_components/profile-full/profile-full.component";
-import { MDBBootstrapModule } from "angular-bootstrap-md";
+import { CarouselModule as MdbCarouselModule } from "angular-bootstrap-md";
 import { CarouselComponent } from "./_components/carousel/carousel.component";
 import { TabsComponent } from "./_components/tabs/tabs.component";
 import { FormWithTableComponent } from "./_components/form-with-table/form-with-table.component";
 import { ProfileInstallsComponent } from "./_components/profile-full/profile-installs.component";
 import { ProfileTeamsComponent } from "./_components/profile-full/profile-teams.component";
 import { DashboardTwitterComponent } from "./_components/dashboard-twitter/dashboard-twitter.component";
-import { NgxTwitterTimelineModule } from "ngx-twitter-timeline";
 import { SizeDetectorComponent } from "./_components/size-detector/size-detector.component";
 import { ResizeService } from "../lib/_services/resize.service";
 import { DashboardPopulationComponent } from "./_components/dashboard-population/dashboard-population.component";
@@ -94,8 +93,7 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         HttpClientModule,
         CommonModule,
         FlexLayoutModule,
-        MDBBootstrapModule,
-        NgxTwitterTimelineModule,
+        MdbCarouselModule,
         GalleryModule,
     ],
     exports: [
