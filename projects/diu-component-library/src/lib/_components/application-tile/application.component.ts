@@ -44,16 +44,45 @@ export class ApplicationTileComponent implements OnInit {
         // Listen for close
         dialogApp.afterClosed().subscribe((decision: any) => {
             if (decision && decision.choice === "install") {
+                // Get user id
+                const userId = `${this.user.username}#${this.user.organisation}`;
+
                 // Install app
                 this.apiService
-                    .createCapabiltiesLink(this.app.capability, `${this.user.username}#${this.user.organisation}`, "user", "allow")
+                    .createCapabiltiesLink(this.app.capability, userId, "user", "allow")
                     .subscribe(
                         () => {
                             this.status = "installed";
                             this.changed.emit({ action: "installed", app: this.app });
                         },
-                        () => {
-                            window["notify"]({ message: "Could not install app", status: "error" });
+                        (error) => {
+                            if(error.status === 403) {
+                                // Send request
+                                this.apiService.sendPermissionsRequest({
+                                    type: "user",
+                                    type_id: userId,
+                                    user: {
+                                        id: `${this.user.username}#${this.user.organisation}`,
+                                        email: this.user.email
+                                    },
+                                    capabilities: [{
+                                        id: this.app.capability,
+                                        valuejson: "allow"
+                                    }],
+                                    roles: [],
+                                    date: new Date().toISOString()
+                                }).subscribe((data: any) => {
+                                    if(data.success) {
+                                        // Notify user
+                                        window["notify"]({
+                                            message: "An installation request for this app has been sent!",
+                                            status: "success"
+                                        });
+                                    }
+                                });
+                            } else {
+                                window["notify"]({ message: "Failed to install app", status: "error" });
+                            }
                         }
                     );
             }
