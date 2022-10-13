@@ -49,13 +49,6 @@ export class WardmapComponent implements OnInit, OnChanges {
     boundaryShown = true;
     ICSboundaries: any;
     projection: any;
-    organisations: { icp: string; color: string }[] = [
-        { icp: "Fylde Coast", color: "#ff8200" },
-        { icp: "West Lancashire", color: "#5c315f" },
-        { icp: "Central Lancashire", color: "#eb1b75" },
-        { icp: "Pennine Lancashire", color: "#00577d" },
-        { icp: "Bay Health & Care Partners", color: "#69c14a" },
-    ];
     svgtooltip: any;
     allwardDetails: iWardDetails[] = [];
     trigger: boolean;
@@ -127,6 +120,7 @@ export class WardmapComponent implements OnInit, OnChanges {
         24: "Other_Justice_Estate",
         25: "Prison",
     };
+    breadcrumbs: any[];
 
     url = `https://api.nhs-bi-platform.co.uk/`;
     @HostListener("window:resize", ["$event"])
@@ -144,22 +138,12 @@ export class WardmapComponent implements OnInit, OnChanges {
         this.check = this.crossfilterData;
         this.width = document.getElementById("wardMapMain").getBoundingClientRect().width;
         this.allwardDetails = this.wardDetails;
-        this.apiService.genericGetAPICall(this.url + "wards").subscribe((res: any[]) => {
+        this.apiService.getWardDistricts().subscribe((res: any[]) => {
             if (res.length > 0) {
-                this.wards = res[0];
-                this.wardlist = this.wards.features.map((key) => key.properties.wd15cd);
-                if (this.filteredWardList === undefined) {
-                    this.filteredWardList = this.filterList();
-                }
+                this.ICSboundaries = res[0];
                 this.drawGraph();
                 this.trigger = true;
                 this.loading = false;
-            }
-        });
-        this.apiService.genericGetAPICall(this.url + "orgboundaries/topo-json").subscribe((res: any[]) => {
-            if (res.length > 0) {
-                this.ICSboundaries = res[0];
-                if (this.g) this.addBoundaries();
             }
         });
         this.apiService.getGPPracticesPopMini().subscribe((data: any[]) => {
@@ -176,7 +160,7 @@ export class WardmapComponent implements OnInit, OnChanges {
         } else if (this.wards && this.check !== this.crossfilterData) {
             this.check = this.crossfilterData;
             if (this.crossfilterData) {
-                this.drawGraph();
+                // this.drawGraph();
                 this.loading = false;
             }
         }
@@ -184,11 +168,11 @@ export class WardmapComponent implements OnInit, OnChanges {
 
     drawGraph() {
         this.active = d3.select(null);
-        const geoms = JSON.parse(JSON.stringify(this.wards));
+        const geoms = JSON.parse(JSON.stringify(this.ICSboundaries));
         const wardstokeep = this.crossfilterData["WDimension"].values.filter((x) => x.value > 10).map((key) => key.key);
         const wardstokeepVals = this.crossfilterData["WDimension"].values.filter((x) => x.value > 10).map((key) => key.value);
         this.mapDomain = d3.scaleBand().range([0, 1]).domain(wardstokeepVals);
-        geoms.features = geoms.features.filter((x) => wardstokeep.includes(x.properties.wd15cd));
+        geoms.features = geoms.features.filter((x) => wardstokeep.includes(x.properties.code));
         this.projection = d3.geoMercator().fitExtent(
             [
                 [20, 20],
@@ -217,31 +201,13 @@ export class WardmapComponent implements OnInit, OnChanges {
             .on("click", () => this.reset());
         this.g = this.svg.append("g");
         if (this.ICSboundaries) {
-            this.addBoundaries();
+            this.addBoundaries(null);
         }
         let text = "none";
         if (this.boundaryShown) {
             text = "block";
         }
         d3.selectAll("path").filter(".boundary").style("display", text);
-        this.g
-            .selectAll("path .feature")
-            .data(geoms.features)
-            .enter()
-            .append("path")
-            .attr("d", this.path)
-            .attr("class", "feature")
-            .attr("data-name", (d) => {
-                return d.properties.wd15cd;
-            })
-            .attr("fill", (d) => {
-                const value = this.crossfilterData["WDimension"].values.filter((x) => x.key === d.properties.wd15cd)[0].value;
-                return this.calculateFill(d.properties.wd15cd, value);
-            })
-            .style("stroke", (d) => {
-                return "rgb(0,0,0,0.5)";
-            })
-            .on("click", (_self) => this.clicked(_self));
         this.svg.call(this.zoom);
         if (this.svgtooltip) {
             d3.select(".svgtooltip").remove();
@@ -277,12 +243,12 @@ export class WardmapComponent implements OnInit, OnChanges {
     }
 
     clicked(d) {
-        const wrdcode = d3.select(d)["_groups"][0][0].properties.wd15cd;
+        const wrdcode = d3.select(d)["_groups"][0][0].properties.code;
         const selected = d3
             .selectAll("path")
             .filter(".feature")
             .filter((x: any) => {
-                return x.properties.wd15cd === wrdcode;
+                return x.properties.code === wrdcode;
             });
         if (this.active) {
             this.active.attr("fill", (d) => {
@@ -319,6 +285,12 @@ export class WardmapComponent implements OnInit, OnChanges {
             this.selectedwrdcode = null;
             this.emitted = true;
             this.selectedWard.emit(null);
+        }
+        this.breadcrumbs = [];
+        const boundaries = d3.selectAll("path").filter(".feature");
+        if (boundaries["_groups"][0].length > 0) {
+            boundaries.remove();
+            // return;
         }
         this.svg.transition().duration(750).call(this.zoom.transform, d3.zoomIdentity);
     }
@@ -371,32 +343,62 @@ export class WardmapComponent implements OnInit, OnChanges {
         }, 60 * 1000);
     }
 
-    addBoundaries() {
-        const boundaries = d3.selectAll("path").filter(".boundary");
+    addBoundaries(parent) {
+        const geoms = this.getChildBoundaries(parent);
+        const selector: string = parent ? "feature" : "topLevel";
+        const boundaries = d3.selectAll("path").filter("." + selector);
         if (boundaries["_groups"][0].length > 0) {
-            boundaries.style("display", "block");
-            return;
+            boundaries.remove();
+            // return;
         }
-        const geoms = this.ICSboundaries;
-        const all = this.g.selectAll("path.boundary").data(geoms.features);
-
+        const all = this.g.selectAll("path." + selector).data(geoms);
         all.enter()
             .append("path")
             .attr("d", this.path)
-            .attr("class", "boundary")
+            .attr("class", selector)
             .attr("data-name", (d) => {
-                return d.properties.ICP;
+                return d.properties.district;
             })
             .attr("title", (d) => {
-                return d.properties.ICP;
+                return d.properties.district;
             })
             .attr("fill", (d) => {
-                const rgb = this.hexToRgb(this.calculateStroke(d.properties.ICP));
+                const rgb = this.hexToRgb(this.calculateStroke(d.properties.district));
                 return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.2)";
             })
             .style("stroke", (d) => {
-                return this.calculateStroke(d.properties.ICP);
-            });
+                return this.calculateStroke(d.properties.district);
+            })
+            .on("click", (_self) => this.boundaryClicked(_self));
+        this.projection = d3.geoMercator().fitExtent(
+            [
+                [20, 20],
+                [this.width, this.height],
+            ],
+            geoms
+        );
+        this.zoom = d3zoom.zoom().on("zoom", () => {
+            this.zoomed();
+        });
+    }
+
+    getChildBoundaries(parent) {
+        const children = this.ICSboundaries.features.filter((feature) => {
+            return feature.properties.parent_code === parent;
+        });
+        return children;
+    }
+
+    getParentBoundaries(currentAreaCode) {
+        const current = this.ICSboundaries.features.filter((feature) => {
+            return feature.properties.code === currentAreaCode;
+        });
+        if (current.length) {
+            this.breadcrumbs.push(current[0]);
+            const parentAreaCode = current[0].properties.parent_code;
+            this.getParentBoundaries(parentAreaCode);
+        }
+        return;
     }
 
     boundaries() {
@@ -410,11 +412,38 @@ export class WardmapComponent implements OnInit, OnChanges {
         }
     }
 
-    calculateStroke(name) {
-        const organisation = this.organisations.filter((org) => org.icp === name);
-        if (organisation.length > 0) {
-            return organisation[0].color;
+    boundaryClicked(clickedDistrict) {
+        const code = clickedDistrict.properties.code;
+        const children = this.getChildBoundaries(code);
+        this.resetBreadCrumbs(code);
+        if (children.length) {
+            this.addBoundaries(clickedDistrict.properties.code);
+            this.clicked(clickedDistrict);
+        } else {
+            this.clicked(clickedDistrict);
         }
+    }
+
+    resetBreadCrumbs(code) {
+        this.breadcrumbs = [];
+        this.getParentBoundaries(code);
+        this.breadcrumbs.reverse();
+    }
+
+    breadcrumbClick(clickedDistrict) {
+        this.reset();
+        if (clickedDistrict) {
+            this.resetBreadCrumbs(clickedDistrict.properties.code);
+            this.addBoundaries(clickedDistrict.properties.code);
+            this.clicked(clickedDistrict);
+        }
+    }
+
+    calculateStroke(name) {
+        // const organisation = this.districts.filter((org) => org.district === name);
+        // if (organisation.length > 0) {
+        //     return organisation[0].color;
+        // }
         return "#000";
     }
 

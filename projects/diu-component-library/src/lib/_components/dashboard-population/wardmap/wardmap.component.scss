@@ -43,3 +43,13 @@ rect {
 .electoralmap-svg {
     fill: white;
 }
+app-wardmap {
+    .breadcrumbs {
+        span {
+            cursor: pointer;
+            &:hover {
+                color: blue;
+            }
+        }
+    }
+}
