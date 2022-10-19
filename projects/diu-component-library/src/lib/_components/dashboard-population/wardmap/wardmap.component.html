@@ -1,5 +1,4 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
-
 <div #mapGraph id="mapGraph" class="chart" style="position: relative">
     <div style="position: absolute; right: 5px; top: 5px">
         <button
@@ -61,4 +60,8 @@
             </div>
         </div>
     </div>
+</div>
+<div *ngIf="!loading" class="breadcrumbs">
+    <span (click)="breadcrumbClick(null)">LSC</span>
+    <span *ngFor="let item of breadcrumbs" (click)="breadcrumbClick(item)"> > {{ item.properties.area }}</span>
 </div>

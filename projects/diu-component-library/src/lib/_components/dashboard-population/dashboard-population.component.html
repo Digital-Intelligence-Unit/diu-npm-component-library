@@ -31,23 +31,10 @@
                         [crossfilterData]="filteredData"
                         [inputTrigger]="mapReset"
                         (selectedWard)="changedWard($event)"
+                        (selectedArea)="changedArea($event)"
                         [wardDetails]="allWardDetails"
                     >
                     </app-wardmap>
-                </div>
-                <div style="display: block; width: 100%; padding-bottom: 5px" fxLayoutAlign="center center">
-                    Filters:&nbsp;
-                    <mat-chip-list *ngIf="queryFilter">
-                        <mat-chip *ngIf="checkFilters()">None</mat-chip>
-                        <mat-chip color="primary" selected *ngIf="queryFilter['AgeDimension']" (click)="removeFilter('AgeDimension')">
-                            Age: {{ queryFilter["AgeDimension"][0] }}
-                            <mat-icon matChipRemove (click)="removeFilter('AgeDimension')">cancel</mat-icon>
-                        </mat-chip>
-                        <mat-chip color="primary" selected *ngIf="queryFilter['DDimension']" (click)="removeFilter('DDimension')">
-                            Deprivation: {{ queryFilter["DDimension"][0] }}
-                            <mat-icon matChipRemove (click)="removeFilter('DDimension')">cancel</mat-icon>
-                        </mat-chip>
-                    </mat-chip-list>
                 </div>
             </div>
             <div
