@@ -61,7 +61,6 @@ export class DashboardPopulationComponent implements OnInit {
     constructor(private apiService: APIService, @Inject("environment") environment) {
         if (environment && environment.websiteURL) {
             this.cfUrl = `https://popmini.${environment.websiteURL as string}/dataset/getCrossfilter`;
-            this.cfUrl = `http://localhost:8080/dataset/getCrossfilter`;
         }
         const token = localStorage.getItem("@@STATE");
         if (token) {
