@@ -30,6 +30,7 @@ export class WardmapComponent implements OnInit, OnChanges {
     @Input() inputTrigger: boolean;
     @Input() wardDetails: iWardDetails[];
     @Output() selectedWard = new EventEmitter<string>();
+    @Output() selectedArea = new EventEmitter<string>();
     emitted = false;
     mapDomain: any;
     check: any;
@@ -121,17 +122,42 @@ export class WardmapComponent implements OnInit, OnChanges {
         25: "Prison",
     };
     breadcrumbs: any[];
-
+    drawGraphTimeout: any;
     url = `https://api.nhs-bi-platform.co.uk/`;
-    @HostListener("window:resize", ["$event"])
-    onResize() {
-        setTimeout(() => {
-            this.width = document.getElementById("wardMapMain").getBoundingClientRect().width;
-            this.drawGraph();
-        }, 0);
-    }
+    resizeTimeOut: any;
+    parentColours = {
+        E10000006: {
+            name: "South Cumbria",
+            colour: "#69c14a",
+        },
+        E06000008: {
+            name: "Blackburn with Darwen",
+            colour: "#009EE0",
+        },
+        E06000009: {
+            name: "Blackpool",
+            colour: "#ff8200",
+        },
+        E10000017: {
+            name: "Lancashire",
+            colour: "#D6000A",
+        },
+    };
+
     constructor(private apiService: APIService, @Inject("environment") environment) {
         if (environment) this.url = `https://api.${environment.websiteURL as string}/` || `https://api.nhs-bi-platform.co.uk/`;
+    }
+
+    @HostListener("window:resize", ["$event"])
+    onResize() {
+        if (this.resizeTimeOut) {
+            clearTimeout(this.resizeTimeOut);
+        }
+        this.resizeTimeOut = setTimeout(() => {
+            this.width = document.getElementById("wardMapMain").getBoundingClientRect().width;
+            this.reset();
+            this.drawGraph();
+        }, 250);
     }
 
     ngOnInit() {
@@ -168,11 +194,14 @@ export class WardmapComponent implements OnInit, OnChanges {
 
     drawGraph() {
         this.active = d3.select(null);
-        const geoms = JSON.parse(JSON.stringify(this.ICSboundaries));
-        const wardstokeep = this.crossfilterData["WDimension"].values.filter((x) => x.value > 10).map((key) => key.key);
+        if (!this.ICSboundaries) {
+            setTimeout(this.drawGraph, 100);
+            return;
+        }
+        console.log(this);
+        const geoms = this.ICSboundaries;
         const wardstokeepVals = this.crossfilterData["WDimension"].values.filter((x) => x.value > 10).map((key) => key.value);
         this.mapDomain = d3.scaleBand().range([0, 1]).domain(wardstokeepVals);
-        geoms.features = geoms.features.filter((x) => wardstokeep.includes(x.properties.code));
         this.projection = d3.geoMercator().fitExtent(
             [
                 [20, 20],
@@ -200,9 +229,7 @@ export class WardmapComponent implements OnInit, OnChanges {
             .attr("height", this.height)
             .on("click", () => this.reset());
         this.g = this.svg.append("g");
-        if (this.ICSboundaries) {
-            this.addBoundaries(null);
-        }
+        this.addBoundaries(null);
         let text = "none";
         if (this.boundaryShown) {
             text = "block";
@@ -220,30 +247,16 @@ export class WardmapComponent implements OnInit, OnChanges {
             .on("click", () => this.closesvgtooltip());
     }
 
-    calculateFill(wrdcode, value) {
-        const warddets = this.allwardDetails.filter((x) => x.code === wrdcode);
-        if (warddets.length > 0) {
-            const rgb = this.hexToRgb(this.calculateStroke(warddets[0].icp));
-            return (
-                "rgba(" +
-                rgb.r.toString() +
-                "," +
-                rgb.g.toString() +
-                "," +
-                rgb.b.toString() +
-                ", " +
-                (1 - this.mapDomain(value)).toString() +
-                ")"
-            );
-        }
-        if (this.filteredWardList.includes(wrdcode)) {
-            return "rgb(255,255,255,0.6)";
+    calculateFill(area?) {
+        if (area) {
+            const rgb = this.hexToRgb(this.calculateStroke(area));
+            return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.2)";
         }
         return "rgb(255,255,255,0)";
     }
 
-    clicked(d) {
-        const wrdcode = d3.select(d)["_groups"][0][0].properties.code;
+    clicked(clickedArea) {
+        const wrdcode = d3.select(clickedArea)["_groups"][0][0].properties.code;
         const selected = d3
             .selectAll("path")
             .filter(".feature")
@@ -251,9 +264,8 @@ export class WardmapComponent implements OnInit, OnChanges {
                 return x.properties.code === wrdcode;
             });
         if (this.active) {
-            this.active.attr("fill", (d) => {
-                const value = this.crossfilterData["WDimension"].values.filter((x) => x.key === wrdcode)[0].value;
-                return this.calculateFill(wrdcode, value);
+            this.active.attr("fill", (clickedArea) => {
+                return this.calculateFill(clickedArea);
             });
             if (wrdcode === this.selectedwrdcode) {
                 return this.reset();
@@ -261,26 +273,27 @@ export class WardmapComponent implements OnInit, OnChanges {
         }
         this.active = selected;
         this.selectedwrdcode = wrdcode;
-        this.active.attr("fill", "tomato");
-        const bounds = this.path.bounds(d);
+        this.active.attr("fill", this.calculateStroke(clickedArea));
+        const bounds = this.path.bounds(clickedArea);
         const dx = bounds[1][0] - bounds[0][0];
         const dy = bounds[1][1] - bounds[0][1];
         const x = ((bounds[0][0] as number) + (bounds[1][0] as number)) / 2;
         const y = ((bounds[0][1] as number) + (bounds[1][1] as number)) / 2;
         const scale = Math.max(1, Math.min(8, 0.85 / Math.max(dx / this.width, dy / this.height)));
         const translate = [this.width / 2 - scale * x, this.height / 2 - scale * y];
-
         this.svg.transition().duration(750).call(this.zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
         this.emitted = true;
-        this.selectedWard.emit(wrdcode);
+        const children = this.getChildBoundaries(clickedArea.properties.code);
+        console.log(children);
+        if (children.length) {
+            this.selectedArea.emit(wrdcode);
+        } else {
+            this.selectedWard.emit(wrdcode);
+        }
     }
 
     reset() {
         if (this.active) {
-            this.active.attr("fill", (d) => {
-                const value = this.crossfilterData["WDimension"].values.filter((x) => x.key === this.selectedwrdcode)[0].value;
-                return this.calculateFill(this.selectedwrdcode, value);
-            });
             this.active = null;
             this.selectedwrdcode = null;
             this.emitted = true;
@@ -307,19 +320,9 @@ export class WardmapComponent implements OnInit, OnChanges {
 
     rolodex() {
         this.rolodex_stopped = !this.rolodex_stopped;
-        if (this.filteredWardList === undefined) {
-            this.filteredWardList = this.filterList();
-        }
         if (!this.rolodex_stopped) {
             this.playrandom();
         }
-    }
-
-    filterList() {
-        if (this.crossfilterData) {
-            return this.crossfilterData["WDimension"].values.filter((x) => x.value > 10).map((key) => key.key);
-        }
-        return this.wardlist;
     }
 
     playrandom() {
@@ -363,11 +366,11 @@ export class WardmapComponent implements OnInit, OnChanges {
                 return d.properties.district;
             })
             .attr("fill", (d) => {
-                const rgb = this.hexToRgb(this.calculateStroke(d.properties.district));
+                const rgb = this.hexToRgb(this.calculateStroke(d));
                 return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.2)";
             })
             .style("stroke", (d) => {
-                return this.calculateStroke(d.properties.district);
+                return this.calculateStroke(d);
             })
             .on("click", (_self) => this.boundaryClicked(_self));
         this.projection = d3.geoMercator().fitExtent(
@@ -439,12 +442,21 @@ export class WardmapComponent implements OnInit, OnChanges {
         }
     }
 
-    calculateStroke(name) {
-        // const organisation = this.districts.filter((org) => org.district === name);
-        // if (organisation.length > 0) {
-        //     return organisation[0].color;
-        // }
-        return "#000";
+    calculateStroke(feature?) {
+        let colour = "#000";
+        if (feature) {
+            if (this.parentColours[feature.properties.code]) {
+                return this.parentColours[feature.properties.code].colour;
+            }
+        }
+        if (this.breadcrumbs) {
+            this.breadcrumbs.forEach((feature) => {
+                if (this.parentColours[feature.properties.code]) {
+                    colour = this.parentColours[feature.properties.code].colour;
+                }
+            });
+        }
+        return colour;
     }
 
     hexToRgb(hex) {
