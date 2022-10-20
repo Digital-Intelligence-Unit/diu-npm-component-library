@@ -45,7 +45,6 @@ export class WardmapComponent implements OnInit, OnChanges {
     zoomedOut = true;
     path: any;
     rolodex_stopped = true;
-    wardlist = [];
     filteredWardList: any;
     boundaryShown = true;
     ICSboundaries: any;
@@ -198,8 +197,6 @@ export class WardmapComponent implements OnInit, OnChanges {
             setTimeout(this.drawGraph, 100);
             return;
         }
-        console.log(this);
-        const geoms = this.ICSboundaries;
         const wardstokeepVals = this.crossfilterData["WDimension"].values.filter((x) => x.value > 10).map((key) => key.value);
         this.mapDomain = d3.scaleBand().range([0, 1]).domain(wardstokeepVals);
         this.projection = d3.geoMercator().fitExtent(
@@ -207,7 +204,7 @@ export class WardmapComponent implements OnInit, OnChanges {
                 [20, 20],
                 [this.width, this.height],
             ],
-            geoms
+            this.ICSboundaries
         );
         this.zoom = d3zoom.zoom().on("zoom", () => {
             this.zoomed();
@@ -284,7 +281,6 @@ export class WardmapComponent implements OnInit, OnChanges {
         this.svg.transition().duration(750).call(this.zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
         this.emitted = true;
         const children = this.getChildBoundaries(clickedArea.properties.code);
-        console.log(children);
         if (children.length) {
             this.selectedArea.emit(wrdcode);
         } else {
@@ -373,13 +369,6 @@ export class WardmapComponent implements OnInit, OnChanges {
                 return this.calculateStroke(d);
             })
             .on("click", (_self) => this.boundaryClicked(_self));
-        this.projection = d3.geoMercator().fitExtent(
-            [
-                [20, 20],
-                [this.width, this.height],
-            ],
-            geoms
-        );
         this.zoom = d3zoom.zoom().on("zoom", () => {
             this.zoomed();
         });
