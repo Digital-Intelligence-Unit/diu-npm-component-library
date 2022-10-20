@@ -1291,6 +1291,10 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "wards");
     }
 
+    public getWardDistricts() {
+        return this.http.get(this.baseUrl + "wards/districts");
+    }
+
     // ATOMICFORMDATA
 
     public getFormDataById(payloadID: string) {
