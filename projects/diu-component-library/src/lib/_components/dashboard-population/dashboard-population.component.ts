@@ -303,7 +303,7 @@ export class DashboardPopulationComponent implements OnInit {
         const response: { key: string; value: number }[] = [];
         const genderData = data.filter((x) => x["key"].includes(type));
         genderData.forEach((elem) => {
-            const elemCat = this.getAgeCategory(parseInt(elem["key"].split(":")[1]));
+            const elemCat = elem["key"].split(":")[1];
             const item = response.filter((i) => i.key === elemCat);
             if (item.length > 0) {
                 item[0].value = item[0].value + (elem["value"] as number);
@@ -314,51 +314,6 @@ export class DashboardPopulationComponent implements OnInit {
         return response.sort((a, b) => {
             return parseInt(a.key.split(":")[0]) - parseInt(b.key.split(":")[0]);
         });
-    }
-
-    getAgeCategory(age: number) {
-        if (age <= 5) {
-            return "0 - 5";
-        } else if (age <= 10) {
-            return "6 - 10";
-        } else if (age <= 15) {
-            return "11 - 15";
-        } else if (age <= 20) {
-            return "16 - 20";
-        } else if (age <= 25) {
-            return "21 - 25";
-        } else if (age <= 30) {
-            return "26 - 30";
-        } else if (age <= 35) {
-            return "31 - 35";
-        } else if (age <= 40) {
-            return "36 - 40";
-        } else if (age <= 45) {
-            return "41 - 45";
-        } else if (age <= 50) {
-            return "46 - 50";
-        } else if (age <= 55) {
-            return "51 - 55";
-        } else if (age <= 60) {
-            return "56 - 60";
-        } else if (age <= 65) {
-            return "61 - 65";
-        } else if (age <= 70) {
-            return "66 - 70";
-        } else if (age <= 75) {
-            return "71 - 75";
-        } else if (age <= 80) {
-            return "76 - 80";
-        } else if (age <= 85) {
-            return "81 - 85";
-        } else if (age <= 90) {
-            return "86 - 90";
-        } else if (age <= 95) {
-            return "91 - 95";
-        } else if (age <= 100) {
-            return "96 - 100";
-        }
-        return "100 - 125";
     }
 
     refresh(queryFilter) {
