@@ -18,11 +18,11 @@
                     <mat-icon>chevron_left</mat-icon>
                 </button>
                 <div fxLayout="row wrap" fxLayoutGap="15px" *ngIf="settings.display && !isIE" fxLayoutAlign="center top">
-                    <div *ngFor="let feed of twitterfeeds.slice(settings.index, settings.numCols); let i = index" fxFlex>
+                    <div *ngFor="let feed of twitterfeeds.slice(settings.index, settings.index + settings.numCols); let i = index" fxFlex>
                         <iframe class="w-100" frameborder="0" height="600" [srcdoc]="feed.html"></iframe>
                     </div>
                 </div>
-                <button class="nav right" mat-mini-fab color="primary" [disabled]="(settings.index + settings.numCols + 1) === settings.total" (click)="nextSlide()">
+                <button class="nav right" mat-mini-fab color="primary" [disabled]="(settings.index + settings.numCols) === settings.total" (click)="nextSlide()">
                     <mat-icon>chevron_right</mat-icon>
                 </button>
             </mat-card-content>

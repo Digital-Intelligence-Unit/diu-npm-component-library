@@ -26,6 +26,8 @@ export class DashboardPopulationComponent implements OnInit {
     DDimGroup: any;
     WDimension: any;
     WDimGroup: any;
+    AreaLookupDimension: any;
+    AreaLookupDimGroup: any;
     myDC: any;
     all: any;
     filteredData: any;
@@ -104,6 +106,7 @@ export class DashboardPopulationComponent implements OnInit {
     /* #endregion */
 
     changedWard(filter) {
+        this.AreaLookupDimension.filter(null);
         this.selectedWard = filter;
         if (!filter) {
             this.WDimension.filter(null);
@@ -124,6 +127,21 @@ export class DashboardPopulationComponent implements OnInit {
             }
             this.WDimension.filter([filter]);
         }
+        this.refresh(this.queryFilter);
+        this.onCollapse();
+    }
+
+    changedArea(filter) {
+        this.WDimension.filter(null);
+        this.selectedWard = filter;
+        if (!filter) {
+            this.AreaLookupDimension.filter(null);
+            this.resetToWholePop();
+            this.selectedWardDetails = null;
+        } else {
+            this.AreaLookupDimension.filter([filter]);
+        }
+        this.refresh(this.queryFilter);
         this.onCollapse();
     }
 
@@ -134,7 +152,7 @@ export class DashboardPopulationComponent implements OnInit {
 
     checkFilters() {
         const length = Object.keys(this.queryFilter).length;
-        if (length === 1 && this.queryFilter["WDimension"]) {
+        if ((length === 1 && this.queryFilter["AreaLookupDimension"]) || (length === 1 && this.queryFilter["WDimension"])) {
             return true;
         } else if (length > 0) {
             return false;
@@ -178,7 +196,6 @@ export class DashboardPopulationComponent implements OnInit {
                 } else {
                     delete this.queryFilter["WDimension"];
                 }
-                this.refresh(this.queryFilter);
             },
             filterAll: () => {},
         };
@@ -197,7 +214,6 @@ export class DashboardPopulationComponent implements OnInit {
                 } else {
                     delete this.queryFilter["AgeDimension"];
                 }
-                this.refresh(this.queryFilter);
             },
             filterAll: () => {},
         };
@@ -218,7 +234,6 @@ export class DashboardPopulationComponent implements OnInit {
                 } else {
                     delete this.queryFilter["AgeDimension"];
                 }
-                this.refresh(this.queryFilter);
             },
             filterAll: () => {},
         };
@@ -238,7 +253,6 @@ export class DashboardPopulationComponent implements OnInit {
                 } else {
                     delete this.queryFilter["DDimension"];
                 }
-                this.refresh(this.queryFilter);
             },
             filterAll: () => {},
         };
@@ -249,13 +263,47 @@ export class DashboardPopulationComponent implements OnInit {
             order: () => {},
             top: () => {},
         };
+        this.DDimension = {
+            filter: (f) => {
+                if (f && f.length > 0) {
+                    this.queryFilter["DDimension"] = f;
+                } else {
+                    delete this.queryFilter["DDimension"];
+                }
+            },
+            filterAll: () => {},
+        };
+        this.DDimGroup = {
+            all: () => {
+                return this.filteredData["DDimension"].values;
+            },
+            order: () => {},
+            top: () => {},
+        };
+        this.AreaLookupDimension = {
+            filter: (f) => {
+                if (f && f.length > 0) {
+                    this.queryFilter["AreaLookup"] = f;
+                } else {
+                    delete this.queryFilter["AreaLookup"];
+                }
+            },
+            filterAll: () => {},
+        };
+        this.AreaLookupDimGroup = {
+            all: () => {
+                return this.filteredData["AreaLookup"].values;
+            },
+            order: () => {},
+            top: () => {},
+        };
     }
 
     extractValues(type: string, data: any[]) {
         const response: { key: string; value: number }[] = [];
         const genderData = data.filter((x) => x["key"].includes(type));
         genderData.forEach((elem) => {
-            const elemCat = this.getAgeCategory(parseInt(elem["key"].split(":")[1]));
+            const elemCat = elem["key"].split(":")[1];
             const item = response.filter((i) => i.key === elemCat);
             if (item.length > 0) {
                 item[0].value = item[0].value + (elem["value"] as number);
@@ -266,51 +314,6 @@ export class DashboardPopulationComponent implements OnInit {
         return response.sort((a, b) => {
             return parseInt(a.key.split(":")[0]) - parseInt(b.key.split(":")[0]);
         });
-    }
-
-    getAgeCategory(age: number) {
-        if (age <= 5) {
-            return "0 - 5";
-        } else if (age <= 10) {
-            return "6 - 10";
-        } else if (age <= 15) {
-            return "11 - 15";
-        } else if (age <= 20) {
-            return "16 - 20";
-        } else if (age <= 25) {
-            return "21 - 25";
-        } else if (age <= 30) {
-            return "26 - 30";
-        } else if (age <= 35) {
-            return "31 - 35";
-        } else if (age <= 40) {
-            return "36 - 40";
-        } else if (age <= 45) {
-            return "41 - 45";
-        } else if (age <= 50) {
-            return "46 - 50";
-        } else if (age <= 55) {
-            return "51 - 55";
-        } else if (age <= 60) {
-            return "56 - 60";
-        } else if (age <= 65) {
-            return "61 - 65";
-        } else if (age <= 70) {
-            return "66 - 70";
-        } else if (age <= 75) {
-            return "71 - 75";
-        } else if (age <= 80) {
-            return "76 - 80";
-        } else if (age <= 85) {
-            return "81 - 85";
-        } else if (age <= 90) {
-            return "86 - 90";
-        } else if (age <= 95) {
-            return "91 - 95";
-        } else if (age <= 100) {
-            return "96 - 100";
-        }
-        return "100 - 125";
     }
 
     refresh(queryFilter) {
@@ -457,11 +460,7 @@ export class DashboardPopulationComponent implements OnInit {
         d3.selectAll(".bar")
             .style("cursor", "pointer")
             .on("mouseover.something", (d, index, array) => this.mouseEnter(d, index, array, chartName))
-            .on("mouseout.something", () => this.mouseLeave())
-            .on("click.something", (datum) => {
-                this.queryFilter["DDimension"] = [datum["key"]];
-                this.refresh(this.queryFilter);
-            });
+            .on("mouseout.something", () => this.mouseLeave());
 
         if (firstRun) {
             this.deprivationChart
@@ -518,10 +517,6 @@ export class DashboardPopulationComponent implements OnInit {
             .attr("transform", "translate(" + shift.toString() + "," + margin.top.toString() + ")")
             .on("mouseout.something", () => this.mouseLeave());
 
-        // let axisCrossPoint = 0.0;
-        // if (male) {
-        //     axisCrossPoint = 100.0;
-        // }
         const x = d3
             .scaleLinear()
             .domain([0, top])
@@ -608,17 +603,10 @@ export class DashboardPopulationComponent implements OnInit {
         }
         new_bars
             .on("mouseover.something", (d, index, array) => this.mouseEnter(d, index, array, chartName))
-            .on("mouseout.something", () => this.mouseLeave())
-            .on("click.something", (datum) => {
-                this.queryFilter["AgeDimension"] = [datum.key];
-                this.refresh(this.queryFilter);
-            });
-        bars.on("mouseover.something", (d, index, array) => this.mouseEnter(d, index, array, chartName))
-            .on("mouseout.something", () => this.mouseLeave())
-            .on("click.something", (datum) => {
-                this.queryFilter["AgeDimension"] = [datum.key];
-                this.refresh(this.queryFilter);
-            });
+            .on("mouseout.something", () => this.mouseLeave());
+        bars.on("mouseover.something", (d, index, array) => this.mouseEnter(d, index, array, chartName)).on("mouseout.something", () =>
+            this.mouseLeave()
+        );
         if (!male) {
             const xAxis = d3.axisBottom(x).ticks(5);
             this.compCharts[chartName]
@@ -674,13 +662,7 @@ export class DashboardPopulationComponent implements OnInit {
     }
 
     htmlTooltip(d: any, text: string) {
-        // let usedCompType;
         let output;
-        // if (typeof d.data === "undefined") {
-        //     usedCompType = d.key;
-        // } else {
-        //     usedCompType = d.data.key;
-        // }
         output = "<div id='toolTip' class='container d3-tip'>";
         output += " <h5>" + text + ": " + (d.key as string) + "</h5><h5>Total: " + (d.value as string) + "</h5>";
         output += "	</div>";

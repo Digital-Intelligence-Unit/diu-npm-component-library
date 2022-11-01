@@ -30,6 +30,7 @@ export class WardmapComponent implements OnInit, OnChanges {
     @Input() inputTrigger: boolean;
     @Input() wardDetails: iWardDetails[];
     @Output() selectedWard = new EventEmitter<string>();
+    @Output() selectedArea = new EventEmitter<string>();
     emitted = false;
     mapDomain: any;
     check: any;
@@ -44,18 +45,10 @@ export class WardmapComponent implements OnInit, OnChanges {
     zoomedOut = true;
     path: any;
     rolodex_stopped = true;
-    wardlist = [];
     filteredWardList: any;
     boundaryShown = true;
     ICSboundaries: any;
     projection: any;
-    organisations: { icp: string; color: string }[] = [
-        { icp: "Fylde Coast", color: "#ff8200" },
-        { icp: "West Lancashire", color: "#5c315f" },
-        { icp: "Central Lancashire", color: "#eb1b75" },
-        { icp: "Pennine Lancashire", color: "#00577d" },
-        { icp: "Bay Health & Care Partners", color: "#69c14a" },
-    ];
     svgtooltip: any;
     allwardDetails: iWardDetails[] = [];
     trigger: boolean;
@@ -127,39 +120,55 @@ export class WardmapComponent implements OnInit, OnChanges {
         24: "Other_Justice_Estate",
         25: "Prison",
     };
-
+    breadcrumbs: any[];
+    drawGraphTimeout: any;
     url = `https://api.nhs-bi-platform.co.uk/`;
-    @HostListener("window:resize", ["$event"])
-    onResize() {
-        setTimeout(() => {
-            this.width = document.getElementById("wardMapMain").getBoundingClientRect().width;
-            this.drawGraph();
-        }, 0);
-    }
+    resizeTimeOut: any;
+    parentColours = {
+        E10000006: {
+            name: "South Cumbria",
+            colour: "#69c14a",
+        },
+        E06000008: {
+            name: "Blackburn with Darwen",
+            colour: "#009EE0",
+        },
+        E06000009: {
+            name: "Blackpool",
+            colour: "#ff8200",
+        },
+        E10000017: {
+            name: "Lancashire",
+            colour: "#D6000A",
+        },
+    };
+
     constructor(private apiService: APIService, @Inject("environment") environment) {
         if (environment) this.url = `https://api.${environment.websiteURL as string}/` || `https://api.nhs-bi-platform.co.uk/`;
+    }
+
+    @HostListener("window:resize", ["$event"])
+    onResize() {
+        if (this.resizeTimeOut) {
+            clearTimeout(this.resizeTimeOut);
+        }
+        this.resizeTimeOut = setTimeout(() => {
+            this.width = document.getElementById("wardMapMain").getBoundingClientRect().width;
+            this.reset();
+            this.drawGraph();
+        }, 250);
     }
 
     ngOnInit() {
         this.check = this.crossfilterData;
         this.width = document.getElementById("wardMapMain").getBoundingClientRect().width;
         this.allwardDetails = this.wardDetails;
-        this.apiService.genericGetAPICall(this.url + "wards").subscribe((res: any[]) => {
+        this.apiService.getWardDistricts().subscribe((res: any[]) => {
             if (res.length > 0) {
-                this.wards = res[0];
-                this.wardlist = this.wards.features.map((key) => key.properties.wd15cd);
-                if (this.filteredWardList === undefined) {
-                    this.filteredWardList = this.filterList();
-                }
+                this.ICSboundaries = res[0];
                 this.drawGraph();
                 this.trigger = true;
                 this.loading = false;
-            }
-        });
-        this.apiService.genericGetAPICall(this.url + "orgboundaries/topo-json").subscribe((res: any[]) => {
-            if (res.length > 0) {
-                this.ICSboundaries = res[0];
-                if (this.g) this.addBoundaries();
             }
         });
         this.apiService.getGPPracticesPopMini().subscribe((data: any[]) => {
@@ -176,7 +185,7 @@ export class WardmapComponent implements OnInit, OnChanges {
         } else if (this.wards && this.check !== this.crossfilterData) {
             this.check = this.crossfilterData;
             if (this.crossfilterData) {
-                this.drawGraph();
+                // this.drawGraph();
                 this.loading = false;
             }
         }
@@ -184,17 +193,18 @@ export class WardmapComponent implements OnInit, OnChanges {
 
     drawGraph() {
         this.active = d3.select(null);
-        const geoms = JSON.parse(JSON.stringify(this.wards));
-        const wardstokeep = this.crossfilterData["WDimension"].values.filter((x) => x.value > 10).map((key) => key.key);
+        if (!this.ICSboundaries) {
+            setTimeout(this.drawGraph, 100);
+            return;
+        }
         const wardstokeepVals = this.crossfilterData["WDimension"].values.filter((x) => x.value > 10).map((key) => key.value);
         this.mapDomain = d3.scaleBand().range([0, 1]).domain(wardstokeepVals);
-        geoms.features = geoms.features.filter((x) => wardstokeep.includes(x.properties.wd15cd));
         this.projection = d3.geoMercator().fitExtent(
             [
                 [20, 20],
                 [this.width, this.height],
             ],
-            geoms
+            this.ICSboundaries
         );
         this.zoom = d3zoom.zoom().on("zoom", () => {
             this.zoomed();
@@ -216,32 +226,12 @@ export class WardmapComponent implements OnInit, OnChanges {
             .attr("height", this.height)
             .on("click", () => this.reset());
         this.g = this.svg.append("g");
-        if (this.ICSboundaries) {
-            this.addBoundaries();
-        }
+        this.addBoundaries(null);
         let text = "none";
         if (this.boundaryShown) {
             text = "block";
         }
         d3.selectAll("path").filter(".boundary").style("display", text);
-        this.g
-            .selectAll("path .feature")
-            .data(geoms.features)
-            .enter()
-            .append("path")
-            .attr("d", this.path)
-            .attr("class", "feature")
-            .attr("data-name", (d) => {
-                return d.properties.wd15cd;
-            })
-            .attr("fill", (d) => {
-                const value = this.crossfilterData["WDimension"].values.filter((x) => x.key === d.properties.wd15cd)[0].value;
-                return this.calculateFill(d.properties.wd15cd, value);
-            })
-            .style("stroke", (d) => {
-                return "rgb(0,0,0,0.5)";
-            })
-            .on("click", (_self) => this.clicked(_self));
         this.svg.call(this.zoom);
         if (this.svgtooltip) {
             d3.select(".svgtooltip").remove();
@@ -254,40 +244,25 @@ export class WardmapComponent implements OnInit, OnChanges {
             .on("click", () => this.closesvgtooltip());
     }
 
-    calculateFill(wrdcode, value) {
-        const warddets = this.allwardDetails.filter((x) => x.code === wrdcode);
-        if (warddets.length > 0) {
-            const rgb = this.hexToRgb(this.calculateStroke(warddets[0].icp));
-            return (
-                "rgba(" +
-                rgb.r.toString() +
-                "," +
-                rgb.g.toString() +
-                "," +
-                rgb.b.toString() +
-                ", " +
-                (1 - this.mapDomain(value)).toString() +
-                ")"
-            );
-        }
-        if (this.filteredWardList.includes(wrdcode)) {
-            return "rgb(255,255,255,0.6)";
+    calculateFill(area?) {
+        if (area) {
+            const rgb = this.hexToRgb(this.calculateStroke(area));
+            return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.2)";
         }
         return "rgb(255,255,255,0)";
     }
 
-    clicked(d) {
-        const wrdcode = d3.select(d)["_groups"][0][0].properties.wd15cd;
+    clicked(clickedArea) {
+        const wrdcode = d3.select(clickedArea)["_groups"][0][0].properties.code;
         const selected = d3
             .selectAll("path")
             .filter(".feature")
             .filter((x: any) => {
-                return x.properties.wd15cd === wrdcode;
+                return x.properties.code === wrdcode;
             });
         if (this.active) {
-            this.active.attr("fill", (d) => {
-                const value = this.crossfilterData["WDimension"].values.filter((x) => x.key === wrdcode)[0].value;
-                return this.calculateFill(wrdcode, value);
+            this.active.attr("fill", (clickedArea) => {
+                return this.calculateFill(clickedArea);
             });
             if (wrdcode === this.selectedwrdcode) {
                 return this.reset();
@@ -295,30 +270,36 @@ export class WardmapComponent implements OnInit, OnChanges {
         }
         this.active = selected;
         this.selectedwrdcode = wrdcode;
-        this.active.attr("fill", "tomato");
-        const bounds = this.path.bounds(d);
+        this.active.attr("fill", this.calculateStroke(clickedArea));
+        const bounds = this.path.bounds(clickedArea);
         const dx = bounds[1][0] - bounds[0][0];
         const dy = bounds[1][1] - bounds[0][1];
         const x = ((bounds[0][0] as number) + (bounds[1][0] as number)) / 2;
         const y = ((bounds[0][1] as number) + (bounds[1][1] as number)) / 2;
         const scale = Math.max(1, Math.min(8, 0.85 / Math.max(dx / this.width, dy / this.height)));
         const translate = [this.width / 2 - scale * x, this.height / 2 - scale * y];
-
         this.svg.transition().duration(750).call(this.zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
         this.emitted = true;
-        this.selectedWard.emit(wrdcode);
+        const children = this.getChildBoundaries(clickedArea.properties.code);
+        if (children.length) {
+            this.selectedArea.emit(wrdcode);
+        } else {
+            this.selectedWard.emit(wrdcode);
+        }
     }
 
     reset() {
         if (this.active) {
-            this.active.attr("fill", (d) => {
-                const value = this.crossfilterData["WDimension"].values.filter((x) => x.key === this.selectedwrdcode)[0].value;
-                return this.calculateFill(this.selectedwrdcode, value);
-            });
             this.active = null;
             this.selectedwrdcode = null;
             this.emitted = true;
             this.selectedWard.emit(null);
+        }
+        this.breadcrumbs = [];
+        const boundaries = d3.selectAll("path").filter(".feature");
+        if (boundaries["_groups"][0].length > 0) {
+            boundaries.remove();
+            // return;
         }
         this.svg.transition().duration(750).call(this.zoom.transform, d3.zoomIdentity);
     }
@@ -335,19 +316,9 @@ export class WardmapComponent implements OnInit, OnChanges {
 
     rolodex() {
         this.rolodex_stopped = !this.rolodex_stopped;
-        if (this.filteredWardList === undefined) {
-            this.filteredWardList = this.filterList();
-        }
         if (!this.rolodex_stopped) {
             this.playrandom();
         }
-    }
-
-    filterList() {
-        if (this.crossfilterData) {
-            return this.crossfilterData["WDimension"].values.filter((x) => x.value > 10).map((key) => key.key);
-        }
-        return this.wardlist;
     }
 
     playrandom() {
@@ -371,32 +342,55 @@ export class WardmapComponent implements OnInit, OnChanges {
         }, 60 * 1000);
     }
 
-    addBoundaries() {
-        const boundaries = d3.selectAll("path").filter(".boundary");
+    addBoundaries(parent) {
+        const geoms = this.getChildBoundaries(parent);
+        const selector: string = parent ? "feature" : "topLevel";
+        const boundaries = d3.selectAll("path").filter("." + selector);
         if (boundaries["_groups"][0].length > 0) {
-            boundaries.style("display", "block");
-            return;
+            boundaries.remove();
+            // return;
         }
-        const geoms = this.ICSboundaries;
-        const all = this.g.selectAll("path.boundary").data(geoms.features);
-
+        const all = this.g.selectAll("path." + selector).data(geoms);
         all.enter()
             .append("path")
             .attr("d", this.path)
-            .attr("class", "boundary")
+            .attr("class", selector)
             .attr("data-name", (d) => {
-                return d.properties.ICP;
+                return d.properties.district;
             })
             .attr("title", (d) => {
-                return d.properties.ICP;
+                return d.properties.district;
             })
             .attr("fill", (d) => {
-                const rgb = this.hexToRgb(this.calculateStroke(d.properties.ICP));
+                const rgb = this.hexToRgb(this.calculateStroke(d));
                 return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.2)";
             })
             .style("stroke", (d) => {
-                return this.calculateStroke(d.properties.ICP);
-            });
+                return this.calculateStroke(d);
+            })
+            .on("click", (_self) => this.boundaryClicked(_self));
+        this.zoom = d3zoom.zoom().on("zoom", () => {
+            this.zoomed();
+        });
+    }
+
+    getChildBoundaries(parent) {
+        const children = this.ICSboundaries.features.filter((feature) => {
+            return feature.properties.parent_code === parent;
+        });
+        return children;
+    }
+
+    getParentBoundaries(currentAreaCode) {
+        const current = this.ICSboundaries.features.filter((feature) => {
+            return feature.properties.code === currentAreaCode;
+        });
+        if (current.length) {
+            this.breadcrumbs.push(current[0]);
+            const parentAreaCode = current[0].properties.parent_code;
+            this.getParentBoundaries(parentAreaCode);
+        }
+        return;
     }
 
     boundaries() {
@@ -410,12 +404,48 @@ export class WardmapComponent implements OnInit, OnChanges {
         }
     }
 
-    calculateStroke(name) {
-        const organisation = this.organisations.filter((org) => org.icp === name);
-        if (organisation.length > 0) {
-            return organisation[0].color;
+    boundaryClicked(clickedDistrict) {
+        const code = clickedDistrict.properties.code;
+        const children = this.getChildBoundaries(code);
+        this.resetBreadCrumbs(code);
+        if (children.length) {
+            this.addBoundaries(clickedDistrict.properties.code);
+            this.clicked(clickedDistrict);
+        } else {
+            this.clicked(clickedDistrict);
         }
-        return "#000";
+    }
+
+    resetBreadCrumbs(code) {
+        this.breadcrumbs = [];
+        this.getParentBoundaries(code);
+        this.breadcrumbs.reverse();
+    }
+
+    breadcrumbClick(clickedDistrict) {
+        this.reset();
+        if (clickedDistrict) {
+            this.resetBreadCrumbs(clickedDistrict.properties.code);
+            this.addBoundaries(clickedDistrict.properties.code);
+            this.clicked(clickedDistrict);
+        }
+    }
+
+    calculateStroke(feature?) {
+        let colour = "#000";
+        if (feature) {
+            if (this.parentColours[feature.properties.code]) {
+                return this.parentColours[feature.properties.code].colour;
+            }
+        }
+        if (this.breadcrumbs) {
+            this.breadcrumbs.forEach((feature) => {
+                if (this.parentColours[feature.properties.code]) {
+                    colour = this.parentColours[feature.properties.code].colour;
+                }
+            });
+        }
+        return colour;
     }
 
     hexToRgb(hex) {
