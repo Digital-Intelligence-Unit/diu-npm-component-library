@@ -1,3 +1,5 @@
+import { SafeHtml } from "@angular/platform-browser";
+
 export interface iApplication {
     name: string;
     url: string;
@@ -80,4 +82,5 @@ export interface iNewsFeed {
     destination: string;
     type: string;
     priority: string;
+    html?: SafeHtml;
 }
