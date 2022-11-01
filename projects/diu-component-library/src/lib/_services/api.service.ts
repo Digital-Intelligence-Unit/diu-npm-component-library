@@ -1361,6 +1361,19 @@ export class APIService extends BaseService {
         return this.http.delete(this.baseUrl + "atomic/payloads/delete", { body: payload });
     }
 
+    // PBI Data
+    public getPBICategories() {
+        return this.http.get(this.baseUrl + "pbi/categories");
+    }
+
+    public getPBIMetrics(filters = {}) {
+        return this.http.get(this.baseUrl + "pbi/metrics", { params: filters });
+    }
+
+    public getPBIMetricData(id, filters = {}) {
+        return this.http.get(this.baseUrl + "pbi/metrics/" + encodeURIComponent(id), { params: filters });
+    }
+
     // GENERIC HTTP REST METHODS
 
     /**
