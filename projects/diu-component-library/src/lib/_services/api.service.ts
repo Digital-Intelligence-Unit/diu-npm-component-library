@@ -746,6 +746,10 @@ export class APIService extends BaseService {
         return this.http.delete(this.baseUrl + "real_time_surveillance/delete", { body: payload });
     }
 
+    public getSpreadsheetUploadUrl(payload: any) {
+        return this.http.post(this.baseUrl + "real_time_surveillance/get_spreadsheet_url", payload);
+    }
+
     // REQUESTS
     public getRequests(params) {
         return this.http.get(this.baseUrl + "requests", {
