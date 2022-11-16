@@ -1197,6 +1197,33 @@ export class APIService extends BaseService {
         });
     }
 
+    // USER SETTINGS
+
+    /**
+     * GET: Method to get the currently authenticated user's settings
+     */
+    public getUserSetting(filters = { name: null }) {
+        return this.http.get(this.baseUrl + "usersettings", {
+            params: filters
+        });
+    }
+
+    /**
+     * POST: Method to store settings for a user
+     */
+    public storeUserSetting(setting = { name: "", value: {} }) {
+        return this.http.post(this.baseUrl + "usersettings/store", setting);
+    }
+
+    /**
+     * DELETE: Method to delete settings for a user
+     */
+    public deleteUserSetting(params = { name: null }) {
+        return this.http.delete(this.baseUrl + "usersettings/store", {
+            params
+        });
+    }
+
     // VIRTUALWARDS
 
     /**
@@ -1344,6 +1371,23 @@ export class APIService extends BaseService {
 
     public deletePayload(payload: any) {
         return this.http.delete(this.baseUrl + "atomic/payloads/delete", { body: payload });
+    }
+
+    // PBI Data
+    public getPBICategories() {
+        return this.http.get(this.baseUrl + "pbi/categories");
+    }
+
+    public getPBIMetrics(filters = {}) {
+        return this.http.get(this.baseUrl + "pbi/metrics", { params: this.createHttpParams(filters) });
+    }
+
+    public getPBIMetricData(id, filters = {}) {
+        return this.http.get(`${this.baseUrl}pbi/metrics/${encodeURIComponent(id)}/data`, { params: this.createHttpParams(filters) });
+    }
+
+    public getPBIMetricLevels(id) {
+        return this.http.get(`${this.baseUrl}pbi/metrics/${encodeURIComponent(id)}/levels`);
     }
 
     // GENERIC HTTP REST METHODS
