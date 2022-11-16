@@ -1,5 +1,24 @@
-<div fxLayout="row wrap" style="margin-top: 10px; margin-bottom: 10px" *ngIf="orgChecking()">
-    <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100" *ngFor="let newsie of newstandItems">
-        <app-news-stand [selectedCCG]="selectedCCG" [thisNewsStand]="newsie"></app-news-stand>
+<div fxLayout="row wrap" style="margin-top: 10px 0 0">
+    <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="center center">
+        <mat-card style="width: 100%; margin-bottom: 0">
+            <mat-card-header (click)="display = !display">
+                <mat-card-title-group>
+                    <mat-card-title style="padding-top: 2px; padding-left: 15px">Blackpool Teaching Hospital</mat-card-title>
+                </mat-card-title-group>
+                <div fxFlex></div>
+                <div fxLayoutAlign="center center">
+                    <button mat-icon-button color="accent" title="Collapse">
+                        <mat-icon>swap_vertical_circle</mat-icon>
+                    </button>
+                </div>
+            </mat-card-header>
+        </mat-card>
     </div>
+    <mat-card style="width: 100%; margin-bottom: 0; margin-top: 0">
+        <div fxLayout="row wrap" style="margin-top: 10px; margin-bottom: 10px" *ngIf="orgChecking() && display">
+            <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100" *ngFor="let newsie of newstandItems">
+                <app-news-stand [selectedCCG]="selectedCCG" [thisNewsStand]="newsie"></app-news-stand>
+            </div>
+        </div>
+    </mat-card>
 </div>

@@ -15,6 +15,7 @@ export class AcuteHospitalStatsComponent implements OnInit {
     communityNews: number;
     tokenDecoded: any;
     orgCheck = false;
+    display = true;
 
     constructor(private apiService: APIService) {
         const token = localStorage.getItem("@@STATE");
