@@ -15,7 +15,6 @@ describe("DiuAngularHeaderComponent", () => {
             declarations: [DiuAngularHeaderComponent, SystemAlertDialogComponent],
             imports: [
                 MaterialModule,
-                PerfectScrollbarModule,
                 RouterModule.forRoot([{ path: "", component: DiuAngularHeaderComponent }]),
                 CommonModule,
             ],

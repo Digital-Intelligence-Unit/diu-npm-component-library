@@ -1375,11 +1375,15 @@ export class APIService extends BaseService {
     }
 
     public getPBIMetrics(filters = {}) {
-        return this.http.get(this.baseUrl + "pbi/metrics", { params: filters });
+        return this.http.get(this.baseUrl + "pbi/metrics", { params: this.createHttpParams(filters) });
     }
 
     public getPBIMetricData(id, filters = {}) {
-        return this.http.get(this.baseUrl + "pbi/metrics/" + encodeURIComponent(id), { params: filters });
+        return this.http.get(`${this.baseUrl}pbi/metrics/${encodeURIComponent(id)}/data`, { params: this.createHttpParams(filters) });
+    }
+
+    public getPBIMetricLevels(id) {
+        return this.http.get(`${this.baseUrl}pbi/metrics/${encodeURIComponent(id)}/levels`);
     }
 
     // GENERIC HTTP REST METHODS

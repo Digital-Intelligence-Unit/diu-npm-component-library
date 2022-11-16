@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 
 export class BaseService {
     /**
@@ -23,5 +23,19 @@ export class BaseService {
      */
     public checkendpoint() {
         return this.http.get(this.baseUrl, { responseType: "text" });
+    }
+
+    /**
+     * Method to convert params
+     */
+    public createHttpParams(params: any): HttpParams {
+        let httpParams: HttpParams = new HttpParams();
+        Object.keys(params).forEach(param => {
+            if (params[param]) {
+                httpParams = httpParams.set(param, params[param]);
+            }
+        });
+
+        return httpParams;
     }
 }
