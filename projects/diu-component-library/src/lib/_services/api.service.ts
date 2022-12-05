@@ -17,6 +17,7 @@ export class APIService extends BaseService {
     /**
      * Authentication API Service Constructor
      */
+    baseUrl: string;
     constructor(protected http: HttpClient, @Inject("environment") environment) {
         super(http, environment);
         const origin = window.location.href;
@@ -152,6 +153,10 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "capabilities/getByTeamIDs?teamname=" + teamname.toString());
     }
 
+    public getAllCapabilitiesById(capabilityIDs: string) {
+        return this.http.get(this.baseUrl + "capabilities/links/get_by_ids?capability_ids=" + capabilityIDs);
+    }
+
     public getAllCapabilitiesWithTeamAndUsername(teamname: string[], username: string) {
         return this.http.post(this.baseUrl + "capabilities/getAllCapabilitiesWithTeamAndUsername", {
             teamname,
@@ -194,6 +199,15 @@ export class APIService extends BaseService {
             link_type: linkType,
             link_id: linkId,
         });
+    }
+
+    /**
+     * POST: Method to sync a list of capability ids with a link and type combo
+     *
+     * @returns HTTP POST Promise
+     */
+    public syncCapabilityLinksAsAdmin(data) {
+        return this.http.post(this.baseUrl + "capabilities/links/sync/capability_admin", data);
     }
 
     // Cohorts
@@ -847,6 +861,14 @@ export class APIService extends BaseService {
             link_id: linkId,
         });
     }
+    /**
+     * POST: Method to sync a list of role ids with a link and type combo
+     *
+     * @returns HTTP POST Promise
+     */
+    public syncRoleLinksAsAdmin(data) {
+        return this.http.post(this.baseUrl + "roles/links/sync/role_admin", data);
+    }
 
     /**
      * DELETE: Method to delete roles links
@@ -970,6 +992,13 @@ export class APIService extends BaseService {
      */
     public getTeamMembersByCode(code: string) {
         return this.http.get(this.baseUrl + "teammembers/teamcode/" + code);
+    }
+
+    /**
+     * GET: Method to get all teams that match the code provided from the database
+     */
+    public getTeamMembersByMultipleCodes(data: string) {
+        return this.http.get(this.baseUrl + "teammembers/teamcodes/" + data);
     }
 
     /**
