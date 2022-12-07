@@ -154,7 +154,7 @@ export class APIService extends BaseService {
     }
 
     public getAllCapabilitiesById(capabilityIDs: string) {
-        return this.http.get(this.baseUrl + "capabilities/links/get_by_ids?capability_ids=" + capabilityIDs);
+        return this.http.get(this.baseUrl + "capabilities/links/?capability_ids=" + capabilityIDs);
     }
 
     public getAllCapabilitiesWithTeamAndUsername(teamname: string[], username: string) {
@@ -193,21 +193,13 @@ export class APIService extends BaseService {
      *
      * @returns HTTP POST Promise
      */
-    public syncCapabilityLinks(ids, linkType, linkId) {
+    public syncCapabilityLinks(ids, linkType, linkId, managed_capabilities) {
         return this.http.post(this.baseUrl + "capabilities/links/sync", {
             capabilities: ids,
             link_type: linkType,
             link_id: linkId,
+            managed_capabilities,
         });
-    }
-
-    /**
-     * POST: Method to sync a list of capability ids with a link and type combo
-     *
-     * @returns HTTP POST Promise
-     */
-    public syncCapabilityLinksAsAdmin(data) {
-        return this.http.post(this.baseUrl + "capabilities/links/sync/capability_admin", data);
     }
 
     // Cohorts
@@ -854,20 +846,13 @@ export class APIService extends BaseService {
      *
      * @returns HTTP POST Promise
      */
-    public syncRoleLinks(ids, linkType, linkId) {
+    public syncRoleLinks(ids, linkType, linkId, managedRoles) {
         return this.http.post(this.baseUrl + "roles/links/sync", {
             roles: ids,
             link_type: linkType,
             link_id: linkId,
+            managed_roles: managedRoles,
         });
-    }
-    /**
-     * POST: Method to sync a list of role ids with a link and type combo
-     *
-     * @returns HTTP POST Promise
-     */
-    public syncRoleLinksAsAdmin(data) {
-        return this.http.post(this.baseUrl + "roles/links/sync/role_admin", data);
     }
 
     /**
@@ -992,13 +977,6 @@ export class APIService extends BaseService {
      */
     public getTeamMembersByCode(code: string) {
         return this.http.get(this.baseUrl + "teammembers/teamcode/" + code);
-    }
-
-    /**
-     * GET: Method to get all teams that match the code provided from the database
-     */
-    public getTeamMembersByMultipleCodes(data: string) {
-        return this.http.get(this.baseUrl + "teammembers/teamcodes/" + data);
     }
 
     /**
@@ -1233,7 +1211,7 @@ export class APIService extends BaseService {
      */
     public getUserSetting(filters = { name: null }) {
         return this.http.get(this.baseUrl + "usersettings", {
-            params: filters
+            params: filters,
         });
     }
 
@@ -1249,7 +1227,7 @@ export class APIService extends BaseService {
      */
     public deleteUserSetting(params = { name: null }) {
         return this.http.delete(this.baseUrl + "usersettings/store", {
-            params
+            params,
         });
     }
 
