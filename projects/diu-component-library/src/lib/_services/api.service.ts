@@ -1379,8 +1379,8 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "pbi/metrics", { params: this.createHttpParams(filters) });
     }
 
-    public getPBIMetricData(id, filters = {}) {
-        return this.http.get(`${this.baseUrl}pbi/metrics/${encodeURIComponent(id)}/data`, { params: this.createHttpParams(filters) });
+    public getPBIMetricLevelData(id, filters = {}) {
+        return this.http.get(`${this.baseUrl}pbi/metric-levels/${encodeURIComponent(id)}/data`, { params: this.createHttpParams(filters) });
     }
 
     public getPBIMetricLevels(id) {
