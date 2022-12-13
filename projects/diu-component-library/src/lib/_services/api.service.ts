@@ -134,7 +134,7 @@ export class APIService extends BaseService {
     }
 
     public getAllCapabilitiesByTag(tags: string) {
-        return this.http.get(this.baseUrl + "capabilities/getByTag?tags=" + tags);
+        return this.http.get(this.baseUrl + "capabilities?tags=" + tags);
     }
 
     public getAllCapabilitiesByTagsAnd(tags: string[]) {
@@ -146,22 +146,12 @@ export class APIService extends BaseService {
     }
 
     public getCapabilitiesByRoleName(roleName: string) {
-        return this.http.get(this.baseUrl + "capabilities/getByRoleName?roleName=" + roleName);
+        return this.http.get(this.baseUrl + "capabilities/?role=" + roleName);
     }
 
-    public getAllCapabilitiesByTeamIDs(teamname: string[]) {
-        return this.http.get(this.baseUrl + "capabilities/getByTeamIDs?teamname=" + teamname.toString());
-    }
-
-    public getAllCapabilitiesById(capabilityIDs: string) {
-        return this.http.get(this.baseUrl + "capabilities/links/?capability_ids=" + capabilityIDs);
-    }
-
-    public getAllCapabilitiesWithTeamAndUsername(teamname: string[], username: string) {
-        return this.http.post(this.baseUrl + "capabilities/getAllCapabilitiesWithTeamAndUsername", {
-            teamname,
-            username,
-        });
+    public getAllLinkedCapabilitiesById(capabilityIDs: string) {
+        console.log(capabilityIDs);
+        return this.http.get(this.baseUrl + "capabilities?links=" + capabilityIDs);
     }
 
     public createCapabiltiesLink(capability_id: number, link_id: string, link_type: string, valuejson: any = null) {
