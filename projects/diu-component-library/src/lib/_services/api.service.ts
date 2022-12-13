@@ -17,6 +17,7 @@ export class APIService extends BaseService {
     /**
      * Authentication API Service Constructor
      */
+    baseUrl: string;
     constructor(protected http: HttpClient, @Inject("environment") environment) {
         super(http, environment);
         const origin = window.location.href;
@@ -133,7 +134,7 @@ export class APIService extends BaseService {
     }
 
     public getAllCapabilitiesByTag(tags: string) {
-        return this.http.get(this.baseUrl + "capabilities/getByTag?tags=" + tags);
+        return this.http.get(this.baseUrl + "capabilities?tags=" + tags);
     }
 
     public getAllCapabilitiesByTagsAnd(tags: string[]) {
@@ -145,18 +146,12 @@ export class APIService extends BaseService {
     }
 
     public getCapabilitiesByRoleName(roleName: string) {
-        return this.http.get(this.baseUrl + "capabilities/getByRoleName?roleName=" + roleName);
+        return this.http.get(this.baseUrl + "capabilities/?role=" + roleName);
     }
 
-    public getAllCapabilitiesByTeamIDs(teamname: string[]) {
-        return this.http.get(this.baseUrl + "capabilities/getByTeamIDs?teamname=" + teamname.toString());
-    }
-
-    public getAllCapabilitiesWithTeamAndUsername(teamname: string[], username: string) {
-        return this.http.post(this.baseUrl + "capabilities/getAllCapabilitiesWithTeamAndUsername", {
-            teamname,
-            username,
-        });
+    public getAllLinkedCapabilitiesById(capabilityIDs: string) {
+        console.log(capabilityIDs);
+        return this.http.get(this.baseUrl + "capabilities?links=" + capabilityIDs);
     }
 
     public createCapabiltiesLink(capability_id: number, link_id: string, link_type: string, valuejson: any = null) {
@@ -188,11 +183,12 @@ export class APIService extends BaseService {
      *
      * @returns HTTP POST Promise
      */
-    public syncCapabilityLinks(ids, linkType, linkId) {
+    public syncCapabilityLinks(ids, linkType, linkId, managed_capabilities) {
         return this.http.post(this.baseUrl + "capabilities/links/sync", {
             capabilities: ids,
             link_type: linkType,
             link_id: linkId,
+            managed_capabilities,
         });
     }
 
@@ -840,11 +836,12 @@ export class APIService extends BaseService {
      *
      * @returns HTTP POST Promise
      */
-    public syncRoleLinks(ids, linkType, linkId) {
+    public syncRoleLinks(ids, linkType, linkId, managedRoles) {
         return this.http.post(this.baseUrl + "roles/links/sync", {
             roles: ids,
             link_type: linkType,
             link_id: linkId,
+            managed_roles: managedRoles,
         });
     }
 
@@ -1204,7 +1201,7 @@ export class APIService extends BaseService {
      */
     public getUserSetting(filters = { name: null }) {
         return this.http.get(this.baseUrl + "usersettings", {
-            params: filters
+            params: filters,
         });
     }
 
@@ -1220,7 +1217,7 @@ export class APIService extends BaseService {
      */
     public deleteUserSetting(params = { name: null }) {
         return this.http.delete(this.baseUrl + "usersettings/store", {
-            params
+            params,
         });
     }
 
