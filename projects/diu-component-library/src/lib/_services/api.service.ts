@@ -1383,6 +1383,13 @@ export class APIService extends BaseService {
         return this.http.get(`${this.baseUrl}pbi/metric-levels/${encodeURIComponent(id)}/data`, { params: this.createHttpParams(filters) });
     }
 
+    public getPBIMetricLevelSpineData(id: string) {
+        return this.cacheHttpRequest(
+            this.http.get(`${this.baseUrl}pbi/metric-levels/${encodeURIComponent(id)}/spine-data`),
+            "pbi-spine-data-" + id
+        );
+    }
+
     public getPBIMetricLevels(id) {
         return this.http.get(`${this.baseUrl}pbi/metrics/${encodeURIComponent(id)}/levels`);
     }
@@ -1401,6 +1408,12 @@ export class APIService extends BaseService {
 
     public updatePBIView(payload) {
         return this.http.put(`${this.baseUrl}pbi/views/update`, payload);
+    }
+
+    public deletePBIView(id) {
+        return this.http.delete(`${this.baseUrl}pbi/views/delete`, {
+            body: { id }
+        });
     }
 
     // GENERIC HTTP REST METHODS

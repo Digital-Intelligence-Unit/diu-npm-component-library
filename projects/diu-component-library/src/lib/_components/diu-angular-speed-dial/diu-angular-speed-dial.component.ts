@@ -13,7 +13,8 @@ import { APIService } from "../../_services/api.service";
     styleUrls: ["./diu-angular-speed-dial.component.scss"],
     animations: speedDialFabAnimations,
 })
-export class DiuAngularSpeedDialComponent implements OnInit {
+export class
+DiuAngularSpeedDialComponent implements OnInit {
     @Output() newMFAToken = new EventEmitter<string>();
     @Output() errorMessage = new EventEmitter<string>();
     @Input() token: string;
