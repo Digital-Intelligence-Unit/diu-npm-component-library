@@ -270,6 +270,13 @@ export class APIService extends BaseService {
     }
 
     /**
+     * GET: Method to return all PHMv2 cohorts assigned to a team
+     */
+    public getCVICohortsByUsernameAndTeamcode(username: string, teamcode: string) {
+        return this.http.get(this.baseUrl + "cvicohorts/?username=" + username + "&teamcode=" + teamcode);
+    }
+
+    /**
      * POST: Method to create a new PHMv2 cohort
      */
     public createCVICohort(payload) {
