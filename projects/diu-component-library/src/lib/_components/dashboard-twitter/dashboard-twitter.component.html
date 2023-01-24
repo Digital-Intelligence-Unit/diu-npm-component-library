@@ -2,9 +2,9 @@
 <div fxLayout="row wrap" style="margin-top: 10px 0 0">
     <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="center center">
         <mat-card style="width: 100%; margin-bottom: 0">
-            <mat-card-header (click)="settings.display = !settings.display">
+            <mat-card-header (click)="settings.display = !settings.display" style="align-items: center;">
                 <mat-card-title-group>
-                    <mat-card-title style="padding-top: 2px; padding-left: 15px">Latest News (NHS Twitter)</mat-card-title>
+                    <mat-card-title>Latest News (NHS Twitter)</mat-card-title>
                 </mat-card-title-group>
                 <div fxFlex></div>
                 <div fxLayoutAlign="center center">
@@ -19,7 +19,7 @@
                 </button>
                 <div fxLayout="row wrap" fxLayoutGap="15px" *ngIf="settings.display && !isIE" fxLayoutAlign="center top">
                     <div *ngFor="let feed of twitterfeeds.slice(settings.index, settings.index + settings.numCols); let i = index" fxFlex>
-                        <iframe class="w-100" frameborder="0" height="600" [srcdoc]="feed.html"></iframe>
+                        <iframe class="w-100" frameborder="0" height="600" [src]="feed.html"></iframe>
                     </div>
                 </div>
                 <button class="nav right" mat-mini-fab color="primary" [disabled]="(settings.index + settings.numCols) === settings.total" (click)="nextSlide()">
