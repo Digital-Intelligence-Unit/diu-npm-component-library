@@ -284,6 +284,13 @@ export class APIService extends BaseService {
     }
 
     /**
+     * PUT: Method to update an existing PHMv2 cohort
+     */
+    public updateCVICohort(payload) {
+        return this.http.put(this.baseUrl + "cvicohorts/update", payload);
+    }
+
+    /**
      * DELETE: Method to delete an PHMv2 cohort
      */
     public deleteCVICohort(payload) {
