@@ -156,6 +156,7 @@ export class WardmapComponent implements OnInit, OnChanges {
             this.width = document.getElementById("wardMapMain").getBoundingClientRect().width;
             this.reset();
             this.drawGraph();
+            this.clickEvents("refresh");
         }, 250);
     }
 
