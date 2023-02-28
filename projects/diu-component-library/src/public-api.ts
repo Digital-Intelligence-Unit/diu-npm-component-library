@@ -80,6 +80,7 @@ export * from "./lib/_models/patient.interface";
 export * from "./lib/_models/postcodesio.interface";
 export * from "./lib/_models/population.interface";
 export * from "./lib/_models/chart.interface";
+export * from "./lib/_models/acorn.interface";
 export * from "./lib/_components/dashboard-population/lookups";
 
 /**

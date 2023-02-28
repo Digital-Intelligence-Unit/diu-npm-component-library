@@ -550,6 +550,14 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "otp/generate");
     }
 
+    // Acorn
+    /**
+     * GET: Method to retrieve acorn data
+     */
+    public getAcorn() {
+        return this.http.get(this.baseUrl + "acorn");
+    }
+
     // MOSAIC
 
     public getMosiacs() {

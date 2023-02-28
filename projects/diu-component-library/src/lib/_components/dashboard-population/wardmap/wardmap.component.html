@@ -12,31 +12,6 @@
         >
             <mat-icon>highlight_off</mat-icon>
         </button>
-        <br />
-        <button
-            type="button"
-            color="primary"
-            mat-mini-fab
-            (click)="rolodex()"
-            style="margin-bottom: 5px"
-            matTooltip="Play Random Selection"
-            matTooltipPosition="left"
-        >
-            <mat-icon *ngIf="rolodex_stopped">play_circle_filled</mat-icon>
-            <mat-icon *ngIf="!rolodex_stopped">pause_circle_filled</mat-icon>
-        </button>
-        <br />
-        <button
-            type="button"
-            [color]="boundaryShown ? 'primary' : 'secondary'"
-            mat-mini-fab
-            (click)="boundaries()"
-            style="margin-bottom: 5px"
-            matTooltip="Toggle Boundaries"
-            matTooltipPosition="left"
-        >
-            <mat-icon>select_all</mat-icon>
-        </button>
     </div>
 
     <div style="position: absolute; right: 5px; bottom: 10px">
