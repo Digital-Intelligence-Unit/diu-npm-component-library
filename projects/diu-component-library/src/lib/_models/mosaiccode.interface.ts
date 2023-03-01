@@ -9,6 +9,7 @@ export interface MosaicCode {
     feat4: string;
     feat5: string;
     feat6: string;
+    oldcode: string;
 }
 
 export const MosaicDomain = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "U"];
