@@ -270,6 +270,13 @@ export class APIService extends BaseService {
     }
 
     /**
+     * GET: Method to return all PHMv2 cohorts assigned to a team
+     */
+    public getCVICohortsByUsernameAndTeamcode(username: string, teamcode: string) {
+        return this.http.get(this.baseUrl + "cvicohorts/?username=" + username + "&teamcode=" + teamcode);
+    }
+
+    /**
      * POST: Method to create a new PHMv2 cohort
      */
     public createCVICohort(payload) {
@@ -541,6 +548,14 @@ export class APIService extends BaseService {
      */
     public generateOTPCode() {
         return this.http.get(this.baseUrl + "otp/generate");
+    }
+
+    // Acorn
+    /**
+     * GET: Method to retrieve acorn data
+     */
+    public getAcorn() {
+        return this.http.get(this.baseUrl + "acorn");
     }
 
     // MOSAIC
@@ -1412,7 +1427,7 @@ export class APIService extends BaseService {
 
     public deletePBIView(id) {
         return this.http.delete(`${this.baseUrl}pbi/views/delete`, {
-            body: { id }
+            body: { id },
         });
     }
 

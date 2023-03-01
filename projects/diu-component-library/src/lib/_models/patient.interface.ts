@@ -198,6 +198,7 @@ export interface PatientLinked {
     d_district: string;
     d_etl_run_date: Date;
     d_nhs_number: string;
+    execution_date?: string;
 }
 
 export interface VirtualWardPatient {
