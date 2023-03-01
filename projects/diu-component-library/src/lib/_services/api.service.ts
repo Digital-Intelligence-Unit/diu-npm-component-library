@@ -1371,8 +1371,8 @@ export class APIService extends BaseService {
     }
 
     // PBI Data
-    public getPBICategories() {
-        return this.http.get(this.baseUrl + "pbi/categories");
+    public getPBICategories(filters = {}) {
+        return this.http.get(this.baseUrl + "pbi/categories", { params: this.createHttpParams(filters) });
     }
 
     public getPBIMetrics(filters = {}) {
