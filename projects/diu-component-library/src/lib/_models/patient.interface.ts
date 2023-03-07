@@ -199,6 +199,11 @@ export interface PatientLinked {
     d_etl_run_date: Date;
     d_nhs_number: string;
     execution_date?: string;
+    mosaic_label?: string;
+    wellbeing_acorn_type?: string;
+    testdigest?: string;
+    household_type?: string;
+    household_group?: string;
 }
 
 export interface VirtualWardPatient {
