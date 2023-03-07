@@ -204,6 +204,8 @@ export interface PatientLinked {
     testdigest?: string;
     household_type?: string;
     household_group?: string;
+    frailty_text?: string;
+    deprivation_decile?: string;
 }
 
 export interface VirtualWardPatient {
