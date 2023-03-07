@@ -557,7 +557,7 @@ export class APIService extends BaseService {
     public getAcorn() {
         return this.http.get(this.baseUrl + "acorn");
     }
-    
+
     /**
      * GET: Method to retrieve acorn wellbeing data
      */
