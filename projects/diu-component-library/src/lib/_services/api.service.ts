@@ -1401,12 +1401,20 @@ export class APIService extends BaseService {
     }
 
     // PBI Data
-    public getPBICategories() {
-        return this.http.get(this.baseUrl + "pbi/categories");
+    public getPBICategories(filters = {}) {
+        return this.http.get(this.baseUrl + "pbi/categories", { params: this.createHttpParams(filters) });
+    }
+
+    public getPBIGeographies(filters = {}) {
+        return this.http.get(this.baseUrl + "pbi/geographies", { params: this.createHttpParams(filters) });
     }
 
     public getPBIMetrics(filters = {}) {
         return this.http.get(this.baseUrl + "pbi/metrics", { params: this.createHttpParams(filters) });
+    }
+
+    public getPBIMetricDashboard(payload) {
+        return this.http.post(this.baseUrl + "pbi/metric-dashboard", payload);
     }
 
     public getPBIMetricLevelData(id, filters = {}) {
