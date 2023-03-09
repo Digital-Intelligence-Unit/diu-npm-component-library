@@ -5,6 +5,13 @@ export interface AcornCode {
     colour: string;
 }
 
+export interface AcornWellbeingCode {
+    type: string;
+    name: string;
+    description: string;
+    colour: string;
+}
+
 export const AcornColours = {
     A:"#304DEC",
     B:"#6F83F3",

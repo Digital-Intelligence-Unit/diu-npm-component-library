@@ -558,6 +558,13 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "acorn");
     }
 
+    /**
+     * GET: Method to retrieve acorn wellbeing data
+     */
+    public getAcornWellbeing() {
+        return this.http.get(this.baseUrl + "acorn/wellbeing");
+    }
+
     // MOSAIC
 
     public getMosiacs() {
@@ -1261,6 +1268,14 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "warddetails");
     }
 
+    // Population Activity
+    /**
+     * GET: Get Data from population_activity
+     */
+    public getActivityData(data: string) {
+        return this.http.get(this.baseUrl + "population_activity/?" + data);
+    }
+
     // WARDS
 
     /**
@@ -1467,4 +1482,5 @@ export class APIService extends BaseService {
     public genericDeleteAPICall(url: string, payload) {
         return this.http.delete(url, { body: payload });
     }
+
 }
