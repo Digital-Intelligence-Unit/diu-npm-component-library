@@ -714,6 +714,13 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "patientlists/patientdetailsbynhsnumber?NHSNumber=" + nhsnumber);
     }
 
+    /**
+     * GET: Method to retrieve a patients details
+     */
+    public getPatientDetailWithDigest(digest: string) {
+        return this.http.get(this.baseUrl + "patientlists/patientdetailsbydigest?digest=" + digest);
+    }
+
     // PCNINFORMATION
 
     public getTopoJSON() {
