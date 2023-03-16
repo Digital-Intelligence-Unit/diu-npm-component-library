@@ -481,6 +481,7 @@ export class APIService extends BaseService {
      * POST: Method to retrieve LPRES validation key
      */
     public getLPRESViewerValidationKey(nhsnumber: string) {
+        nhsnumber = nhsnumber.toString();
         return this.http.post(this.baseUrl + "lpresviewer/generate-validation-key", {nhsnumber});
     }
 
