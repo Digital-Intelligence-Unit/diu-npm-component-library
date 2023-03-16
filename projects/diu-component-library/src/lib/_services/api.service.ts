@@ -481,7 +481,7 @@ export class APIService extends BaseService {
      * POST: Method to retrieve LPRES validation key
      */
     public getLPRESViewerValidationKey(nhsnumber: string) {
-        return this.http.post(this.baseUrl + "lpresviewer/generate-validation-key", nhsnumber);
+        return this.http.post(this.baseUrl + "lpresviewer/generate-validation-key", {nhsnumber: nhsnumber.toString()});
     }
 
     // MFA
@@ -704,7 +704,14 @@ export class APIService extends BaseService {
      * GET: Method to retrieve all patients from a cohort
      */
     public getPatientsByCohort(limit: string, cohort: string) {
-        return this.http.get(this.baseUrl + "patientlists/getPatientsByCohort?limit=" + limit + "&cohort=" + cohort);
+        return this.http.get(this.baseUrl + "patientlists/getPatientsByCohort?limit=" + limit + "&orderBy=nhs_number&cohort=" + cohort);
+    }
+
+    /**
+     * GET: Method to retrieve all patients from a cohort
+     */
+    public getPatientsByCohortCount(cohort: string) {
+        return this.http.get(this.baseUrl + "patientlists/getPatientsByCohort?count=true&cohort=" + cohort);
     }
 
     /**
