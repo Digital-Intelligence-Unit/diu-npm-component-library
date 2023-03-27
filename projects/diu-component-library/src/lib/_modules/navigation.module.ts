@@ -4,8 +4,6 @@ import { AccordionDirective } from "../_components/diu-angular-navigation/accord
 import { AccordionAnchorDirective } from "../_components/diu-angular-navigation/accordion/accordionanchor.directive";
 import { AccordionLinkDirective } from "../_components/diu-angular-navigation/accordion/accordionlink.directive";
 import { DiuAngularNavigationComponent } from "../_components/diu-angular-navigation/diu-angular-navigation.component";
-import { ValidateDialogComponent } from "../_components/diu-angular-speed-dial/dialogs/dialogvalidate";
-import { VerifyDialogComponent } from "../_components/diu-angular-speed-dial/dialogs/dialogverify";
 import { DiuAngularSpeedDialComponent } from "../_components/diu-angular-speed-dial/diu-angular-speed-dial.component";
 import { MaterialModule } from "./material.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -20,11 +18,9 @@ import { APIService } from "../_services/api.service";
         AccordionAnchorDirective,
         AccordionLinkDirective,
         AccordionDirective,
-        ValidateDialogComponent,
-        VerifyDialogComponent,
     ],
     imports: [MaterialModule, RouterModule, HttpClientModule, FormsModule, ReactiveFormsModule, CommonModule],
-    exports: [DiuAngularNavigationComponent, DiuAngularSpeedDialComponent, ValidateDialogComponent, VerifyDialogComponent],
+    exports: [DiuAngularNavigationComponent, DiuAngularSpeedDialComponent],
     providers: [APIService],
 })
 export class DiuAngularNavigationModule {}
