@@ -491,7 +491,7 @@ export class APIService extends BaseService {
      *
      * @returns HTTP GET Promise
      */
-    checkMFA() {
+    mfaDeviceAdded() {
         return this.http.get(this.baseUrl + "mfa/checkmfa/");
     }
 
@@ -500,8 +500,8 @@ export class APIService extends BaseService {
      *
      * @returns HTTP GET Promise
      */
-    registerMFA() {
-        return this.http.get(this.baseUrl + "mfa/register/");
+    mfaDeviceSetup() {
+        return this.http.get(this.baseUrl + "mfa/device/setup/");
     }
 
     /**
@@ -509,8 +509,8 @@ export class APIService extends BaseService {
      *
      * @returns HTTP POST Promise
      */
-    verifyMFA(token, tempSecret) {
-        return this.http.post(this.baseUrl + "mfa/verify/", {
+    mfaDeviceVerifySetup(token, tempSecret) {
+        return this.http.post(this.baseUrl + "mfa/device/verify/", {
             token,
             tempSecret,
         });
@@ -521,7 +521,7 @@ export class APIService extends BaseService {
      *
      * @returns HTTP POST Promise
      */
-    validateMFA(token) {
+    mfaValidate(token) {
         return this.http.post(this.baseUrl + "mfa/validate/", {
             token,
         });
@@ -532,22 +532,10 @@ export class APIService extends BaseService {
      *
      * @returns HTTP GET Promise
      */
-    unregisterMFA() {
-        return this.http.get(this.baseUrl + "mfa/unregister/");
-    }
-
-    /**
-     * POST: Method to validate a one-time token for access
-     */
-    public validateOTPCode(code: string) {
-        return this.http.post(this.baseUrl + "otp/validate", { code });
-    }
-
-    /**
-     * GET: Method to generate a one-time token for access
-     */
-    public generateOTPCode() {
-        return this.http.get(this.baseUrl + "otp/generate");
+    mfaDeviceRemove(payload) {
+        return this.http.delete(this.baseUrl + "mfa/device/remove", {
+            body: payload
+        });
     }
 
     // Acorn

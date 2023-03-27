@@ -23,8 +23,6 @@ export * from "./lib/_components/diu-angular-header/diu-angular-header.component
 export * from "./lib/_components/diu-angular-header/dialogs/systemalertdialog.component";
 export * from "./lib/_components/diu-angular-navigation/diu-angular-navigation.component";
 export * from "./lib/_components/diu-angular-speed-dial/diu-angular-speed-dial.component";
-export * from "./lib/_components/diu-angular-speed-dial/dialogs/dialogverify";
-export * from "./lib/_components/diu-angular-speed-dial/dialogs/dialogvalidate";
 export * from "./lib/_components/matcard/matcard.component";
 export * from "./lib/_components/_layouts/div-row.component";
 export * from "./lib/_components/_layouts/div-col.component";
