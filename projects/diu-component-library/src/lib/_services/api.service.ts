@@ -1386,6 +1386,14 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "atomic/payloads/" + payloadID);
     }
 
+    public getPayloadByIdType(type: string, id: string) {
+        return this.cacheHttpRequest(
+            this.http.get(`${this.baseUrl}atomic/payloads/${encodeURIComponent(type)}/${encodeURIComponent(id)}`),
+            `payload-${id}-${type}`,
+            { age: 60 }
+        );
+    }
+
     public getAllPayloads() {
         return this.http.get(this.baseUrl + "atomic/payloads");
     }
@@ -1413,6 +1421,10 @@ export class APIService extends BaseService {
 
     public getPBIMetrics(filters = {}) {
         return this.http.get(this.baseUrl + "pbi/metrics", { params: this.createHttpParams(filters) });
+    }
+
+    public getPBIMetricById(id) {
+        return this.http.get(`${this.baseUrl}pbi/metrics/${encodeURIComponent(id)}`);
     }
 
     public getPBIMetricDashboard(payload) {
