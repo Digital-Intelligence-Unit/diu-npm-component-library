@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { iFieldConfig, iValidator } from "../../../_models/field.interface";
 
 /**
@@ -17,7 +17,7 @@ export class DateComponent implements OnInit {
     /**
      * Initialise FormGroup
      */
-    group: FormGroup;
+    group: UntypedFormGroup;
 
     /**
      * Constructor Function
@@ -35,7 +35,7 @@ export class DateComponent implements OnInit {
             arrValidation = this.setValidation(this.field.validators);
         }
         // set the form control with validation in place
-        this.group.setControl(this.field.name, new FormControl(null, arrValidation));
+        this.group.setControl(this.field.name, new UntypedFormControl(null, arrValidation));
     }
 
     /**

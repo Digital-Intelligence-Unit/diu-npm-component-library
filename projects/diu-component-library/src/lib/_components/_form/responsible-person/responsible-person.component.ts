@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { iFieldConfig } from "../../../_models/field.interface";
 import { iFullUser } from "../../../_models/user.interface";
@@ -12,7 +12,7 @@ import { UserSearchDialogComponent } from "../../user-search/dialogusersearch";
 })
 export class ResponsiblePersonComponent implements OnInit, OnChanges {
     @Input() field: iFieldConfig;
-    @Input() group: FormGroup;
+    @Input() group: UntypedFormGroup;
 
     responsiblepeople: string[] = [];
 

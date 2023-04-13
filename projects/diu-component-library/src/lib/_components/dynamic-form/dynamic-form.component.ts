@@ -9,7 +9,7 @@ import {
     Output,
     ViewEncapsulation,
 } from "@angular/core";
-import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, UntypedFormArray } from "@angular/forms";
 import { iFieldConfig } from "../../_models/field.interface";
 import { APIService } from "../../_services/api.service";
 
@@ -56,12 +56,12 @@ export class DynamicFormComponent implements OnInit, OnChanges, AfterViewInit {
     /**
      * Initialise Form Group
      */
-    form: FormGroup;
+    form: UntypedFormGroup;
 
     /**
      * Dynamic Form Component Constructor
      */
-    constructor(private fb: FormBuilder, private changeDetectorRef: ChangeDetectorRef, private apiService: APIService) {}
+    constructor(private fb: UntypedFormBuilder, private changeDetectorRef: ChangeDetectorRef, private apiService: APIService) {}
 
     /**
      * Angular Life-cycle hook that is executed when the dynamic form component is initialized
@@ -101,9 +101,9 @@ export class DynamicFormComponent implements OnInit, OnChanges, AfterViewInit {
             Object.keys(config).forEach((key) => {
                 // If the form answers are in an array (checkboxes, for example)
                 if (typeof config[key] === "object") {
-                    const arrFormControls: FormArray = this.form.get(key) as FormArray;
+                    const arrFormControls: UntypedFormArray = this.form.get(key) as UntypedFormArray;
                     config[key].forEach((elem) => {
-                        arrFormControls.push(new FormControl(elem));
+                        arrFormControls.push(new UntypedFormControl(elem));
                     });
                     config[key] = arrFormControls;
                 } else {
@@ -191,7 +191,7 @@ export class DynamicFormComponent implements OnInit, OnChanges, AfterViewInit {
     /**
      * Marks each field as Touched to Trigger Validation functions
      */
-    validateAllFormFields(formGroup: FormGroup) {
+    validateAllFormFields(formGroup: UntypedFormGroup) {
         Object.keys(formGroup.controls).forEach((field) => {
             const control = formGroup.get(field);
             control.markAsTouched({ onlySelf: true });

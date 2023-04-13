@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output, ViewEncapsulation } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { iFieldConfig } from "../../../_models/field.interface";
 import { ImageUploaderOptions } from "ngx-image-uploader-next";
 import { ImageGalleryDialogComponent } from "../../image-gallery/image-gallery.component";
@@ -28,7 +28,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     /**
      * Initialise FormGroup
      */
-    group: FormGroup = new FormGroup({});
+    group: UntypedFormGroup = new UntypedFormGroup({});
 
     /**
      * Form Input Name
@@ -52,7 +52,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     constructor(public dialog: MatDialog, private changeDetectorRef: ChangeDetectorRef, @Inject("environment") environment) {
         if (environment && environment.websiteURL)
             this.options.uploadUrl = `https://images.${environment.websiteURL as string}/imageuploader/upload`;
-        this.group.setControl(this.formName, new FormControl(null, null));
+        this.group.setControl(this.formName, new UntypedFormControl(null, null));
     }
 
     /**
@@ -61,7 +61,7 @@ export class FileUploadComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         if (this.group && this.field) {
             this.formName = this.field.name;
-            this.group.setControl(this.formName, new FormControl(null, null));
+            this.group.setControl(this.formName, new UntypedFormControl(null, null));
             this.group.controls[this.formName].valueChanges.subscribe((data) => {
                 this.selectedImage = JSON.parse(data);
             });

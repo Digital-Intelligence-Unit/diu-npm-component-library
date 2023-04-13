@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { iFieldConfig } from "../../_models/field.interface";
 
 /**
@@ -18,12 +18,12 @@ export class AutocompleteComponent implements OnInit {
     /**
      * Initialise FormGroup
      */
-    group?: FormGroup;
+    group?: UntypedFormGroup;
 
     /**
      * formControl variable for if this component is a form element
      */
-    formControl = new FormControl(null, null);
+    formControl = new UntypedFormControl(null, null);
 
     /**
      * List of Items
@@ -46,8 +46,8 @@ export class AutocompleteComponent implements OnInit {
     ngOnInit() {
         // If the component is being included as a from input set the controls
         if (this.group) {
-            this.group.setControl(this.field.name, new FormControl(null, null));
-            this.formControl = this.group.controls[this.field.name] as FormControl;
+            this.group.setControl(this.field.name, new UntypedFormControl(null, null));
+            this.formControl = this.group.controls[this.field.name] as UntypedFormControl;
         }
     }
 
