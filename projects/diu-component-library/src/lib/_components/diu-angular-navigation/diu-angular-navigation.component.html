@@ -35,26 +35,29 @@
       </a>
   
       <!-- Submenu items -->
-      <a class="" appAccordionToggle href="javascript:;" *ngIf="menuitem.type === 'sub'">
+      <a class="subMenuParent" appAccordionToggle href="javascript:;" *ngIf="menuitem.type === 'sub'">
         <mat-icon *ngIf="!menuitem.icon.includes('fas fa')">{{ menuitem.icon }}</mat-icon>
         <i *ngIf="menuitem.icon.includes('fas fa')" [class]="menuitem.icon" style="margin-right: 8px; font-size: 20px"></i>
         <span>{{ menuitem.name }}</span>
         <span fxFlex></span>
         <span class="label label-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
-        <mat-icon class="dd-icon">keyboard_arrow_down</mat-icon>
+        <mat-icon class="dd-icon show-more-less">keyboard_arrow_down</mat-icon>
       </a>
       <mat-nav-list class="sub-item" *ngIf="menuitem.type === 'sub'">
         <mat-nav-list class="sub-item" *ngFor="let childitem of subChildren(menuitem.children)">
+          <mat-icon *ngIf="childitem.icon && !childitem.icon.includes('fas fa')">{{ childitem.icon }}</mat-icon>
           <i *ngIf="childitem.icon && childitem.icon.includes('fas fa')" [class]="childitem.icon" style="margin-right: 8px; font-size: 20px"></i>
-          {{ childitem.name }}
+          <span>{{ childitem.name }}</span>
         </mat-nav-list>
         <mat-list-item *ngFor="let childitem of nonsubChildren(menuitem.children)" routerLinkActive="selected">
           <a *ngIf="childitem.id" [routerLink]="childitem.state" class="relative" routerLinkActive="selected">
+            <mat-icon *ngIf="childitem.icon && !childitem.icon.includes('fas fa')">{{ menuitem.icon }}</mat-icon>
             <i *ngIf="childitem.icon && childitem.icon.includes('fas fa')" [class]="childitem.icon" style="margin-right: 8px; font-size: 20px"></i>
-            {{ childitem.name }}</a>
-          <a *ngIf="!childitem.id" [routerLink]="childitem.state" class="relative" routerLinkActive="selected">
+            <span>{{ childitem.name }}</span></a>
+            <a *ngIf="!childitem.id" [routerLink]="childitem.state" class="relative" routerLinkActive="selected">
+            <mat-icon *ngIf="childitem.icon && !childitem.icon.includes('fas fa')">{{ childitem.icon }}</mat-icon>
             <i *ngIf="childitem.icon && childitem.icon.includes('fas fa')" [class]="childitem.icon" style="margin-right: 8px; font-size: 20px"></i>
-            {{ childitem.name }}</a
+            <span>{{ childitem.name }}</span></a
           >
         </mat-list-item>
       </mat-nav-list>
@@ -71,4 +74,7 @@
   </div>
   <div class="profile-text" style="position: absolute; left: 5px; bottom: 5px" *ngIf="!minisidebar">
     <img src="assets/images/DIULogoWText.png" alt="Digital Intelligence Unit" width="230px" style="margin-top: 15px" />
+  </div>
+  <div class="profile-text" [style]="minisidebar ? 'position: absolute; bottom: 80px' : 'position: absolute; left: 5px; bottom: 60px'">
+    <img src="assets/images/ICB-logo.svg" alt="Lancashire & South Cumbria Integrated Care Board" width="100%" style="margin-top: 15px" />
   </div>
