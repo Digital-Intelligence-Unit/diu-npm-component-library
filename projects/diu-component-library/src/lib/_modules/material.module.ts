@@ -30,7 +30,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatDatetimepickerModule } from "@mat-datetimepicker/core";
-import { MatDatepickerModule } from "@angular/material/datepicker/";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatMomentDatetimeModule } from "@mat-datetimepicker/moment";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
