@@ -9,21 +9,35 @@ import { APIService } from "../../_services/api.service";
     templateUrl: "./dashboard-hospital-stats.component.html",
 })
 export class AcuteHospitalStatsComponent implements OnInit {
+
+    _user;
+    get user() {
+        // Get user
+        if(!this._user) {
+            let token = localStorage.getItem("@@STATE");
+            if(token) {
+                token = (JSON.parse(token)).stateauth.token;
+                this._user = jwt_decode(token);
+            }
+        }
+
+        // Return user
+        return this._user;
+    }
+
     selectedCCG: string;
     newstandItems: iNewsStand[];
     BTHToken: string;
     communityNews: number;
-    tokenDecoded: any;
-    orgCheck = false;
-    display = true;
+
+    authorised = false;
+    display = false;
 
     constructor(private apiService: APIService) {
-        const token = localStorage.getItem("@@STATE");
-        if (token) {
-            const jsonToken = JSON.parse(token);
-            const myToken = jsonToken.stateauth.token;
-            this.tokenDecoded = jwt_decode(myToken);
-            this.dashboardchecks();
+        // Check if user authorised
+        const capabilities = this.user.capabilities.map((item) => Object.keys(item)[0]);
+        if(capabilities.includes("Hall Monitor")) {
+            this.authorised = true;
         }
     }
 
@@ -160,20 +174,6 @@ export class AcuteHospitalStatsComponent implements OnInit {
                 ],
             },
         ];
-    }
-
-    dashboardchecks() {
-        if (this.tokenDecoded.authentication === "xfyldecoast") {
-            this.orgCheck = true;
-            this.loadNewsStand();
-        }
-    }
-
-    orgChecking() {
-        if (this.tokenDecoded && this.tokenDecoded.authentication === "xfyldecoast") {
-            return true;
-        }
-        return false;
     }
 
     updateBG(color: string) {
