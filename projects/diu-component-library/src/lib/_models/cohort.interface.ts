@@ -12,6 +12,7 @@ export class CVICohort {
     data = "{}";
     teamcode?: string;
     created: Date;
+    global?: boolean;
 
     public constructor(init?: Partial<Cohort>) {
         Object.assign(this, init);
