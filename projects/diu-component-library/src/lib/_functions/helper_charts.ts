@@ -73,7 +73,7 @@ export const matrixChartLabels = function(chart) {
     ctx.textAlign = "left";
     helpers.each(chart.data.datasets.forEach((dataset, i) => {
         const meta = chart.getDatasetMeta(i);
-        helpers.each(meta.data.forEach((bar: any, index) => {
+        helpers.each(meta.data.forEach((bar: any) => {
             ctx.textAlign = "center";
             ctx.fillText(
                 numberWithCommas(bar.$context.raw.v),
