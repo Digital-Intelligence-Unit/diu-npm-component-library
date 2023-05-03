@@ -25,7 +25,7 @@ export const createTooltip = (context) => {
     }
 
     // Set position
-    tooltipEl.style.top = tooltip.y + "px";
+    tooltipEl.style.top = String(tooltip.y) + "px";
     return tooltipEl;
 }
 
@@ -35,7 +35,7 @@ export const barChartValues = function(chart) {
     helpers.each(chart.data.datasets.forEach((dataset, i) => {
         const meta = chart.getDatasetMeta(i);
         helpers.each(meta.data.forEach((bar, index) => {
-            ctx.fillText(dataset.data[index], bar.base + 5, bar.y + 4);
+            ctx.fillText(dataset.data[index], Number(bar.base) + 5, Number(bar.y) + 4);
         }),this)
     }),this);
 }
@@ -54,16 +54,16 @@ export const barChartLabels = function(chart) {
                 const width = ctx.measureText(text).width;
                 ctx.fillStyle = chart?.config?.options?.plugins?.barChartLabels?.backdropColor;
                 ctx.fillRect(
-                    bar.base + 5 - (padding / 2),
+                    Number(bar.base) + 5 - (padding / 2),
                     bar.y - 5 - (padding / 2),
-                    width + padding,
+                    Number(width) + Number(padding),
                     10 + padding,
                 );
             }
 
             // Write text
             ctx.fillStyle = "#000";
-            ctx.fillText(text, bar.base + 5, bar.y + 4);
+            ctx.fillText(text, Number(bar.base) + 5, Number(bar.y) + 4);
         }),this)
     }),this);
 }
@@ -77,8 +77,8 @@ export const matrixChartLabels = function(chart) {
             ctx.textAlign = "center";
             ctx.fillText(
                 numberWithCommas(bar.$context.raw.v),
-                bar.x + (bar.width / 2),
-                bar.y + (bar.height / 2)
+                Number(bar.x) + (bar.width / 2),
+                Number(bar.y) + (bar.height / 2)
             );
         }),this)
     }),this);
