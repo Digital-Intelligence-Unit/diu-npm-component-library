@@ -43,6 +43,7 @@
         "@mat-datetimepicker/moment": "^7.0.1",
         "angular-bootstrap-md": "^12.1.0",
         "angular-signaturepad": "^1.0.4",
+        "chart.js": "^4.2.1",
         "compodoc": "^0.0.41",
         "crossfilter2": "^1.4.7",
         "d3": "^5.9.2",
