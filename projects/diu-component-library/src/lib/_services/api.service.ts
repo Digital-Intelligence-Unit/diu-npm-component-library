@@ -258,22 +258,39 @@ export class APIService extends BaseService {
     /**
      * GET: Method to return all PHMv2 cohorts assigned to a user
      */
-    public getCVICohortsByUsername(username: string) {
-        return this.http.get(this.baseUrl + "cvicohorts/?username=" + username);
+    public getCVICohortsByUsername(username: string, app: string) {
+        return this.http.get(this.baseUrl + "cvicohorts/?username=" + username + "&app=" + app);
     }
 
     /**
      * GET: Method to return all PHMv2 cohorts assigned to a team
      */
-    public getCVICohortsByTeamcode(teamcode: string) {
-        return this.http.get(this.baseUrl + "cvicohorts/?teamcode=" + teamcode);
+    public getCVICohortsByTeamcode(teamcode: string, app: string) {
+        return this.http.get(this.baseUrl + "cvicohorts/?teamcode=" + teamcode + "&app=" + app);
     }
 
     /**
      * GET: Method to return all PHMv2 cohorts assigned to a team
      */
-    public getCVICohortsByUsernameAndTeamcode(username: string, teamcode: string) {
-        return this.http.get(this.baseUrl + "cvicohorts/?username=" + username + "&teamcode=" + teamcode);
+    public getCVICohortsByUsernameAndTeamcode(username: string, teamcode: string, app:string, global?: boolean) {
+        let paramString = "";
+        if(username){
+            paramString += "&username=" + username;
+        }
+        if(teamcode){
+            paramString += "&teamcode=" + teamcode;
+        }
+        if(app){
+            paramString += "&app=" + app;
+        }
+        if(global){
+            paramString += "&global=true";
+        }
+        console.log(username);
+        console.log(teamcode);
+        console.log(app);
+        console.log(global);
+        return this.http.get(this.baseUrl + "cvicohorts/?" + paramString);
     }
 
     /**

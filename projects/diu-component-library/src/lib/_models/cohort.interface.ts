@@ -7,12 +7,14 @@ export interface Caseload {
 }
 
 export class CVICohort {
+    id?: number;
     username: string = null;
     name: string = null;
     data = "{}";
     teamcode?: string;
     created: Date;
     global?: boolean;
+    app?: string;
 
     public constructor(init?: Partial<Cohort>) {
         Object.assign(this, init);
