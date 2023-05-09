@@ -1,6 +1,6 @@
 {
     "name": "diu-component-library",
-    "version": "0.1.107",
+    "version": "0.2.0",
     "description": "NPM Repository for Digital Intelligence Unit @ NHS Blackpool CCG's Angular Component Library",
     "homepage": "https://github.com/morgans3/diu-npm-component-library",
     "bugs": {
@@ -13,6 +13,7 @@
         "url": "https://github.com/morgans3/diu-npm-component-library.git"
     },
     "peerDependencies": {
+        "@angular-eslint/template-parser": "^13.2.1",
         "@angular/animations": "14.3.0",
         "@angular/cdk": "14.2.7",
         "@angular/common": "14.3.0",
@@ -29,6 +30,7 @@
         "@mat-datetimepicker/moment": "^7.0.1",
         "angular-bootstrap-md": "^12.1.0",
         "angular-signaturepad": "^1.0.4",
+        "chart.js": "^4.2.1",
         "compodoc": "^0.0.41",
         "crossfilter2": "^1.4.7",
         "d3": "^5.9.2",

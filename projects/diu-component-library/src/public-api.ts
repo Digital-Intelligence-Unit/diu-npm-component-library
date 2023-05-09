@@ -102,3 +102,8 @@ export * from "./lib/_modules/material.module";
 export * from "./lib/_modules/header.module";
 export * from "./lib/_modules/navigation.module";
 export * from "./lib/_modules/services.module";
+
+/**
+ * Helpers List
+ */
+export * from "./lib/_functions/helper_charts";
