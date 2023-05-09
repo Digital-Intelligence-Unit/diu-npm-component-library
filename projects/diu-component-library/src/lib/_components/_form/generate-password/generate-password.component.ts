@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { iFieldConfig } from "../../../_models/field.interface";
 
 /**
@@ -19,7 +19,7 @@ export class PasswordGeneratorComponent implements OnInit {
     /**
      * Initialise FormGroup
      */
-    group: FormGroup = new FormGroup({});
+    group: UntypedFormGroup = new UntypedFormGroup({});
 
     /**
      * Form Input Name
@@ -51,7 +51,7 @@ export class PasswordGeneratorComponent implements OnInit {
      * Constructor Function
      */
     constructor() {
-        this.group.setControl(this.formName, new FormControl(null, null));
+        this.group.setControl(this.formName, new UntypedFormControl(null, null));
     }
 
     /**
@@ -61,7 +61,7 @@ export class PasswordGeneratorComponent implements OnInit {
     ngOnInit() {
         if (this.group && this.field) {
             this.formName = this.field.name;
-            this.group.setControl(this.formName, new FormControl(null, null));
+            this.group.setControl(this.formName, new UntypedFormControl(null, null));
             this.group.controls[this.formName].valueChanges.subscribe((data) => {
                 this.newPassword = data;
             });

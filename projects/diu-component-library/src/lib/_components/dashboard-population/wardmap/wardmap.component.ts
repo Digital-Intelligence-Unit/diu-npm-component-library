@@ -49,7 +49,6 @@ export class WardmapComponent implements OnInit, OnChanges {
     boundaryShown = true;
     ICSboundaries: any;
     projection: any;
-    svgtooltip: any;
     allwardDetails: iWardDetails[] = [];
     trigger: boolean;
     loading = true;
@@ -234,15 +233,6 @@ export class WardmapComponent implements OnInit, OnChanges {
         }
         d3.selectAll("path").filter(".boundary").style("display", text);
         this.svg.call(this.zoom);
-        if (this.svgtooltip) {
-            d3.select(".svgtooltip").remove();
-        }
-        this.svgtooltip = d3
-            .select("mat-sidenav-content")
-            .append("div")
-            .attr("class", "svgtooltip")
-            .style("opacity", 0)
-            .on("click", () => this.closesvgtooltip());
     }
 
     calculateFill(area?) {
@@ -460,10 +450,6 @@ export class WardmapComponent implements OnInit, OnChanges {
         const g = parseInt(result[2], 16);
         const b = parseInt(result[3], 16);
         return result ? { r, g, b } : null;
-    }
-
-    closesvgtooltip() {
-        this.svgtooltip.transition().duration(200).style("opacity", 0).style("z-index", -1);
     }
 
     updatePOI(type: string) {

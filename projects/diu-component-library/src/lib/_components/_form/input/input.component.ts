@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { iFieldConfig, iValidator } from "../../../_models/field.interface";
 import { inputComponentHandler } from "./input.component.handler";
 
@@ -18,7 +18,7 @@ export class InputComponent implements OnInit {
     /**
      * Initialise FormGroup
      */
-    group: FormGroup;
+    group: UntypedFormGroup;
     /**
      * Initialise dataHandler
      */
@@ -71,7 +71,7 @@ export class InputComponent implements OnInit {
         if (domElem && domElem.value) {
             currValue = domElem.value;
         }
-        this.group.setControl(this.dataHandler.name, new FormControl(currValue, arrValidation));
+        this.group.setControl(this.dataHandler.name, new UntypedFormControl(currValue, arrValidation));
     }
 
     /**
@@ -125,7 +125,7 @@ export class InputComponent implements OnInit {
     /**
      * Function to validate NHS numbers
      */
-    NHSnumberValidation(control: FormControl) {
+    NHSnumberValidation(control: UntypedFormControl) {
         // get NHS number from input
         let nhsNumber = control.value;
         if (nhsNumber) {
