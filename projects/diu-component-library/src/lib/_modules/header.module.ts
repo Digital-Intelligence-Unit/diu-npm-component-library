@@ -8,7 +8,6 @@ import { CommonModule } from "@angular/common";
 @NgModule({
     declarations: [DiuAngularHeaderComponent, SystemAlertDialogComponent],
     imports: [MaterialModule, RouterModule, CommonModule],
-    exports: [DiuAngularHeaderComponent, SystemAlertDialogComponent],
-    entryComponents: [SystemAlertDialogComponent],
+    exports: [DiuAngularHeaderComponent, SystemAlertDialogComponent]
 })
 export class DiuHeaderModule {}

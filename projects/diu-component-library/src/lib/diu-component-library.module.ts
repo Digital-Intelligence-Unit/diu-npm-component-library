@@ -132,25 +132,6 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         ResponsiblePersonComponent,
         InputChipListComponent,
     ],
-    entryComponents: [
-        DynamicFormComponent,
-        InputComponent,
-        SelectComponent,
-        DateComponent,
-        RadiobuttonComponent,
-        DisplayTableComponent,
-        UserSearchDialogComponent,
-        UserSearchComponent,
-        MatCardComponent,
-        DivRowComponent,
-        DivColComponent,
-        ProfileFullComponent,
-        CarouselComponent,
-        ScreenshotsComponent,
-        ApplicationInfoDialogComponent,
-        ApplicationTileComponent,
-        ResponsiblePersonComponent,
-    ],
-    providers: [ResizeService, BrokerService],
+    providers: [ResizeService, BrokerService]
 })
 export class DiuComponentLibraryModule {}

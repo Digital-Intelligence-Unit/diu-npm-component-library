@@ -28,19 +28,8 @@
                         "tsConfig": "projects/diu-component-library/tsconfig.spec.json",
                         "karmaConfig": "projects/diu-component-library/karma.conf.js"
                     }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": [
-                            "projects/diu-component-library/tsconfig.lib.json",
-                            "projects/diu-component-library/tsconfig.spec.json"
-                        ],
-                        "exclude": ["**/node_modules/**"]
-                    }
                 }
             }
         }
-    },
-    "defaultProject": "diu-component-library"
+    }
 }

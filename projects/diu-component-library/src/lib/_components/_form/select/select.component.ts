@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { iFieldConfig, iOptions, iValidator } from "../../../_models/field.interface";
 import { selectComponentHandler } from "./select.component.handler";
 
@@ -18,7 +18,7 @@ export class SelectComponent implements OnInit {
     /**
      * Initialise Form Group
      */
-    group: FormGroup;
+    group: UntypedFormGroup;
     /**
      * Initialise dataHandler
      */
@@ -87,6 +87,6 @@ export class SelectComponent implements OnInit {
                 currValue = option.optionKey;
             }
         });
-        this.group.setControl(this.dataHandler.name, new FormControl(currValue, arrValidation));
+        this.group.setControl(this.dataHandler.name, new UntypedFormControl(currValue, arrValidation));
     }
 }

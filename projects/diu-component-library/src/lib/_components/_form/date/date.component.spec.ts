@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { DateComponent } from "./date.component";
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "../../../_modules/material.module";
 
@@ -32,8 +32,8 @@ describe("DateComponent", () => {
                 },
             ],
         };
-        component.group = new FormGroup({
-            selectName: new FormControl(null, []),
+        component.group = new UntypedFormGroup({
+            selectName: new UntypedFormControl(null, []),
         });
         component.ngOnInit();
         fixture.detectChanges();

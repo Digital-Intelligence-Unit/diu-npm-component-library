@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { iFieldConfig, iOptions, iValidator } from "../../../_models/field.interface";
 
 /**
@@ -19,7 +19,7 @@ export class RadiobuttonComponent implements OnInit {
     /**
      * Initialise Form Group
      */
-    group: FormGroup;
+    group: UntypedFormGroup;
 
     /**
      * Radiobutton Component Constructor
@@ -71,7 +71,7 @@ export class RadiobuttonComponent implements OnInit {
         if (domElem && domElem.getAttribute("ng-reflect-value")) {
             currValue = domElem.getAttribute("ng-reflect-value");
         }
-        this.group.setControl(this.field.name, new FormControl(currValue, arrValidation));
+        this.group.setControl(this.field.name, new UntypedFormControl(currValue, arrValidation));
     }
 
     /**
