@@ -150,7 +150,6 @@ export class APIService extends BaseService {
     }
 
     public getAllLinkedCapabilitiesById(capabilityIDs: string) {
-        console.log(capabilityIDs);
         return this.http.get(this.baseUrl + "capabilities?links=" + capabilityIDs);
     }
 
@@ -286,10 +285,6 @@ export class APIService extends BaseService {
         if(global){
             paramString += "&global=true";
         }
-        console.log(username);
-        console.log(teamcode);
-        console.log(app);
-        console.log(global);
         return this.http.get(this.baseUrl + "cvicohorts/?" + paramString);
     }
 
