@@ -150,7 +150,6 @@ export class APIService extends BaseService {
     }
 
     public getAllLinkedCapabilitiesById(capabilityIDs: string) {
-        console.log(capabilityIDs);
         return this.http.get(this.baseUrl + "capabilities?links=" + capabilityIDs);
     }
 
@@ -258,22 +257,29 @@ export class APIService extends BaseService {
     /**
      * GET: Method to return all PHMv2 cohorts assigned to a user
      */
-    public getCVICohortsByUsername(username: string) {
-        return this.http.get(this.baseUrl + "cvicohorts/?username=" + username);
+    public getCVICohortsByUsername(username: string, app: string) {
+        return this.http.get(this.baseUrl + "cvicohorts/?username=" + username + "&app=" + app);
     }
 
     /**
      * GET: Method to return all PHMv2 cohorts assigned to a team
      */
-    public getCVICohortsByTeamcode(teamcode: string) {
-        return this.http.get(this.baseUrl + "cvicohorts/?teamcode=" + teamcode);
+    public getCVICohortsByTeamcode(teamcode: string, app: string) {
+        return this.http.get(this.baseUrl + "cvicohorts/?teamcode=" + teamcode + "&app=" + app);
     }
 
     /**
      * GET: Method to return all PHMv2 cohorts assigned to a team
      */
-    public getCVICohortsByUsernameAndTeamcode(username: string, teamcode: string) {
-        return this.http.get(this.baseUrl + "cvicohorts/?username=" + username + "&teamcode=" + teamcode);
+    public getCVICohortsByUsernameAndTeamcode(username: string, teamcode: string, app:string, global?: boolean) {
+        return this.http.get(this.baseUrl + "cvicohorts", {
+            params: this.createHttpParams({
+                username,
+                teamcode,
+                app,
+                global: global ? true :  null
+            })
+        });
     }
 
     /**

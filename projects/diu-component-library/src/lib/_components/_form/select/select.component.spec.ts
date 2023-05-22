@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { SelectComponent } from "./select.component";
 import { MaterialModule } from "../../../_modules/material.module";
 
-import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe("SelectComponent", () => {
@@ -44,8 +44,8 @@ describe("SelectComponent", () => {
                 },
             ],
         };
-        component.group = new FormGroup({
-            selectName: new FormControl(null, []),
+        component.group = new UntypedFormGroup({
+            selectName: new UntypedFormControl(null, []),
         });
         component.ngOnInit();
         fixture.detectChanges();

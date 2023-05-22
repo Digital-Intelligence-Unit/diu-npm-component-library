@@ -1,5 +1,5 @@
 import { ComponentFactoryResolver, Directive, Input, OnInit, ViewContainerRef } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { iFieldConfig } from "../../../_models/field.interface";
 import { componentMapper } from "../../_mapping/componentMapping";
 
@@ -18,7 +18,7 @@ export class DynamicFieldDirective implements OnInit {
     /**
      * Initialise Form Group
      */
-    @Input() group: FormGroup;
+    @Input() group: UntypedFormGroup;
     /**
      * Represents a component created by a ComponentFactory
      */
