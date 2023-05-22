@@ -1468,6 +1468,14 @@ export class APIService extends BaseService {
         });
     }
 
+    public retrieveFile(payload = { bucket_name: "", file_name: "" }) {
+        return this.http.get(this.baseUrl + "files/retrieve", { params: this.createHttpParams(payload) });
+    }
+
+    public uploadFile(payload = { bucket_name: "", file_name: "", file_type: "" }) {
+        return this.http.post(this.baseUrl + "files/upload", payload);
+    }
+
     // GENERIC HTTP REST METHODS
 
     /**
