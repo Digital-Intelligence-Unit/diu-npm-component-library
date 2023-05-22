@@ -272,20 +272,14 @@ export class APIService extends BaseService {
      * GET: Method to return all PHMv2 cohorts assigned to a team
      */
     public getCVICohortsByUsernameAndTeamcode(username: string, teamcode: string, app:string, global?: boolean) {
-        let paramString = "";
-        if(username){
-            paramString += "&username=" + username;
-        }
-        if(teamcode){
-            paramString += "&teamcode=" + teamcode;
-        }
-        if(app){
-            paramString += "&app=" + app;
-        }
-        if(global){
-            paramString += "&global=true";
-        }
-        return this.http.get(this.baseUrl + "cvicohorts/?" + paramString);
+        return this.http.get(this.baseUrl + "cvicohorts", {
+            params: this.createHttpParams({
+                username,
+                teamcode,
+                app,
+                global: global ? true :  null
+            })
+        });
     }
 
     /**
@@ -1478,6 +1472,14 @@ export class APIService extends BaseService {
         return this.http.delete(`${this.baseUrl}pbi/views/delete`, {
             body: { id },
         });
+    }
+
+    public retrieveFile(payload = { bucket_name: "", file_name: "" }) {
+        return this.http.get(this.baseUrl + "files/retrieve", { params: this.createHttpParams(payload) });
+    }
+
+    public uploadFile(payload = { bucket_name: "", file_name: "", file_type: "" }) {
+        return this.http.post(this.baseUrl + "files/upload", payload);
     }
 
     // GENERIC HTTP REST METHODS
