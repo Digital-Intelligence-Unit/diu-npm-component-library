@@ -35,7 +35,11 @@ export const barChartValues = function(chart) {
     helpers.each(chart.data.datasets.forEach((dataset, i) => {
         const meta = chart.getDatasetMeta(i);
         helpers.each(meta.data.forEach((bar, index) => {
-            ctx.fillText(dataset.data[index], Number(bar.base) + 5, Number(bar.y) + 4);
+            ctx.fillText(
+                new Intl.NumberFormat("en-GB", chart.options.scales["x"].ticks.format).format(dataset.data[index]),
+                Number(bar.base) + 5,
+                Number(bar.y) + 4
+            );
         }),this)
     }),this);
 }
