@@ -2,7 +2,7 @@
     <mat-card-content>
         <div fxLayout="row-wrap" fxLayoutGap="15px">
             <div fxFlex.gt-md="calc(30% - 15px)" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="space-around center">
-                <img class="appImage" src="/assets/icons/apps/{{ app.icon }}" (click)="open()" />
+                <img class="image" src="/assets/icons/apps/{{ app.icon }}" (click)="open()" />
             </div>
             <div fxFlex.gt-md="calc(70% - 15px)" fxFlex.gt-xs="100" fxFlex="100">
                 <h4 class="name">{{ app.name.split("_").join(" ") }}</h4>
