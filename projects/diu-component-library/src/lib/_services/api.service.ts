@@ -534,6 +534,17 @@ export class APIService extends BaseService {
     }
 
     /**
+     * Function to validate a device already registered for MFA
+     *
+     * @returns HTTP POST Promise
+     */
+    mfaInvalidate(token) {
+        return this.http.post(this.baseUrl + "mfa/invalidate/", {
+            token,
+        });
+    }
+
+    /**
      * Function to unregister a device for MFA
      *
      * @returns HTTP GET Promise
