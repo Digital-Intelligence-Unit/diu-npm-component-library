@@ -1436,6 +1436,14 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "pbi/geographies", { params: this.createHttpParams(filters) });
     }
 
+    public getPBIGeographiesByParent(parentGeoId, filters = {}) {
+        return this.http.get(
+            this.baseUrl + `pbi/geographies/${encodeURIComponent(parentGeoId)}/children`, {
+                params: this.createHttpParams(filters)
+            }
+        );
+    }
+
     public getPBIMetrics(filters = {}) {
         return this.http.get(this.baseUrl + "pbi/metrics", { params: this.createHttpParams(filters) });
     }
