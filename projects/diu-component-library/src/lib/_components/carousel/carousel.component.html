@@ -1,20 +1,16 @@
-<div fxLayout="row wrap" style="margin: 0px 15px">
-    <div fxFlex="100">
-        <mdb-carousel [isControls]="true" class="carousel slide" [animation]="'slide'" data-interval="20000">
-            <mdb-carousel-item style="height: 145px" *ngFor="let item of carouselItems">
-                <div class="view">
-                    <video class="video-fluid" autoplay loop style="width: 100%; margin-top: -35px">
-                        <source [src]="'/assets/images/' + item.video" type="video/mp4" />
-                    </video>
-                    <div [class]="item.class" mdbWavesEffect></div>
-                </div>
+<mdb-carousel [isControls]="true" class="carousel slide" [animation]="'slide'" data-interval="20000">
+    <mdb-carousel-item style="height: 145px" *ngFor="let item of carouselItems">
+        <div class="view">
+            <video class="video-fluid" autoplay loop style="width: 100%; margin-top: -35px">
+                <source [src]="'/assets/images/' + item.video" type="video/mp4" />
+            </video>
+            <div [class]="item.class" mdbWavesEffect></div>
+        </div>
 
-                <div class="carousel-caption">
-                    <div class="animated fadeInDown">
-                        <p [innerHTML]="item.innerhtml"></p>
-                    </div>
-                </div>
-            </mdb-carousel-item>
-        </mdb-carousel>
-    </div>
-</div>
+        <div class="carousel-caption">
+            <div class="animated fadeInDown">
+                <p [innerHTML]="item.innerhtml"></p>
+            </div>
+        </div>
+    </mdb-carousel-item>
+</mdb-carousel>
