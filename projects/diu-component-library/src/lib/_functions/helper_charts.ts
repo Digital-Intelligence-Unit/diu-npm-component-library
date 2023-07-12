@@ -10,7 +10,7 @@ export const createTooltip = (context) => {
         tooltipEl.style.pointerEvents = "none";
         tooltipEl.style.position = "absolute";
         tooltipEl.style["z-index"] = "100";
-        tooltipEl.style.transform = "translate(-50%, -50%)";
+        tooltipEl.style.transform = "translate(0, -50%)";
         tooltipEl.style.transition = "all .1s ease";
         tooltipEl.style.overflow = "auto";
         tooltipEl.style["border-radius"] = "15px";

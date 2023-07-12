@@ -1,26 +1,28 @@
 <div *ngIf="app" class="content">
-    <div class="sm:tw-w-2/6">
-        <img style="min-width: 60px; max-width: 110px;" class="tw-w-full tw-m-auto tw-p-3" src="/assets/icons/apps/{{ app.icon }}" (click)="open()" />
-    </div>
-    <div>
-        <h4 class="tw-text-2xl tw-my-base tw-mb-df">{{ app.name.split("_").join(" ") }}</h4>
-
-        <div class="tw-flex tw-align-items-center">
-            <button (click)="open()" class="btn btn-sm btn-blue rounded-lg tw-mr-df">
-                Launch <i class="fas fa-play-circle"></i>
-            </button>
-
-            <button class="btn-sm" *ngIf="app.description" [matTooltip]="app.description" style="cursor: help">
-                <i class="fas fa-info-circle tw-text-2xl tw-text-dblue"></i>
-            </button>
-
-            <button class="btn-sm" (click)="openUserGuide()" [matTooltip]="'User Guide'" [disabled]="!app.userguideURL">
-                <i class="fas fa-book tw-text-2xl tw-text-dblue"></i>
-            </button>
-
-            <button class="btn-sm" (click)="uninstall()" [matTooltip]="'Uninstall'" [disabled]="status !== 'installed'">
-                <i class="fas fa-trash tw-text-2xl tw-text-pink"></i>
-            </button>
+    <div class="tw-flex tw-items-center">
+        <div class="sm:tw-w-3/6">
+            <img style="min-width: 60px; max-width: 110px;" class="tw-w-full tw-ml-auto tw-p-3" src="/assets/icons/apps/{{ app.icon }}" (click)="open()" />
         </div>
+        <div>
+            <h4 class="tw-text-2xl tw-my-base">{{ app.name.split("_").join(" ") }}</h4>
+        </div>
+    </div>
+
+    <div class="tw-flex tw-items-center tw-justify-center tw-my-df">
+        <button (click)="open()" class="btn btn-sm btn-blue rounded-lg tw-mr-df">
+            Launch <i class="fas fa-play-circle"></i>
+        </button>
+
+        <button class="btn-sm" *ngIf="app.description" [matTooltip]="app.description" style="cursor: help">
+            <i class="fas fa-info-circle tw-text-2xl tw-text-dblue"></i>
+        </button>
+
+        <button class="btn-sm" (click)="openUserGuide()" [matTooltip]="'User Guide'" [disabled]="!app.userguideURL">
+            <i class="fas fa-book tw-text-2xl tw-text-dblue"></i>
+        </button>
+
+        <button class="btn-sm" (click)="uninstall()" [matTooltip]="'Uninstall'" [disabled]="status !== 'installed'">
+            <i class="fas fa-trash tw-text-2xl tw-text-pink"></i>
+        </button>
     </div>
 </div>
