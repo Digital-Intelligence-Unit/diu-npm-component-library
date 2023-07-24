@@ -8,13 +8,13 @@
                 </mat-card-title-group>
                 <div fxFlex></div>
                 <div fxLayoutAlign="center center">
-                    <button mat-icon-button color="accent" title="Collapse">
+                    <button class="tw-text-blue" title="Collapse">
                         <mat-icon>swap_vertical_circle</mat-icon>
                     </button>
                 </div>
             </mat-card-header>
             <mat-card-content>
-                <button class="nav left" mat-mini-fab color="primary" [disabled]="settings.index === 0" (click)="previousSlide()">
+                <button class="btn-rounded btn-blue nav left" [disabled]="settings.index === 0" (click)="previousSlide()">
                     <mat-icon>chevron_left</mat-icon>
                 </button>
                 <div fxLayout="row wrap" fxLayoutGap="15px" *ngIf="settings.display && !isIE" fxLayoutAlign="center top">
@@ -22,7 +22,7 @@
                         <iframe class="w-100" frameborder="0" height="600" [src]="feed.html"></iframe>
                     </div>
                 </div>
-                <button class="nav right" mat-mini-fab color="primary" [disabled]="(settings.index + settings.numCols) === settings.total" (click)="nextSlide()">
+                <button class="btn-rounded btn-blue nav right" [disabled]="(settings.index + settings.numCols) === settings.total" (click)="nextSlide()">
                     <mat-icon>chevron_right</mat-icon>
                 </button>
             </mat-card-content>

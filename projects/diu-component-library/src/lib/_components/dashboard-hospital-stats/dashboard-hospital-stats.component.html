@@ -1,12 +1,12 @@
 <div *ngIf="authorised" fxLayout="row wrap" style="margin-top: 10px 0 0">
-    <mat-card style="width: 100%; margin-bottom: 0; margin-top: 0">
+    <mat-card>
         <mat-card-header (click)="display = !display" style="align-items: center;">
             <mat-card-title-group>
                 <mat-card-title>Blackpool Teaching Hospital</mat-card-title>
             </mat-card-title-group>
             <div fxFlex></div>
             <div fxLayoutAlign="center center">
-                <button mat-icon-button color="accent" title="Collapse">
+                <button class="tw-text-blue" title="Collapse">
                     <mat-icon>swap_vertical_circle</mat-icon>
                 </button>
             </div>
