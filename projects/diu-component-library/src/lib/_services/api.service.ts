@@ -324,6 +324,13 @@ export class APIService extends BaseService {
     // DEMOGRAPHICS
 
     /**
+     * GET: Method to retrieve a patients nhs number
+     */
+    public getPatientNhsNumber(digest: string) {
+        return this.http.get(this.baseUrl + "patient/" + digest + "/nhs-number");
+    }
+
+    /**
      * GET: Method to retrieve a patients demographics
      */
     public getPatientDemographics(nhsnumber: string) {
@@ -335,13 +342,6 @@ export class APIService extends BaseService {
      */
     public valiateNHSNumber(payload: any) {
         return this.http.post(this.baseUrl + "demographics/valiateNHSNumber/", payload);
-    }
-
-    /**
-     * POST: Method to retrieve a patients NHS number
-     */
-    public findNHSNumber(payload: any) {
-        return this.http.post(this.baseUrl + "demographics/findMyNHSNumber/", payload);
     }
 
     // DOCOBO

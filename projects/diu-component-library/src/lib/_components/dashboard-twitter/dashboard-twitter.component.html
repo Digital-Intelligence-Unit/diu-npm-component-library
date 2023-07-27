@@ -19,7 +19,7 @@
                 </button>
                 <div fxLayout="row wrap" fxLayoutGap="15px" *ngIf="settings.display && !isIE" fxLayoutAlign="center top">
                     <div *ngFor="let feed of twitterfeeds.slice(settings.index, settings.index + settings.numCols); let i = index" fxFlex>
-                        <iframe class="w-100" frameborder="0" height="600" [src]="feed.html"></iframe>
+                        <iframe class="w-100" frameborder="0" height="600" [srcdoc]="feed.html"></iframe>
                     </div>
                 </div>
                 <button class="btn-rounded btn-blue nav right" [disabled]="(settings.index + settings.numCols) === settings.total" (click)="nextSlide()">
