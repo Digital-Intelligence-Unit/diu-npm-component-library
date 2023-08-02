@@ -35,7 +35,7 @@ import { DashboardTwitterComponent } from "./_components/dashboard-twitter/dashb
 import { SizeDetectorComponent } from "./_components/size-detector/size-detector.component";
 import { ResizeService } from "../lib/_services/resize.service";
 import { DashboardPopulationComponent } from "./_components/dashboard-population/dashboard-population.component";
-import { WardmapComponent } from "./_components/dashboard-population/wardmap/wardmap.component";
+import { WardMapComponent } from "./_components/dashboard-population/ward-map/ward-map.component";
 import { AcuteHospitalStatsComponent } from "./_components/dashboard-hospital-stats/dashboard-hospital-stats.component";
 import { NewsStandComponent } from "./_components/newsstand/newsstand.component";
 import { ScreenshotsComponent } from "./_components/screenshots/screenshots.component";
@@ -76,7 +76,7 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         DashboardTwitterComponent,
         SizeDetectorComponent,
         DashboardPopulationComponent,
-        WardmapComponent,
+        WardMapComponent,
         AcuteHospitalStatsComponent,
         NewsStandComponent,
         ScreenshotsComponent,
@@ -123,7 +123,7 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         DashboardTwitterComponent,
         SizeDetectorComponent,
         DashboardPopulationComponent,
-        WardmapComponent,
+        WardMapComponent,
         AcuteHospitalStatsComponent,
         NewsStandComponent,
         ScreenshotsComponent,

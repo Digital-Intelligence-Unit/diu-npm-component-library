@@ -1,82 +1,16 @@
 <mat-card>
-    <mat-card-content #deprivationChartParent>
-        <div class="row wrap" style="width: 100%">
-            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="center center">
-                <div fxLayout="row" style="width: 100%">
-                    <div fxFlex="100" fxLayoutAlign="center center">
-                        <mat-card-title style="text-decoration: underline; padding-left: 55px"> Population Health </mat-card-title>
-                    </div>
-                </div>
-            </div>
+    <mat-card-header class="tw-justify-center">
+        <mat-card-title>Population Health</mat-card-title>
+    </mat-card-header>
+    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-df2">
+        <div class="tw-flex-auto tw-w-full sm:tw-w-1/4">
+            <canvas #cfChartElementMale style="height: 70vh; min-height: 250px;"></canvas>
         </div>
-
-        <div class="row wrap" fxLayout="row" fxLayout.lt-md="column" (mouseout)="mouseLeave()">
-            <div
-                id="ageChartMaleMain"
-                fxFlex.gt-sm="25"
-                fxFlex.gt-xs="100"
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                (mouseout)="mouseLeave()"
-            >
-                <mat-card-content #ageChartMaleParent class="chartspace" style="min-height: 300px; padding: 0">
-                    <div id="ageChartMale"></div>
-                </mat-card-content>
-            </div>
-            <div id="wardMapMain" fxFlex.gt-sm="50" fxFlex.gt-xs="100" fxFlex="100" (mouseenter)="mouseLeave()">
-                <div style="display: block; width: 100%; padding-top: 30px">
-                    <mat-spinner *ngIf="allWardDetails.length === 0"></mat-spinner>
-                    <app-wardmap
-                        *ngIf="allWardDetails.length > 0"
-                        [crossfilterData]="filteredData"
-                        [inputTrigger]="mapReset"
-                        (selectedWard)="changedWard($event)"
-                        (selectedArea)="changedArea($event)"
-                        [wardDetails]="allWardDetails"
-                    >
-                    </app-wardmap>
-                </div>
-            </div>
-            <div
-                id="ageChartFemaleMain"
-                fxFlex.gt-sm="25"
-                fxFlex.gt-xs="100"
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                (mouseout)="mouseLeave()"
-            >
-                <mat-card-content #ageChartFemaleParent class="chartspace" style="min-height: 300px; padding: 0">
-                    <div id="ageChartFemale"></div>
-                </mat-card-content>
-            </div>
+        <div class="tw-flex-auto tw-w-full sm:tw-w-1/2">
+            <app-wardmap *ngIf="data" [data]="data"></app-wardmap>
         </div>
-
-        <div class="row wrap" (mouseenter)="mouseLeave()">
-            <div
-                id="deprivationChartMain"
-                fxFlex.gt-sm="100"
-                fxFlex.gt-xs="100"
-                fxFlex="100"
-                fxLayoutAlign="center center"
-                (mouseout)="mouseLeave()"
-            >
-                <div id="deprivationChart"></div>
-            </div>
+        <div class="tw-flex-auto tw-w-full sm:tw-w-1/4">
+            <canvas #cfChartElementFemale style="height: 70vh; min-height: 250px;"></canvas>
         </div>
-
-        <div style="width: 100%" [@expandCollapse]="openCloseWardAnim">
-            <div class="row wrap" fxLayout="row" fxLayout.lt-md="column" *ngIf="visible && selectedWardDetails">
-                <div fxFlex.gt-sm="20" fxFlex.gt-xs="30" fxFlex="100" fxLayoutAlign="center center">
-                    <img *ngIf="selectedWardDetails.image" [src]="'/assets/images/' + selectedWardDetails.image" style="max-width: 100%" />
-                </div>
-                <div fxFlex.gt-sm="80" fxFlex.gt-xs="70" fxFlex="100" style="padding-left: 15px">
-                    <h4 style="text-decoration: underline">
-                        <strong>Electoral Ward:</strong>&nbsp;&nbsp;{{ selectedWardDetails.name }}&nbsp;[{{ selectedWardDetails.code }}]
-                    </h4>
-                    <p [innerHTML]="selectedWardDetails.text" style="text-align: justify"></p>
-                    <a *ngIf="selectedWardDetails.link" target="_blank" [href]="selectedWardDetails.link">More Information...</a>
-                </div>
-            </div>
-        </div>
-    </mat-card-content>
+    </div>
 </mat-card>

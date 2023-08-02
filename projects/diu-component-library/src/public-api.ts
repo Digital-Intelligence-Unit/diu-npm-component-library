@@ -19,10 +19,6 @@ export * from "./lib/_components/_form/file-upload/file-upload.component";
 export * from "./lib/_components/_form/generate-password/generate-password.component";
 export * from "./lib/_components/image-gallery/image-gallery.component";
 export * from "./lib/_components/display-table/display-table.component";
-export * from "./lib/_components/diu-angular-header/diu-angular-header.component";
-export * from "./lib/_components/diu-angular-header/dialogs/systemalertdialog.component";
-export * from "./lib/_components/diu-angular-navigation/diu-angular-navigation.component";
-export * from "./lib/_components/diu-angular-speed-dial/diu-angular-speed-dial.component";
 export * from "./lib/_components/matcard/matcard.component";
 export * from "./lib/_components/_layouts/div-row.component";
 export * from "./lib/_components/_layouts/div-col.component";
@@ -35,7 +31,7 @@ export * from "./lib/_components/profile-full/profile-teams.component";
 export * from "./lib/_components/dashboard-twitter/dashboard-twitter.component";
 export * from "./lib/_components/size-detector/size-detector.component";
 export * from "./lib/_components/dashboard-population/dashboard-population.component";
-export * from "./lib/_components/dashboard-population/wardmap/wardmap.component";
+export * from "./lib/_components/dashboard-population/ward-map/ward-map.component";
 export * from "./lib/_components/dashboard-hospital-stats/dashboard-hospital-stats.component";
 export * from "./lib/_components/newsstand/newsstand.component";
 export * from "./lib/_components/screenshots/screenshots.component";
@@ -48,9 +44,6 @@ export * from "./lib/_components/input-chiplist/input-chiplist.component";
  * Directives List
  */
 export * from "./lib/_components/_form/dynamic-field/dynamic-field.directive";
-export * from "./lib/_components/diu-angular-navigation/accordion/accordion.directive";
-export * from "./lib/_components/diu-angular-navigation/accordion/accordionanchor.directive";
-export * from "./lib/_components/diu-angular-navigation/accordion/accordionlink.directive";
 export * from "./lib/_components/dynamic-component/dynamic-component.directive";
 
 /**
@@ -79,7 +72,7 @@ export * from "./lib/_models/postcodesio.interface";
 export * from "./lib/_models/population.interface";
 export * from "./lib/_models/chart.interface";
 export * from "./lib/_models/acorn.interface";
-export * from "./lib/_components/dashboard-population/lookups";
+export * from "./lib/_components/dashboard-population/helper";
 
 /**
  * Services List
@@ -99,8 +92,6 @@ export * from "./lib/_services/outbreak.service";
  */
 export * from "./lib/diu-component-library.module";
 export * from "./lib/_modules/material.module";
-export * from "./lib/_modules/header.module";
-export * from "./lib/_modules/navigation.module";
 export * from "./lib/_modules/services.module";
 
 /**
