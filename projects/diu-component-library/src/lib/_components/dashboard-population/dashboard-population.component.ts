@@ -1,6 +1,6 @@
 import { Component, ViewChild, Inject, AfterViewInit } from "@angular/core";
 import { APIService } from "../../_services/api.service";
-import { AgeChart } from "./age.chart";
+import { AgeChart } from "./shared/age.chart";
 
 @Component({
     selector: "app-population",

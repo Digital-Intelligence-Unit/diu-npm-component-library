@@ -1,3 +1,5 @@
+import * as d3 from "d3";
+
 // -------- TYPES  --------
 export interface iColorCodes {
     key: string;
@@ -97,4 +99,83 @@ export const calculateStroke = (feature?, breadcrumbs?) => {
     }
 
     return colour;
+}
+
+export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) => {
+    // Create tooltip
+    const tooltip = chartElement
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip mat-tooltip mat-tooltip-show")
+        .style("color", "white")
+        .style("border-radius", "4px");
+
+    // Store disabled
+    tooltip.disabled = false;
+    tooltip.disable = () => {
+        tooltip.disabled = true;
+        tooltip.style("opacity", 0);
+    };
+    tooltip.enable = () => {
+        tooltip.disabled = false;
+    };
+
+    // Add events
+    tooltipParent.on("mouseover", function (d) {
+        if(tooltip.disabled === false) {
+            // Show tooltip
+            tooltip.style("opacity", 1)
+
+            // Highlight area
+            d3.select(this).style("filter", "brightness(125%)");
+
+            tooltip
+                .html(tooltipContentCallback(d))
+                .style("left", (d3.select(this).node().getBBox().x as number).toString() + "px")
+                .style("top", (d3.select(this).node().getBBox().y as number).toString() + "px")
+        }
+    });
+
+    tooltipParent.on("mouseleave", function (d) {
+        // Hide tooltip
+        tooltip.style("opacity", 0)
+
+        // Return to normal
+        d3.select(this).style("filter", "unset");
+    });
+
+    return tooltip;
+}
+
+// -------- USEFUL CLASSES  --------
+export class ICSBoundaries {
+    _data;
+
+    constructor(data) {
+        this._data = data;
+    }
+
+    get() {
+        return this._data;
+    }
+
+    getParentBoundaries(currentAreaCode, icsSelectedBreadcrumbs) {
+        const current = this._data.features.filter((feature) => {
+            return feature.properties.code === currentAreaCode;
+        });
+
+        if (current.length) {
+            icsSelectedBreadcrumbs.push(current[0]);
+            const parentAreaCode = current[0].properties.parent_code;
+            this.getParentBoundaries(parentAreaCode, icsSelectedBreadcrumbs);
+        }
+
+        return;
+    }
+
+    getChildBoundaries(parent) {
+        return this._data.features.filter((feature) => {
+            return feature.properties.parent_code === parent;
+        });
+    }
 }
