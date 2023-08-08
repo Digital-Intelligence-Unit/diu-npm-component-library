@@ -1,14 +1,10 @@
 <div *ngIf="app" class="content">
-    <div class="tw-flex tw-items-center">
-        <div class="sm:tw-w-3/6">
-            <img style="min-width: 60px; max-width: 110px;" class="tw-w-full tw-ml-auto tw-p-3" src="/assets/icons/apps/{{ app.icon }}" (click)="open()" />
-        </div>
-        <div>
-            <h4 class="tw-text-2xl tw-my-base">{{ app.name.split("_").join(" ") }}</h4>
-        </div>
+    <div class="icon">
+        <img style="height: 110px;" class="tw-p-3 tw-m-auto" src="/assets/icons/apps/{{ app.icon }}" (click)="open()" />
+        <h4 class="tw-text-2xl tw-my-base">{{ app.name.split("_").join(" ") }}</h4>
     </div>
 
-    <div class="tw-flex tw-items-center tw-justify-center tw-my-df">
+    <div class="actions">
         <button (click)="open()" class="btn btn-sm btn-blue rounded-lg tw-mr-df">
             Launch <i class="fas fa-play-circle"></i>
         </button>
