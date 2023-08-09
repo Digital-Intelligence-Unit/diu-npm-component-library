@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import * as d3zoom from "d3-zoom";
 import { ICSBoundaries, calculateAreaFill, calculateStroke, hexToRgb, d3Tooltip } from "./helper";
+import { Subject } from "rxjs";
 
 export class D3Element {
 
@@ -20,15 +21,24 @@ export class D3Element {
     getChild(name): D3Element {
         return this.children[name];
     }
+
+    remove() {
+        for(const child in this.children) {
+            if(this.children[child].instance) {
+                this.children[child].instance.remove();
+            }
+        }
+        this.instance.remove();
+    }
 }
 
 export class WardChart {
 
-    active;
     domain;
     projection;
     zoom;
-    path;
+    path: D3Element;
+    activePath;
 
     icsBoundaries: ICSBoundaries;
     icsSelectedBreadcrumbs = [];
@@ -38,13 +48,13 @@ export class WardChart {
     mapElement;
     activeMapLayer;
 
-    constructor() {}
+    selectedGeo: Subject<{ id: string; value: any }> = new Subject();
 
     create(htmlElement, boundaries) {
         // Store useful vars
         this.mapElement = htmlElement.nativeElement;
         this.icsBoundaries = boundaries;
-        this.active = d3.select(null);
+        this.activePath = d3.select(null);
 
         // Create scale range
         this.domain = d3.scaleBand().range([0, 1]).domain([]);
@@ -67,7 +77,7 @@ export class WardChart {
         });
 
         // Add svg geo path
-        this.path = d3.geoPath().projection(this.projection);
+        this.path = new D3Element(d3.geoPath().projection(this.projection));
         if (!d3.select(this.mapElement).empty()) {
             d3.select(this.mapElement).select("svg").remove();
         }
@@ -112,11 +122,8 @@ export class WardChart {
         const selector: string = parent ? "feature" : "topLevel";
 
         // Clear existing
-        const boundaries = d3.selectAll("path").filter("." + selector);
-        if (boundaries["_groups"][0].length > 0) {
-            boundaries.remove();
-            // return;
-        }
+        const boundary = this.path.children[selector];
+        if (boundary) { boundary.remove(); }
 
         // Add data
         const all = this.map.getChild("g").instance
@@ -124,7 +131,36 @@ export class WardChart {
             .data(geoms);
 
         // Add path
-        const path = new D3Element(all.enter().append("path"));
+        const path = this.path.addChild(selector, all.enter().append("path"));
+
+        // Add boundaries
+        path.instance
+            .attr("d", this.path.instance)
+            .attr("class", selector)
+            .attr("data-name", (d) => {
+                return d.properties.district;
+            })
+            .attr("title", (d) => {
+                return d.properties.district;
+            })
+            .attr("fill", (d) => {
+                const rgb = hexToRgb(calculateStroke(d, this.icsSelectedBreadcrumbs));
+                return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.2)";
+            })
+            .style("stroke", (d) => {
+                return calculateStroke(d, this.icsSelectedBreadcrumbs);
+            })
+            .on("click", (selectedDistrict) => {
+                const code = selectedDistrict.properties.code;
+                const children = this.icsBoundaries.getChildBoundaries(code);
+                // this.icsSelectedBreadcrumbs.reset(code);
+                if (children.length) {
+                    this.updateBoundaries(selectedDistrict.properties.code);
+                    this._clickHandler(selectedDistrict);
+                } else {
+                    this._clickHandler(selectedDistrict);
+                }
+            });
 
         // Add place labels
         path.addChild("tooltip", d3Tooltip(
@@ -134,40 +170,14 @@ export class WardChart {
             }
         ));
 
-        // Add boundaries
-        path.instance
-            .attr("d", this.path)
-            .attr("class", selector)
-            .attr("data-name", (d) => {
-                return d.properties.district;
-            })
-            .attr("title", (d) => {
-                return d.properties.district;
-            })
-            .attr("fill", (d) => {
-                const rgb = hexToRgb(calculateStroke(d, this.icsSelectedBreadcrumbs.value));
-                return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.2)";
-            })
-            .style("stroke", (d) => {
-                return calculateStroke(d, this.icsSelectedBreadcrumbs.value);
-            })
-            .on("click", (selectedDistrict) => {
-                const code = selectedDistrict.properties.code;
-                const children = this.icsBoundaries.getChildBoundaries(code);
-                this.icsSelectedBreadcrumbs.reset(code);
-                if (children.length) {
-                    this.updateBoundaries(selectedDistrict.properties.code);
-                    this._clickHandler(selectedDistrict);
-                } else {
-                    this._clickHandler(selectedDistrict);
-                }
-            });
-
-        // Enable disable tooltips?
-        if(this.activeMapLayer) {
-            this.activeMapLayer.children["tooltip"].instance.disable();
+        // Disable top level labels?
+        if(this.path.getChild("topLevel")) {
+            if(selector === "feature") {
+                this.path.getChild("topLevel").children["tooltip"].instance.disable();
+            } else {
+                this.path.getChild("topLevel").children["tooltip"].instance.enable();
+            }
         }
-        this.activeMapLayer = path;
 
         //
         this.zoom = d3zoom.zoom().on("zoom", () => {
@@ -175,30 +185,37 @@ export class WardChart {
         });
     }
 
-    selectedWardcode;
+    selectedGeoCode;
     _clickHandler(clickedArea) {
-        const wrdcode = d3.select(clickedArea)["_groups"][0][0].properties.code;
+        // Get selected area code
+        const selectedGeoCode = d3.select(clickedArea)["_groups"][0][0].properties.code;
         const selected = d3
             .selectAll("path")
             .filter(".feature")
             .filter((x: any) => {
-                return x.properties.code === wrdcode;
+                return x.properties.code === selectedGeoCode;
             });
 
-        if (this.active) {
-            this.active.attr("fill", (clickedArea) => {
-                return calculateAreaFill(clickedArea, this.icsSelectedBreadcrumbs.value);
+        // Unfill currently selected?
+        if (this.activePath) {
+            // Reset to original fill
+            this.activePath.attr("fill", (clickedArea) => {
+                return calculateAreaFill(clickedArea, this.icsSelectedBreadcrumbs);
             });
-            if (wrdcode === this.selectedWardcode) {
+
+            // If same area reset
+            if (selectedGeoCode === this.selectedGeoCode) {
                 return this.resetMap();
             }
         }
 
-        this.active = selected;
-        this.selectedWardcode = wrdcode;
-        this.active.attr("fill", calculateStroke(clickedArea, this.icsSelectedBreadcrumbs.value));
+        // Fill selected area
+        this.activePath = selected;
+        this.selectedGeoCode = selectedGeoCode;
+        this.activePath.attr("fill", calculateStroke(clickedArea, this.icsSelectedBreadcrumbs));
 
-        const bounds = this.path.bounds(clickedArea);
+        // Zoom to selected area
+        const bounds = this.path.instance.bounds(clickedArea);
         const dx = bounds[1][0] - bounds[0][0];
         const dy = bounds[1][1] - bounds[0][1];
         const x = ((bounds[0][0] as number) + (bounds[1][0] as number)) / 2;
@@ -206,44 +223,46 @@ export class WardChart {
         const scale = Math.max(
             1,
             Math.min(8, 0.85 / Math.max(
-                dx / this.mapElement.nativeElement.offsetWidth, dy / this.mapElement.nativeElement.offsetHeight
+                dx / this.mapElement.offsetWidth, dy / this.mapElement.offsetHeight
             ))
         );
-
         this.map.instance.transition().duration(750).call(
             this.zoom.transform,
             d3.zoomIdentity.translate(
-                this.mapElement.nativeElement.offsetWidth / 2 - scale * x,
-                this.mapElement.nativeElement.offsetHeight / 2 - scale * y
+                this.mapElement.offsetWidth / 2 - scale * x,
+                this.mapElement.offsetHeight / 2 - scale * y
             ).scale(scale)
         );
 
-        // this.emitted = true;
-        const children = this.icsBoundaries.getChildBoundaries(clickedArea.properties.code)
-        // if (children.length) {
-        //     this.selectedArea.emit(wrdcode);
-        // } else {
-        //     this.selectedWard.emit(wrdcode);
-        // }
+        // Emit selection
+        const children = this.icsBoundaries.getChildBoundaries(clickedArea.properties.code);
+        if (children.length) {
+            this.selectedGeo.next({ id: "AreaLookup", value: selectedGeoCode});
+        } else {
+            this.selectedGeo.next({ id: "WDimension", value: selectedGeoCode});
+        }
     }
 
     resetMap() {
         // Reset variables
-        if (this.active) {
-            this.active = null;
-            this.selectedWardcode = null;
-            // this.emitted = true;
-            // this.selectedWard.emit(null);
+        if (this.activePath) {
+            this.activePath = null;
+            this.selectedGeoCode = null;
+            this.selectedGeo.next(null);
         }
 
+        // Clear breadcrumbs
         this.icsSelectedBreadcrumbs = [];
-        const boundaries = d3.selectAll("path").filter(".feature");
-        if (boundaries["_groups"][0].length > 0) {
-            boundaries.remove();
-            // return;
-        }
 
-        this.map.instance.transition().duration(750).call(this.map.instance.transform, d3.zoomIdentity);
+        // Remove lower level features
+        const boundary = this.path.children["feature"];
+        if (boundary) { boundary.remove(); }
+
+        // Enable top level tooltips
+        this.path.getChild("topLevel").children["tooltip"].instance.enable();
+
+        // Zoom back to bounds
+        this.map.instance.transition().duration(750).call(this.zoom.transform, d3.zoomIdentity);
     }
 
     zoomMap() {

@@ -78,7 +78,7 @@ export class DashboardPopulationComponent implements OnInit {
             setTimeout(() => {
                 window.dispatchEvent(new Event("resize"));
             }, 500);
-        });
+        });changedWard
     }
 
     onCollapse() {
