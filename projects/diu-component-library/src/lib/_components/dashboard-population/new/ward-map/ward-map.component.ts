@@ -9,13 +9,15 @@ import {
     AfterViewInit,
 } from "@angular/core";
 import { WardChart } from "../shared/ward.chart";
-import { ICSBoundaries } from "../shared/helper";
-import { APIService } from "../../../_services/api.service";
+import { FAB_BUTTONS, ICSBoundaries } from "../shared/helper";
+import { APIService } from "../../../../_services/api.service";
+import { speedDialFabAnimations } from "../../speed-dial.animation";
 
 @Component({
     selector: "app-wardmap",
     templateUrl: "./ward-map.component.html",
     encapsulation: ViewEncapsulation.None,
+    animations: [speedDialFabAnimations]
 })
 export class WardMapComponent implements AfterViewInit {
 
@@ -23,8 +25,9 @@ export class WardMapComponent implements AfterViewInit {
     @Output() areaSelected = new EventEmitter();
     @ViewChild("mapElement", { static: true }) mapElement: ElementRef;
 
-    icsBoundaries: ICSBoundaries
     wardChart: WardChart;
+    icsBoundaries: ICSBoundaries;
+    fabButtons = [];
 
     constructor(
         private apiService: APIService
@@ -34,7 +37,7 @@ export class WardMapComponent implements AfterViewInit {
         this.apiService.getWardDistricts().subscribe((res: any[]) => {
             // Draw intial map
             this.icsBoundaries = new ICSBoundaries(res);
-            this.wardChart = new WardChart();
+            this.wardChart = new WardChart(this.apiService);
             this.wardChart.create(this.mapElement, this.icsBoundaries);
 
             // Listen for selection
@@ -42,5 +45,9 @@ export class WardMapComponent implements AfterViewInit {
                 this.areaSelected.emit(value);
             });
         });
+    }
+
+    toggleFabButtons() {
+        this.fabButtons = this.fabButtons.length > 0 ? [] : FAB_BUTTONS;
     }
 }

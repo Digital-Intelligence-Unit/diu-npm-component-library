@@ -13,8 +13,8 @@ import {
 } from "@angular/core";
 import * as d3 from "d3";
 import * as d3zoom from "d3-zoom";
-import { APIService } from "../../../_services/api.service";
-import { speedDialFabAnimations } from "../../diu-angular-speed-dial/animations";
+import { APIService } from "../../../../_services/api.service";
+import { speedDialFabAnimations } from "../../speed-dial.animation";
 import { iWardDetails, iPointOfInterest } from "../lookups";
 
 @Component({

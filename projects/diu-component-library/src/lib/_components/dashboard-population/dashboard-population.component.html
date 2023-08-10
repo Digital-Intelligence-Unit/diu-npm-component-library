@@ -1,31 +1,13 @@
+<div class="tw-w-full tw-text-right tw-my-df">
+    <a class="tw-text-sm" href="javascript:;" (click)="setVersion(version == 'new' ? 'legacy' : 'new')">
+        Switch to {{version == 'new' ? 'legacy' : 'new'}} version
+    </a>
+</div>
+
 <mat-card>
     <mat-card-header class="tw-justify-center">
         <mat-card-title>Population Health</mat-card-title>
     </mat-card-header>
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-df2">
-        <div class="tw-flex-auto tw-w-full sm:tw-w-1/4">
-            <canvas #cfChartElementMale style="height: 70vh; min-height: 250px;"></canvas>
-        </div>
-        <div class="tw-flex-auto tw-w-full sm:tw-w-1/2">
-            <app-wardmap [data]="data" (areaSelected)="filterData($event)"></app-wardmap>
-        </div>
-        <div class="tw-flex-auto tw-w-full sm:tw-w-1/4">
-            <canvas #cfChartElementFemale style="height: 70vh; min-height: 250px;"></canvas>
-        </div>
-    </div>
 
-    <div *ngIf="areaDetails" class="tw-bg-grey tw-p-df2 tw-my-df2">
-        <div class="tw-flex tw-flex-col sm:tw-flex-row tw-items-center tw-gap-df2">
-            <div *ngIf="areaDetails.image">
-                <img src="/assets/images/{{areaDetails.image}}" class="tw-rounded" style="max-width: 225px" />
-            </div>
-            <div class="tw-flex-auto">
-                <h4>
-                    <strong>Electoral Ward:</strong>&nbsp;&nbsp;{{ areaDetails.name }}&nbsp;[{{ areaDetails.code }}]
-                </h4>
-                <p [innerHTML]="areaDetails.text"></p>
-                <a *ngIf="areaDetails.link" target="_blank" [href]="areaDetails.link">More Information...</a>
-            </div>
-        </div>
-    </div>
+    <div #mapContainer class="tw-w-full"></div>
 </mat-card>

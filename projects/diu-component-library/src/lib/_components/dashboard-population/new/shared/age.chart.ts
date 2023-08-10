@@ -1,5 +1,5 @@
 import Chart from "chart.js/auto";
-import { createTooltip, numberWithCommas } from "../../../_functions/helper_charts";
+import { createTooltip, numberWithCommas } from "../../../../_functions/helper_charts";
 export class AgeChart {
 
     id;

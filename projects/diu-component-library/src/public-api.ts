@@ -31,7 +31,6 @@ export * from "./lib/_components/profile-full/profile-teams.component";
 export * from "./lib/_components/dashboard-twitter/dashboard-twitter.component";
 export * from "./lib/_components/size-detector/size-detector.component";
 export * from "./lib/_components/dashboard-population/dashboard-population.component";
-export * from "./lib/_components/dashboard-population/ward-map/ward-map.component";
 export * from "./lib/_components/dashboard-hospital-stats/dashboard-hospital-stats.component";
 export * from "./lib/_components/newsstand/newsstand.component";
 export * from "./lib/_components/screenshots/screenshots.component";
@@ -72,7 +71,7 @@ export * from "./lib/_models/postcodesio.interface";
 export * from "./lib/_models/population.interface";
 export * from "./lib/_models/chart.interface";
 export * from "./lib/_models/acorn.interface";
-export * from "./lib/_components/dashboard-population/shared/helper";
+export * from "./lib/_components/dashboard-population/new/shared/helper";
 
 /**
  * Services List

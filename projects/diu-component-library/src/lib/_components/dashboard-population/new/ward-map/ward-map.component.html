@@ -1,0 +1,39 @@
+<div #mapElement class="map">
+    <div class="tw-absolute tw-right-1 tw-top-1">
+        <button
+            type="button"
+            class="btn-rounded btn-pink"
+            (click)="wardChart.resetMap()"
+            matTooltip="Reset"
+            matTooltipPosition="left"
+        >
+            <mat-icon>highlight_off</mat-icon>
+        </button>
+    </div>
+
+    <div class="tw-absolute tw-right-0 tw-bottom-0 tw-w-full tw-px-df">
+        <div class="tw-flex tw-flex-row tw-items-end tw-gap-df">
+            <div class="tw-flex-auto tw-w-3/4">
+                <div class="tw-bg-white tw-rounded tw-p-df">
+                    <p class="tw-text-blue tw-font-bold tw-text-sm tw-mb-0">{{ wardChart?.hoveredGeo }}</p>
+                </div>
+            </div>
+            <div class="tw-flex-auto tw-w-1/4 tw-p-df tw-text-right">
+                <div class="tw-flex tw-ml-auto tw-flex-col tw-w-fit" [@speedDialStagger]="fabButtons.length">
+                    <button
+                        *ngFor="let btn of fabButtons"
+                        (click)="wardChart.togglePoi(btn)"
+                        class="btn-rounded btn-grey {{wardChart?.pointsOfInterestSelected.includes(btn.datatype) ? 'tw-bg-grey-dark': ''}} tw-mb-df"
+                        [matTooltip]="btn.tooltip"
+                        matTooltipPosition="above"
+                    >
+                        <mat-icon>{{ btn.icon }}</mat-icon>
+                    </button>
+                </div>
+                <button class="btn-rounded btn-blue" (click)="toggleFabButtons()">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

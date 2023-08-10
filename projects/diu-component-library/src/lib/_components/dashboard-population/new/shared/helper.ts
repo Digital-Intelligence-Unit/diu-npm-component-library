@@ -39,6 +39,69 @@ export const PlaceColorCodes = {
     }
 }
 
+export const FAB_BUTTONS =  [
+    {
+        icon: "refresh",
+        tooltip: "Clear Extras",
+        datatype: "refresh",
+    },
+    {
+        icon: "location_city",
+        tooltip: "Toggle Cities & Towns",
+        datatype: "place",
+    },
+    {
+        icon: "local_hospital",
+        tooltip: "Toggle Hospitals",
+        datatype: "hospital",
+    },
+    {
+        icon: "local_pharmacy",
+        tooltip: "Toggle Pharmacies",
+        datatype: "local_pharmacy",
+    },
+    {
+        icon: "more_time",
+        tooltip: "Toggle Out Of Hours Practice",
+        datatype: "OOH_Practice",
+    },
+    {
+        icon: "transfer_within_a_station",
+        tooltip: "Toggle Walk in Centre",
+        datatype: "WIC_Practice",
+    },
+    {
+        icon: "healing",
+        tooltip: "Toggle Urgent Emergency Care",
+        datatype: "Urgent_Emergency_Care",
+    },
+];
+
+export const GPPracticeTypes = {
+    0: "Other",
+    1: "WIC_Practice",
+    2: "OOH_Practice",
+    3: "WIC_OOH_Practice",
+    4: "GP_Practice",
+    8: "Public_Health_Service",
+    9: "Community_Health_Service",
+    10: "Hospital_Service",
+    11: "Optometry_Service",
+    12: "Urgent_Emergency_Care",
+    13: "Hospice",
+    14: "Care_Home_Nursing_Home",
+    15: "Border_Force",
+    16: "Young_Offender_Institution",
+    17: "Secure_Training_Centre",
+    18: "Secure_Childrens_Home",
+    19: "Immigration_Removal_Centre",
+    20: "Court",
+    21: "Police_Custody",
+    22: "Sexual_Assault_Referral_Centre_(SARC)",
+    24: "Other_Justice_Estate",
+    25: "Prison",
+}
+
 export interface iWardDetails {
     code: string;
     name: string;
@@ -102,49 +165,90 @@ export const calculateStroke = (feature?, breadcrumbs?) => {
 }
 
 export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) => {
-    // Create tooltip
-    const tooltip = chartElement
-        .append("div")
-        .style("opacity", 0)
-        .attr("class", "tooltip mat-tooltip mat-tooltip-show")
-        .style("color", "white")
-        .style("border-radius", "4px");
+    // Get tooltip container
+    let tooltipContainer = chartElement.select(".tooltip");
+    if(tooltipContainer.empty()) {
+        tooltipContainer = chartElement
+            .append("div")
+            .style("opacity", 0)
+            .attr("class", "tooltip mat-tooltip mat-tooltip-show")
+            .style("color", "white")
+            .style("border-radius", "4px");
+    }
 
-    // Store disabled
-    tooltip.disabled = false;
-    tooltip.disable = () => {
-        tooltip.disabled = true;
-        tooltip.style("opacity", 0);
+    // Store instance
+    const instance: any = {
+        disabled: false,
+        remove: () => {
+            tooltipParent.on("mouseover", null);
+            tooltipParent.on("mouseleave", null);
+        }
     };
-    tooltip.enable = () => {
-        tooltip.disabled = false;
+
+    // Add disable/enable
+    instance.disable = () => {
+        instance.disabled = true;
+        tooltipContainer.style("opacity", 0);
+    };
+    instance.enable = () => {
+        instance.disabled = false;
     };
 
     // Add events
     tooltipParent.on("mouseover", function (d) {
-        if(tooltip.disabled === false) {
+        console.log("mouseover");
+        if(instance.disabled === false) {
             // Show tooltip
-            tooltip.style("opacity", 1)
+            tooltipContainer.style("opacity", 1)
 
-            // Highlight area
-            d3.select(this).style("filter", "brightness(125%)");
-
-            tooltip
+            tooltipContainer
                 .html(tooltipContentCallback(d))
                 .style("left", (d3.select(this).node().getBBox().x as number).toString() + "px")
                 .style("top", (d3.select(this).node().getBBox().y as number).toString() + "px")
         }
     });
 
-    tooltipParent.on("mouseleave", function (d) {
+    tooltipParent.on("mouseleave", (d) => {
         // Hide tooltip
-        tooltip.style("opacity", 0)
-
-        // Return to normal
-        d3.select(this).style("filter", "unset");
+        tooltipContainer.style("opacity", 0);
     });
 
-    return tooltip;
+    return instance;
+}
+
+export const d3ExternalTooltip = (tooltipParent, tooltipContentCallback) => {
+    // Store instance
+    const instance: any = {
+        disabled: false,
+        remove: () => {
+            tooltipParent.on("mouseover", null);
+            tooltipParent.on("mouseleave", null);
+        }
+    };
+
+    // Add disable/enable
+    instance.disable = () => {
+        instance.disabled = true;
+    };
+    instance.enable = () => {
+        instance.disabled = false;
+    };
+
+    // Add events
+    tooltipParent.on("mouseover", (d) => {
+        console.log("mouseover");
+        if(instance.disabled === false) {
+            tooltipContentCallback(d);
+        }
+    });
+
+    tooltipParent.on("mouseleave", (d) => {
+        if(instance.disabled === false) {
+            tooltipContentCallback(null);
+        }
+    });
+
+    return instance;
 }
 
 // -------- USEFUL CLASSES  --------

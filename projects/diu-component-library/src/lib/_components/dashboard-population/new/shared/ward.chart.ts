@@ -1,7 +1,10 @@
 import * as d3 from "d3";
 import * as d3zoom from "d3-zoom";
-import { ICSBoundaries, calculateAreaFill, calculateStroke, hexToRgb, d3Tooltip } from "./helper";
-import { Subject } from "rxjs";
+import { ICSBoundaries, calculateAreaFill, calculateStroke, hexToRgb, d3Tooltip, iPointOfInterest, GPPracticeTypes, d3ExternalTooltip } from "./helper";
+import { Subject, forkJoin } from "rxjs";
+import { APIService } from "../../../../_services/api.service";
+import { Observable, of } from "rxjs";
+import { map } from "rxjs/operators";
 
 export class D3Element {
 
@@ -48,7 +51,12 @@ export class WardChart {
     mapElement;
     activeMapLayer;
 
+    hoveredGeo = "";
     selectedGeo: Subject<{ id: string; value: any }> = new Subject();
+
+    constructor(
+        private apiService: APIService
+    ) {}
 
     create(htmlElement, boundaries) {
         // Store useful vars
@@ -163,10 +171,9 @@ export class WardChart {
             });
 
         // Add place labels
-        path.addChild("tooltip", d3Tooltip(
-            d3.select(this.mapElement), path.instance,
-            (d) => {
-                return `<div class='tw-px-df'>${d.properties.area as string}</div>`
+        path.addChild("tooltip", d3ExternalTooltip(
+            path.instance, (d) => {
+                this.hoveredGeo = d?.properties.area || this.hoveredGeo;
             }
         ));
 
@@ -183,6 +190,133 @@ export class WardChart {
         this.zoom = d3zoom.zoom().on("zoom", () => {
             this.zoomMap();
         });
+    }
+
+    _pointsOfInterestData;
+    pointsOfInterestSelected = [];
+    togglePoi(btn: any) {
+        // Store type
+        const type: string = btn.datatype;
+
+        // Get poi data...
+        (
+            !this._pointsOfInterestData ? (
+                forkJoin({
+                    poi: this.apiService.getPointsOfInterest() as Observable<iPointOfInterest[]>,
+                    gpPractices: this.apiService.getGPPracticesPopMini() as Observable<Array<any>>
+                }).pipe(
+                    map((data) => {
+                        // Store poi data
+                        this._pointsOfInterestData = data.poi.concat(
+                            data.gpPractices.map((practice) => {
+                                practice.type = GPPracticeTypes[practice.prescribing_setting];
+                                delete practice.prescribing_setting;
+                                return practice;
+                            })
+                        );
+                        return this._pointsOfInterestData;
+                    })
+                )
+            ): of(this._pointsOfInterestData)
+        ).subscribe((pointsOfInterestData) => {
+            // Add or remove data?
+            if (this.pointsOfInterestSelected.includes(type)) {
+                this.pointsOfInterestSelected.splice(this.pointsOfInterestSelected.indexOf(type), 1);
+
+                // Remove existing pois
+                this.map.getChild("g").getChild(type).remove();
+                return;
+            }
+
+            // Add to selected
+            this.pointsOfInterestSelected.push(type);
+
+            // Add to map
+            const data = pointsOfInterestData.filter((x) => x.type === type);
+            const dataLayer = this.map.getChild("g").addChild(
+                type,
+                this.map.getChild("g").instance
+                    .selectAll("text")
+                    .data(data)
+            );
+            const icon = dataLayer.instance.enter().append("text")
+
+            // Set location
+            icon
+                .attr("x", (d) => {
+                    return this.projection([d.longitude, d.latitude])[0] || -100;
+                })
+                .attr("y", (d) => {
+                    return this.projection([d.longitude, d.latitude])[1] || -100;
+                })
+                .attr("data-type", (d) => {
+                    return d.type;
+                })
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "middle");
+
+            // Type?
+            if(type === "place") {
+                // Add place labels
+                icon
+                    .attr("fill", "var(--color-black-default)")
+                    .style("font-size", "12px")
+                    .style("font-weight", "bold")
+                    .text((d) => {
+                        return d.name.toString().toUpperCase();
+                    })
+                    .exit();
+            } else {
+                // Add icon
+                icon
+                    .attr("fill", "var(--color-pink-default)")
+                    .style("font-size", "16px")
+                    .attr("class", "mat-icon material-icons mat-ligature-font mat-icon-no-color")
+                    .text(btn.icon)
+                    .exit();
+
+                // // Add poi tooltip
+                // dataLayer.addChild("tooltip", d3Tooltip(
+                //     d3.select(this.mapElement), icon,
+                //     (d: { name: string; postcode: string; }) => {
+                //         console.log("hello");
+                //         return `<div class='tw-px-df'>${d.name} <br><small>(${d.postcode})</small></div>`
+                //     }
+                // ));
+            }
+        });
+    }
+
+    resetMap() {
+        // Reset variables
+        if (this.activePath) {
+            this.activePath = null;
+            this.selectedGeoCode = null;
+            this.selectedGeo.next(null);
+        }
+
+        // Clear breadcrumbs
+        this.icsSelectedBreadcrumbs = [];
+
+        // Remove lower level features
+        const boundary = this.path.children["feature"];
+        if (boundary) { boundary.remove(); }
+
+        // Enable top level tooltips
+        this.path.getChild("topLevel").children["tooltip"].instance.enable();
+
+        // Zoom back to bounds
+        this.map.instance.transition().duration(750).call(this.zoom.transform, d3.zoomIdentity);
+    }
+
+    zoomMap() {
+        this.map.getChild("g").instance.attr("transform", d3.event.transform);
+    }
+
+    resetBreadCrumbs(code) {
+        this.icsSelectedBreadcrumbs = [];
+        this.icsBoundaries.getParentBoundaries(code, this.icsSelectedBreadcrumbs);
+        this.icsSelectedBreadcrumbs.reverse();
     }
 
     selectedGeoCode;
@@ -241,37 +375,5 @@ export class WardChart {
         } else {
             this.selectedGeo.next({ id: "WDimension", value: selectedGeoCode});
         }
-    }
-
-    resetMap() {
-        // Reset variables
-        if (this.activePath) {
-            this.activePath = null;
-            this.selectedGeoCode = null;
-            this.selectedGeo.next(null);
-        }
-
-        // Clear breadcrumbs
-        this.icsSelectedBreadcrumbs = [];
-
-        // Remove lower level features
-        const boundary = this.path.children["feature"];
-        if (boundary) { boundary.remove(); }
-
-        // Enable top level tooltips
-        this.path.getChild("topLevel").children["tooltip"].instance.enable();
-
-        // Zoom back to bounds
-        this.map.instance.transition().duration(750).call(this.zoom.transform, d3.zoomIdentity);
-    }
-
-    zoomMap() {
-        this.map.getChild("g").instance.attr("transform", d3.event.transform);
-    }
-
-    resetBreadCrumbs(code) {
-        this.icsSelectedBreadcrumbs = [];
-        this.icsBoundaries.getParentBoundaries(code, this.icsSelectedBreadcrumbs);
-        this.icsSelectedBreadcrumbs.reverse();
     }
 }

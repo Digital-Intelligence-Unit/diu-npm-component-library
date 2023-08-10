@@ -4,15 +4,15 @@ import * as dc from "dc";
 declare const window: any;
 import jwt_decode from "jwt-decode";
 import { DeprivationColorCodes, iWardDetails } from "./lookups";
-import { collapseAnimations } from "../../_functions/helper_functions";
-import { APIService } from "../../_services/api.service";
+import { collapseAnimations } from "../../../_functions/helper_functions";
+import { APIService } from "../../../_services/api.service";
 
 @Component({
-    selector: "app-population",
+    selector: "app-population-map-legacy",
     templateUrl: "./dashboard-population.component.html",
     animations: [collapseAnimations],
 })
-export class DashboardPopulationComponent implements OnInit {
+export class PopulationMapLegacyComponent implements OnInit {
     config: any;
     /* #region Global Variables */
     ndx: any;
@@ -78,7 +78,7 @@ export class DashboardPopulationComponent implements OnInit {
             setTimeout(() => {
                 window.dispatchEvent(new Event("resize"));
             }, 500);
-        });changedWard
+        });
     }
 
     onCollapse() {
@@ -669,3 +669,30 @@ export class DashboardPopulationComponent implements OnInit {
         return output;
     }
 }
+
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { HttpClientModule } from "@angular/common/http";
+import { MaterialModule } from "../../../_modules/material.module";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { WardmapComponent } from "./wardmap/wardmap.component";
+
+@NgModule({
+    imports: [
+        CommonModule,
+        RouterModule,
+        HttpClientModule,
+        MaterialModule,
+        FlexLayoutModule
+    ],
+    declarations: [
+        PopulationMapLegacyComponent,
+        WardmapComponent
+    ],
+    exports: [
+        PopulationMapLegacyComponent,
+        WardmapComponent
+    ]
+})
+export class PopulationMapLegacyComponentModule {}
