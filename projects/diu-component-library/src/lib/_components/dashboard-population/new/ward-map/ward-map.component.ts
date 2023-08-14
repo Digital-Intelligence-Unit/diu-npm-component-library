@@ -47,7 +47,15 @@ export class WardMapComponent implements AfterViewInit {
         });
     }
 
-    toggleFabButtons() {
+    fabButtonsToggle() {
         this.fabButtons = this.fabButtons.length > 0 ? [] : FAB_BUTTONS;
+    }
+
+    fabButtonsClick(btn) {
+        if(btn.datatype === "refresh") {
+            this.wardChart.clearPoi();
+        } else {
+            this.wardChart.togglePoi(btn);
+        }
     }
 }

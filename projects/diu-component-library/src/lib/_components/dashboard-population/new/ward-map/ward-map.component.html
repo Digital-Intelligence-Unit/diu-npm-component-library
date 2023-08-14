@@ -11,18 +11,18 @@
         </button>
     </div>
 
-    <div class="tw-absolute tw-right-0 tw-bottom-0 tw-w-full tw-px-df">
+    <div class="toolbar">
         <div class="tw-flex tw-flex-row tw-items-end tw-gap-df">
             <div class="tw-flex-auto tw-w-3/4">
-                <div class="tw-bg-white tw-rounded tw-p-df">
-                    <p class="tw-text-blue tw-font-bold tw-text-sm tw-mb-0">{{ wardChart?.hoveredGeo }}</p>
+                <div class="name">
+                    <p>{{ wardChart?.hoveredGeo }}</p>
                 </div>
             </div>
-            <div class="tw-flex-auto tw-w-1/4 tw-p-df tw-text-right">
-                <div class="tw-flex tw-ml-auto tw-flex-col tw-w-fit" [@speedDialStagger]="fabButtons.length">
+            <div class="tw-flex-auto tw-w-1/4 tw-text-right">
+                <div class="fab-buttons" [@speedDialStagger]="fabButtons.length">
                     <button
                         *ngFor="let btn of fabButtons"
-                        (click)="wardChart.togglePoi(btn)"
+                        (click)="fabButtonsClick(btn)"
                         class="btn-rounded btn-grey {{wardChart?.pointsOfInterestSelected.includes(btn.datatype) ? 'tw-bg-grey-dark': ''}} tw-mb-df"
                         [matTooltip]="btn.tooltip"
                         matTooltipPosition="above"
@@ -30,7 +30,7 @@
                         <mat-icon>{{ btn.icon }}</mat-icon>
                     </button>
                 </div>
-                <button class="btn-rounded btn-blue" (click)="toggleFabButtons()">
+                <button class="btn-rounded btn-blue" (click)="fabButtonsToggle()">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             </div>

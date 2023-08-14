@@ -1,6 +1,15 @@
 import * as d3 from "d3";
 import * as d3zoom from "d3-zoom";
-import { ICSBoundaries, calculateAreaFill, calculateStroke, hexToRgb, d3Tooltip, iPointOfInterest, GPPracticeTypes, d3ExternalTooltip } from "./helper";
+import {
+    ICSBoundaries,
+    calculateAreaFill,
+    calculateStroke,
+    hexToRgb,
+    d3Tooltip,
+    iPointOfInterest,
+    GPPracticeTypes,
+    d3ExternalTooltip
+} from "./helper";
 import { Subject, forkJoin } from "rxjs";
 import { APIService } from "../../../../_services/api.service";
 import { Observable, of } from "rxjs";
@@ -42,13 +51,14 @@ export class WardChart {
     zoom;
     path: D3Element;
     activePath;
+    currentScale = 1;
 
     icsBoundaries: ICSBoundaries;
     icsSelectedBreadcrumbs = [];
 
     map: D3Element;
-    mapLayers = [];
     mapElement;
+    mapLayers = [];
     activeMapLayer;
 
     hoveredGeo = "";
@@ -108,8 +118,11 @@ export class WardChart {
             .attr("height", this.mapElement.offsetHeight)
             .on("click", () => this.resetMap()); // Reset on outside click
 
-        // Add g?
-        this.map.addChild("g", this.map.instance.append("g")).instance
+        // Add main boundary layer
+        this.map.addChild("g", this.map.instance.append("g"));
+
+        // Add feature layer
+        this.map.addChild("featuresg", this.map.instance.append("g"));
 
         // Add areas
         this.updateBoundaries(null);
@@ -171,11 +184,19 @@ export class WardChart {
             });
 
         // Add place labels
-        path.addChild("tooltip", d3ExternalTooltip(
-            path.instance, (d) => {
-                this.hoveredGeo = d?.properties.area || this.hoveredGeo;
+        path.addChild("tooltip", d3Tooltip(
+            d3.select(this.mapElement), path.instance,
+            (d: { properties: { area: string; } }) => {
+                console.log("hello")
+                return `<div class='tw-px-df'>${d?.properties.area}</div>`
             }
         ));
+
+        // path.addChild("tooltip", d3ExternalTooltip(
+        //     path.instance, (d) => {
+        //         this.hoveredGeo = d?.properties.area || this.hoveredGeo;
+        //     }
+        // ));
 
         // Disable top level labels?
         if(this.path.getChild("topLevel")) {
@@ -186,10 +207,10 @@ export class WardChart {
             }
         }
 
-        //
-        this.zoom = d3zoom.zoom().on("zoom", () => {
-            this.zoomMap();
-        });
+        // // Is this needed
+        // this.zoom = d3zoom.zoom().on("zoom", () => {
+        //     this.zoomMap();
+        // });
     }
 
     _pointsOfInterestData;
@@ -224,7 +245,7 @@ export class WardChart {
                 this.pointsOfInterestSelected.splice(this.pointsOfInterestSelected.indexOf(type), 1);
 
                 // Remove existing pois
-                this.map.getChild("g").getChild(type).remove();
+                this.map.getChild("featuresg").getChild(type).remove();
                 return;
             }
 
@@ -233,16 +254,19 @@ export class WardChart {
 
             // Add to map
             const data = pointsOfInterestData.filter((x) => x.type === type);
-            const dataLayer = this.map.getChild("g").addChild(
+            const dataLayer = this.map.getChild("featuresg")
+                .instance
+                .selectAll("text")
+                .data(data);
+
+            // Create icons
+            const icons = this.map.getChild("featuresg").addChild(
                 type,
-                this.map.getChild("g").instance
-                    .selectAll("text")
-                    .data(data)
+                dataLayer.enter().append("text")
             );
-            const icon = dataLayer.instance.enter().append("text")
 
             // Set location
-            icon
+            icons.instance
                 .attr("x", (d) => {
                     return this.projection([d.longitude, d.latitude])[0] || -100;
                 })
@@ -256,11 +280,13 @@ export class WardChart {
                 .attr("dominant-baseline", "middle");
 
             // Type?
+            console.log(type);
             if(type === "place") {
+                console.log("adding")
                 // Add place labels
-                icon
+                icons.instance
                     .attr("fill", "var(--color-black-default)")
-                    .style("font-size", "12px")
+                    .style("font-size", "10px")
                     .style("font-weight", "bold")
                     .text((d) => {
                         return d.name.toString().toUpperCase();
@@ -268,23 +294,32 @@ export class WardChart {
                     .exit();
             } else {
                 // Add icon
-                icon
-                    .attr("fill", "var(--color-pink-default)")
-                    .style("font-size", "16px")
+                icons.instance
+                    .style("fill", "var(--color-blue-default)")
+                    .style("font-size", (16 - (1.6 * this.currentScale)).toString() + "px")
                     .attr("class", "mat-icon material-icons mat-ligature-font mat-icon-no-color")
                     .text(btn.icon)
                     .exit();
 
-                // // Add poi tooltip
-                // dataLayer.addChild("tooltip", d3Tooltip(
-                //     d3.select(this.mapElement), icon,
-                //     (d: { name: string; postcode: string; }) => {
-                //         console.log("hello");
-                //         return `<div class='tw-px-df'>${d.name} <br><small>(${d.postcode})</small></div>`
-                //     }
-                // ));
+                // Add poi tooltip
+                icons.addChild("tooltip", d3Tooltip(
+                    d3.select(this.mapElement), icons.instance,
+                    (d: { name: string; postcode: string; }) => {
+                        return `<div class='tw-px-df'>${d.name} <br><small>(${d.postcode})</small></div>`
+                    }
+                ));
             }
         });
+    }
+
+    clearPoi() {
+        // Remove data?
+        this.pointsOfInterestSelected.forEach((type) => {
+            this.map.getChild("featuresg").getChild(type).remove();
+        });
+
+        // Reset variable
+        this.pointsOfInterestSelected = [];
     }
 
     resetMap() {
@@ -310,7 +345,24 @@ export class WardChart {
     }
 
     zoomMap() {
-        this.map.getChild("g").instance.attr("transform", d3.event.transform);
+        // Store scale
+        this.currentScale = d3.event.transform.k;
+        const zoomEvent = d3.event.transform;
+
+        // Zoom boundaries
+        this.map.getChild("g").instance.attr("transform", zoomEvent);
+        this.map.getChild("featuresg").instance.attr("transform", zoomEvent);
+
+        // Scale icons
+        this.pointsOfInterestSelected.forEach((type) => {
+            // Get layer
+            const icons = this.map.getChild("featuresg").getChild(type);
+
+            // Resize
+            if(type !== "place") {
+                icons.instance.style("font-size", (16 - (1.6 * this.currentScale)).toString() + "px");
+            }
+        });
     }
 
     resetBreadCrumbs(code) {

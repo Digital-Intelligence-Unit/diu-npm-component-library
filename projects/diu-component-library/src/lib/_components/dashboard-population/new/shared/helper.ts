@@ -170,7 +170,6 @@ export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) =
     if(tooltipContainer.empty()) {
         tooltipContainer = chartElement
             .append("div")
-            .style("opacity", 0)
             .attr("class", "tooltip mat-tooltip mat-tooltip-show")
             .style("color", "white")
             .style("border-radius", "4px");
@@ -180,6 +179,7 @@ export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) =
     const instance: any = {
         disabled: false,
         remove: () => {
+            tooltipContainer.style("visibility", "hidden");
             tooltipParent.on("mouseover", null);
             tooltipParent.on("mouseleave", null);
         }
@@ -188,7 +188,7 @@ export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) =
     // Add disable/enable
     instance.disable = () => {
         instance.disabled = true;
-        tooltipContainer.style("opacity", 0);
+        tooltipContainer.style("visibility", "hidden");
     };
     instance.enable = () => {
         instance.disabled = false;
@@ -196,10 +196,9 @@ export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) =
 
     // Add events
     tooltipParent.on("mouseover", function (d) {
-        console.log("mouseover");
         if(instance.disabled === false) {
             // Show tooltip
-            tooltipContainer.style("opacity", 1)
+            tooltipContainer.style("visibility", "visible")
 
             tooltipContainer
                 .html(tooltipContentCallback(d))
@@ -210,7 +209,7 @@ export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) =
 
     tooltipParent.on("mouseleave", (d) => {
         // Hide tooltip
-        tooltipContainer.style("opacity", 0);
+        tooltipContainer.style("visibility", "hidden");
     });
 
     return instance;
