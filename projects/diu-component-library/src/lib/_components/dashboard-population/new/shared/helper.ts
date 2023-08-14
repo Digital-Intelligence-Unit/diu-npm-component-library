@@ -139,7 +139,7 @@ export const hexToRgb = (hex) => {
 export const calculateAreaFill = (area?, breadcrumbs?) => {
     if (area) {
         const rgb = hexToRgb(calculateStroke(area, breadcrumbs));
-        return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.2)";
+        return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.4)";
     }
     return "rgb(255,255,255,0)";
 }
@@ -164,7 +164,10 @@ export const calculateStroke = (feature?, breadcrumbs?) => {
     return colour;
 }
 
-export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) => {
+export const d3Tooltip = (chartElement, tooltipParent, options = {
+    callback: null,
+    position: "mouse"
+}) => {
     // Get tooltip container
     let tooltipContainer = chartElement.select(".tooltip");
     if(tooltipContainer.empty()) {
@@ -172,7 +175,8 @@ export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) =
             .append("div")
             .attr("class", "tooltip mat-tooltip mat-tooltip-show")
             .style("color", "white")
-            .style("border-radius", "4px");
+            .style("border-radius", "4px")
+            .style("visibility", "hidden");
     }
 
     // Store instance
@@ -199,16 +203,24 @@ export const d3Tooltip = (chartElement, tooltipParent, tooltipContentCallback) =
         if(instance.disabled === false) {
             // Show tooltip
             tooltipContainer.style("visibility", "visible")
+            tooltipContainer.html(options.callback(d));
 
-            tooltipContainer
-                .html(tooltipContentCallback(d))
-                .style("left", (d3.select(this).node().getBBox().x as number).toString() + "px")
-                .style("top", (d3.select(this).node().getBBox().y as number).toString() + "px")
+            // Set position
+            if(options.position === "mouse") {
+                tooltipContainer
+                    .style("left", (d3.event.offsetX as number + 2).toString() + "px")
+                    .style("top", (d3.event.offsetY as number + 2).toString() + "px");
+            } else {
+                tooltipContainer
+                    .style("left", (d3.select(this).node().getBBox().x as number).toString() + "px")
+                    .style("top", (d3.select(this).node().getBBox().y as number).toString() + "px")
+            }
         }
     });
 
     tooltipParent.on("mouseleave", (d) => {
-        // Hide tooltip
+        // Hide tooltip?
+        if(d3.event.toElement && d3.event.toElement.classList.contains("tooltip")) { return; }
         tooltipContainer.style("visibility", "hidden");
     });
 
@@ -235,7 +247,6 @@ export const d3ExternalTooltip = (tooltipParent, tooltipContentCallback) => {
 
     // Add events
     tooltipParent.on("mouseover", (d) => {
-        console.log("mouseover");
         if(instance.disabled === false) {
             tooltipContentCallback(d);
         }

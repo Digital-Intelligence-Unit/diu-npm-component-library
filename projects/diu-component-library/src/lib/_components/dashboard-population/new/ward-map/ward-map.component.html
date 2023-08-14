@@ -1,4 +1,8 @@
 <div #mapElement class="map">
+    <div *ngIf="loading" class="loader">
+        <object data="/assets/images/lsc-map-grey.svg" type="image/svg+xml"></object>
+    </div>
+
     <div class="tw-absolute tw-right-1 tw-top-1">
         <button
             type="button"
@@ -15,7 +19,10 @@
         <div class="tw-flex tw-flex-row tw-items-end tw-gap-df">
             <div class="tw-flex-auto tw-w-3/4">
                 <div class="name">
-                    <p>{{ wardChart?.hoveredGeo }}</p>
+                    <p>
+                        <span>L&SC</span>
+                        <span *ngFor="let item of wardChart?.icsSelectedBreadcrumbs"> > {{ item.properties.area }}</span>
+                    </p>
                 </div>
             </div>
             <div class="tw-flex-auto tw-w-1/4 tw-text-right">

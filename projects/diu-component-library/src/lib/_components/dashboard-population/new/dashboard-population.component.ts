@@ -52,19 +52,23 @@ export class PopulationMapNewComponent implements AfterViewInit {
         });
     }
 
+    filterDataTimeout;
     filterData(filter) {
-        // Apply filters
-        if(filter) {
-            this.filters = { [filter.id]: filter.value };
-        } else {
-            this.filters = {};
-        }
+        clearTimeout(this.filterDataTimeout);
+        this.filterDataTimeout = setTimeout(() => {
+            // Apply filters
+            if(filter) {
+                this.filters = { [filter.id]: filter.value };
+            } else {
+                this.filters = {};
+            }
 
-        // Get new data
-        this.getData();
+            // Get new data
+            this.getData();
 
-        // Show ward details
-        this.setAreaDetails(filter?.id === "WDimension" ? filter.value : null);
+            // Show ward details
+            this.setAreaDetails(filter?.id === "WDimension" ? filter.value : null);
+        }, 800);
     }
 
     _allAreaDetails; areaDetails;

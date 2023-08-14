@@ -8,7 +8,6 @@ import {
     d3Tooltip,
     iPointOfInterest,
     GPPracticeTypes,
-    d3ExternalTooltip
 } from "./helper";
 import { Subject, forkJoin } from "rxjs";
 import { APIService } from "../../../../_services/api.service";
@@ -103,8 +102,10 @@ export class WardChart {
         // Create svg ward map
         this.map = new D3Element(d3.select(this.mapElement).append("svg"));
         this.map.instance
-            .attr("width", this.mapElement.offsetWidth)
-            .attr("height", this.mapElement.offsetHeight)
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", `0 0 ${this.mapElement.offsetWidth as number} ${this.mapElement.offsetHeight as number}`)
+            // .attr("width", this.mapElement.offsetWidth)
+            // .attr("height", this.mapElement.offsetHeight)
             .style("fill", "white")
             .on("click", () => {
                 if (d3.event.defaultPrevented) {
@@ -166,7 +167,7 @@ export class WardChart {
             })
             .attr("fill", (d) => {
                 const rgb = hexToRgb(calculateStroke(d, this.icsSelectedBreadcrumbs));
-                return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.2)";
+                return "rgba(" + rgb.r.toString() + "," + rgb.g.toString() + "," + rgb.b.toString() + ",0.4)";
             })
             .style("stroke", (d) => {
                 return calculateStroke(d, this.icsSelectedBreadcrumbs);
@@ -174,7 +175,8 @@ export class WardChart {
             .on("click", (selectedDistrict) => {
                 const code = selectedDistrict.properties.code;
                 const children = this.icsBoundaries.getChildBoundaries(code);
-                // this.icsSelectedBreadcrumbs.reset(code);
+                this.updateBreadcrumbs(code);
+
                 if (children.length) {
                     this.updateBoundaries(selectedDistrict.properties.code);
                     this._clickHandler(selectedDistrict);
@@ -185,18 +187,13 @@ export class WardChart {
 
         // Add place labels
         path.addChild("tooltip", d3Tooltip(
-            d3.select(this.mapElement), path.instance,
-            (d: { properties: { area: string; } }) => {
-                console.log("hello")
-                return `<div class='tw-px-df'>${d?.properties.area}</div>`
+            d3.select(this.mapElement), path.instance, {
+                callback: (d: { properties: { area: string; } }) => {
+                    return `<div class='tw-px-df'>${d?.properties.area}</div>`
+                },
+                position: "element"
             }
         ));
-
-        // path.addChild("tooltip", d3ExternalTooltip(
-        //     path.instance, (d) => {
-        //         this.hoveredGeo = d?.properties.area || this.hoveredGeo;
-        //     }
-        // ));
 
         // Disable top level labels?
         if(this.path.getChild("topLevel")) {
@@ -206,11 +203,12 @@ export class WardChart {
                 this.path.getChild("topLevel").children["tooltip"].instance.enable();
             }
         }
+    }
 
-        // // Is this needed
-        // this.zoom = d3zoom.zoom().on("zoom", () => {
-        //     this.zoomMap();
-        // });
+    updateBreadcrumbs(code) {
+        this.icsSelectedBreadcrumbs = [];
+        this.icsBoundaries.getParentBoundaries(code, this.icsSelectedBreadcrumbs);
+        this.icsSelectedBreadcrumbs.reverse();
     }
 
     _pointsOfInterestData;
@@ -280,9 +278,7 @@ export class WardChart {
                 .attr("dominant-baseline", "middle");
 
             // Type?
-            console.log(type);
             if(type === "place") {
-                console.log("adding")
                 // Add place labels
                 icons.instance
                     .attr("fill", "var(--color-black-default)")
@@ -303,9 +299,11 @@ export class WardChart {
 
                 // Add poi tooltip
                 icons.addChild("tooltip", d3Tooltip(
-                    d3.select(this.mapElement), icons.instance,
-                    (d: { name: string; postcode: string; }) => {
-                        return `<div class='tw-px-df'>${d.name} <br><small>(${d.postcode})</small></div>`
+                    d3.select(this.mapElement), icons.instance, {
+                        callback: (d: { name: string; postcode: string; }) => {
+                            return `<div class='tw-px-df'>${d.name} <br><small>(${d.postcode})</small></div>`
+                        },
+                        position: "mouse"
                     }
                 ));
             }
@@ -363,12 +361,6 @@ export class WardChart {
                 icons.instance.style("font-size", (16 - (1.6 * this.currentScale)).toString() + "px");
             }
         });
-    }
-
-    resetBreadCrumbs(code) {
-        this.icsSelectedBreadcrumbs = [];
-        this.icsBoundaries.getParentBoundaries(code, this.icsSelectedBreadcrumbs);
-        this.icsSelectedBreadcrumbs.reverse();
     }
 
     selectedGeoCode;

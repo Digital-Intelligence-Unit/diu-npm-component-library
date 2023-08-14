@@ -83,7 +83,7 @@ export class AgeChart {
         const filteredData = this._filterSex(data["AgeDimension"]);
 
         // Set new data (Initial data set in create for nicer animation)
-        this.chartInstance.data.labels = filteredData.map((item) => item.key);
+        this.chartInstance.data.labels = filteredData.map((item) => item.label);
         this.chartInstance.data.datasets[0].data = filteredData.map((item) => {
             return item.value;
         }) || 0;
@@ -93,15 +93,30 @@ export class AgeChart {
     }
 
     _filterSex(data) {
-        // Filter by
+        // Get all possible age bands
+        const ageBands = data.values
+            .reduce((bands, item) => {
+                const band = item.key.split(":")[1];
+                if(!bands.includes(band)) {
+                    bands.push(band);
+                }
+                return bands;
+            }, [])
+            .sort((a, b) => parseInt(b) - parseInt(a));
+
+        // Get data for sex
         const sexKey = { Female: "F:", Male: "M:" };
-        return data.values.filter((item) => {
-            return item.key.includes(sexKey[this.id]);
-        }).sort((a, b) => {
-            return parseInt(b.key.split(":")[1]) - parseInt(a.key.split(":")[1]);
-        }).map((item) => {
-            item.key = item.key.replace(sexKey[this.id], "");
-            return item;
+        return ageBands.map((band) => {
+            // Find band data
+            const bandData = data.values.find((item) => {
+                return item.key.includes(sexKey[this.id]) && item.key.includes(band);
+            }) || {
+                key: band, value: 0
+            };
+
+            // Rename label
+            bandData.label = band;
+            return bandData;
         });
     }
 }

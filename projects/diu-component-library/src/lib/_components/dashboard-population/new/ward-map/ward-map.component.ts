@@ -33,12 +33,14 @@ export class WardMapComponent implements AfterViewInit {
         private apiService: APIService
     ) {}
 
+    loading = true;
     ngAfterViewInit() {
         this.apiService.getWardDistricts().subscribe((res: any[]) => {
             // Draw intial map
             this.icsBoundaries = new ICSBoundaries(res);
             this.wardChart = new WardChart(this.apiService);
             this.wardChart.create(this.mapElement, this.icsBoundaries);
+            this.loading = false;
 
             // Listen for selection
             this.wardChart.selectedGeo.subscribe((value) => {
