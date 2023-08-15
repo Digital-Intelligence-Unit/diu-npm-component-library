@@ -218,7 +218,7 @@ export const d3Tooltip = (chartElement, tooltipParent, options = {
         }
     });
 
-    tooltipParent.on("mouseleave", (d) => {
+    tooltipParent.on("mouseleave", () => {
         // Hide tooltip?
         if(d3.event.toElement && d3.event.toElement.classList.contains("tooltip")) { return; }
         tooltipContainer.style("visibility", "hidden");
@@ -252,7 +252,7 @@ export const d3ExternalTooltip = (tooltipParent, tooltipContentCallback) => {
         }
     });
 
-    tooltipParent.on("mouseleave", (d) => {
+    tooltipParent.on("mouseleave", () => {
         if(instance.disabled === false) {
             tooltipContentCallback(null);
         }
