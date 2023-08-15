@@ -1,0 +1,70 @@
+<div #deprivationChartParent>
+    <div class="row wrap" fxLayout="row" fxLayout.lt-md="column" (mouseout)="mouseLeave()">
+        <div
+            id="ageChartMaleMain"
+            fxFlex.gt-sm="25"
+            fxFlex.gt-xs="100"
+            fxFlex="100"
+            fxLayoutAlign="center center"
+            (mouseout)="mouseLeave()"
+        >
+            <mat-card-content #ageChartMaleParent class="chartspace" style="min-height: 300px; padding: 0">
+                <div id="ageChartMale"></div>
+            </mat-card-content>
+        </div>
+        <div id="wardMapMain" fxFlex.gt-sm="50" fxFlex.gt-xs="100" fxFlex="100" (mouseenter)="mouseLeave()">
+            <div style="display: block; width: 100%; padding-top: 30px">
+                <mat-spinner *ngIf="allWardDetails.length === 0"></mat-spinner>
+                <app-wardmap
+                    *ngIf="allWardDetails.length > 0"
+                    [crossfilterData]="filteredData"
+                    [inputTrigger]="mapReset"
+                    (selectedWard)="changedWard($event)"
+                    (selectedArea)="changedArea($event)"
+                    [wardDetails]="allWardDetails"
+                >
+                </app-wardmap>
+            </div>
+        </div>
+        <div
+            id="ageChartFemaleMain"
+            fxFlex.gt-sm="25"
+            fxFlex.gt-xs="100"
+            fxFlex="100"
+            fxLayoutAlign="center center"
+            (mouseout)="mouseLeave()"
+        >
+            <mat-card-content #ageChartFemaleParent class="chartspace" style="min-height: 300px; padding: 0">
+                <div id="ageChartFemale"></div>
+            </mat-card-content>
+        </div>
+    </div>
+
+    <div class="row wrap" (mouseenter)="mouseLeave()">
+        <div
+            id="deprivationChartMain"
+            fxFlex.gt-sm="100"
+            fxFlex.gt-xs="100"
+            fxFlex="100"
+            fxLayoutAlign="center center"
+            (mouseout)="mouseLeave()"
+        >
+            <div id="deprivationChart"></div>
+        </div>
+    </div>
+
+    <div style="width: 100%" [@expandCollapse]="openCloseWardAnim">
+        <div class="row wrap" fxLayout="row" fxLayout.lt-md="column" *ngIf="visible && selectedWardDetails">
+            <div fxFlex.gt-sm="20" fxFlex.gt-xs="30" fxFlex="100" fxLayoutAlign="center center">
+                <img *ngIf="selectedWardDetails.image" [src]="'/assets/images/' + selectedWardDetails.image" style="max-width: 100%" />
+            </div>
+            <div fxFlex.gt-sm="80" fxFlex.gt-xs="70" fxFlex="100" style="padding-left: 15px">
+                <h4 style="text-decoration: underline">
+                    <strong>Electoral Ward:</strong>&nbsp;&nbsp;{{ selectedWardDetails.name }}&nbsp;[{{ selectedWardDetails.code }}]
+                </h4>
+                <p [innerHTML]="selectedWardDetails.text" style="text-align: justify"></p>
+                <a *ngIf="selectedWardDetails.link" target="_blank" [href]="selectedWardDetails.link">More Information...</a>
+            </div>
+        </div>
+    </div>
+</div>
