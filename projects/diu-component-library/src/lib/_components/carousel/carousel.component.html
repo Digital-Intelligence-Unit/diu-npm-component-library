@@ -1,16 +1,11 @@
-<mdb-carousel [isControls]="true" class="carousel slide" [animation]="'slide'" data-interval="20000">
-    <mdb-carousel-item style="height: 145px" *ngFor="let item of carouselItems">
-        <div class="view">
-            <video class="video-fluid" autoplay loop style="width: 100%; margin-top: -35px">
+<swiper-container init="false" #swiperContainer> 
+    <swiper-slide *ngFor="let item of carouselItems">
+        <div class="content">
+            <video class="bg" autoplay loop preload="none" style="width: 100%">
                 <source [src]="'/assets/images/' + item.video" type="video/mp4" />
             </video>
-            <div [class]="item.class" mdbWavesEffect></div>
+            <p [innerHTML]="item.innerhtml"></p>
         </div>
-
-        <div class="carousel-caption">
-            <div class="animated fadeInDown">
-                <p [innerHTML]="item.innerhtml"></p>
-            </div>
-        </div>
-    </mdb-carousel-item>
-</mdb-carousel>
+    </swiper-slide>
+</swiper-container>
+<div class="swiper-pagination"></div>

@@ -8,6 +8,7 @@ import {
     d3Tooltip,
     iPointOfInterest,
     GPPracticeTypes,
+    PlaceColorCodes
 } from "./helper";
 import { Subject, forkJoin } from "rxjs";
 import { APIService } from "../../../../_services/api.service";
@@ -61,7 +62,7 @@ export class WardChart {
     activeMapLayer;
 
     hoveredGeo = "";
-    selectedGeo: Subject<{ id: string; value: any }> = new Subject();
+    selectedGeo: Subject<{ id: string; value: any, details: any }> = new Subject();
 
     constructor(
         private apiService: APIService
@@ -367,6 +368,9 @@ export class WardChart {
     _clickHandler(clickedArea) {
         // Get selected area code
         const selectedGeoCode = d3.select(clickedArea)["_groups"][0][0].properties.code;
+        console.log(
+            d3.select(clickedArea)["_groups"][0][0]
+        )
         const selected = d3
             .selectAll("path")
             .filter(".feature")
@@ -414,10 +418,16 @@ export class WardChart {
 
         // Emit selection
         const children = this.icsBoundaries.getChildBoundaries(clickedArea.properties.code);
-        if (children.length) {
-            this.selectedGeo.next({ id: "AreaLookup", value: selectedGeoCode});
-        } else {
-            this.selectedGeo.next({ id: "WDimension", value: selectedGeoCode});
-        }
+        this.selectedGeo.next({
+            id: children.length ? "AreaLookup" : "WDimension",
+            value: selectedGeoCode,
+            details: {
+                parent: PlaceColorCodes[
+                    this.icsSelectedBreadcrumbs.find((item) => {
+                        return PlaceColorCodes[item.properties.code] ? true : false;
+                    }).properties.code || ""
+                ]
+            }
+        });
     }
 }
