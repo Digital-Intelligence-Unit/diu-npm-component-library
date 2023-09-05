@@ -67,24 +67,29 @@ export class PopulationMapNewComponent implements AfterViewInit {
             this.getData();
 
             // Show ward details
-            this.setAreaDetails(filter?.id === "WDimension" ? filter.value : null);
+            this.setAreaDetails(filter?.id === "WDimension" ? filter : null);
         }, 800);
     }
 
     _allAreaDetails; areaDetails;
-    async setAreaDetails(code) {
-        if(code) {
+    async setAreaDetails(area) {
+        if(area) {
             // Get all area details
             this._allAreaDetails = this._allAreaDetails || await this.apiService.getWardDetails().toPromise();
 
             // Set selected details
-            this.areaDetails = this._allAreaDetails.find((x) => x.code === code) || {
-                code,
-                name: "Unknown",
-                text: "Unknown",
-                image: "innerurban.jpg",
-                icp: "Fylde Coast",
-            }
+            const selectedAreaDetails = this._allAreaDetails.find((x) => x.code === area.value);
+            this.areaDetails = Object.assign(
+                {}, {
+                    code: area.value,
+                    name: "Unknown",
+                    text: "Unknown",
+                    image: "innerurban.jpg",
+                    icp: "Fylde Coast",
+                    parent: area.details.parent
+                },
+                selectedAreaDetails || {}
+            );
         } else {
             this.areaDetails = null;
         }
