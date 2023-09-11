@@ -9,7 +9,6 @@ import { getUser } from "../../_functions/helper_functions";
 @Component({
     selector: "app-application-tile",
     templateUrl: "./application.component.html",
-    styleUrls: ["./application.component.scss"],
 })
 export class ApplicationTileComponent implements OnInit {
     user: iUserProfile;

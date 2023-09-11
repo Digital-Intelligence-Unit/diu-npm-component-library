@@ -1,28 +1,24 @@
-<mat-card class="border-app" *ngIf="app">
-    <mat-card-content>
-        <div fxLayout="row-wrap" fxLayoutGap="15px">
-            <div fxFlex.gt-md="calc(30% - 15px)" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="space-around center">
-                <img class="image" src="/assets/icons/apps/{{ app.icon }}" (click)="open()" />
-            </div>
-            <div fxFlex.gt-md="calc(70% - 15px)" fxFlex.gt-xs="100" fxFlex="100">
-                <h4 class="name">{{ app.name.split("_").join(" ") }}</h4>
+<div *ngIf="app" class="content">
+    <div class="icon">
+        <img style="height: 110px;" class="tw-p-3 tw-m-auto" src="/assets/icons/apps/{{ app.icon }}" (click)="open()" />
+        <h4 class="tw-text-xl tw-my-base">{{ app.name.split("_").join(" ") }}</h4>
+    </div>
 
-                <button mat-icon-button (click)="open()" color="primary" matTooltip="Launch">
-                    <i class="far fa-play-circle font-2x"></i>
-                </button>
+    <div class="actions">
+        <button (click)="open()" class="btn btn-sm btn-blue rounded-lg tw-mr-df">
+            Launch <i class="fas fa-play-circle"></i>
+        </button>
 
-                <button mat-icon-button *ngIf="app.description" [matTooltip]="app.description" color="accent" style="cursor: help">
-                    <i class="fas fa-info-circle font-2x"></i>
-                </button>
+        <button class="btn-sm" *ngIf="app.description" [matTooltip]="app.description" style="cursor: help">
+            <i class="fas fa-info-circle tw-text-2xl tw-text-dblue"></i>
+        </button>
 
-                <button mat-icon-button (click)="openUserGuide()" color="accent" [matTooltip]="'User Guide'" [disabled]="!app.userguideURL">
-                    <i class="fas fa-book font-2x"></i>
-                </button>
+        <button class="btn-sm" (click)="openUserGuide()" [matTooltip]="'User Guide'" [disabled]="!app.userguideURL">
+            <i class="fas fa-book tw-text-2xl tw-text-dblue"></i>
+        </button>
 
-                <button mat-icon-button (click)="uninstall()" color="warn" [matTooltip]="'Uninstall'" [disabled]="status !== 'installed'">
-                    <i class="far fa-trash-alt font-2x"></i>
-                </button>
-            </div>
-        </div>
-    </mat-card-content>
-</mat-card>
+        <button class="btn-sm" (click)="uninstall()" [matTooltip]="'Uninstall'" [disabled]="status !== 'installed'">
+            <i class="fas fa-trash tw-text-2xl tw-text-pink"></i>
+        </button>
+    </div>
+</div>

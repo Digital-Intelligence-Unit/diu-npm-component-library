@@ -13,8 +13,8 @@ import {
 } from "@angular/core";
 import * as d3 from "d3";
 import * as d3zoom from "d3-zoom";
-import { APIService } from "../../../_services/api.service";
-import { speedDialFabAnimations } from "../../diu-angular-speed-dial/animations";
+import { APIService } from "../../../../_services/api.service";
+import { speedDialFabAnimations } from "../../speed-dial.animation";
 import { iWardDetails, iPointOfInterest } from "../lookups";
 
 @Component({
@@ -126,19 +126,19 @@ export class WardmapComponent implements OnInit, OnChanges {
     parentColours = {
         E10000006: {
             name: "South Cumbria",
-            colour: "#69c14a",
+            colour: "#21a699",
         },
         E06000008: {
             name: "Blackburn with Darwen",
-            colour: "#009EE0",
+            colour: "#362c77",
         },
         E06000009: {
             name: "Blackpool",
-            colour: "#ff8200",
+            colour: "#830065",
         },
         E10000017: {
             name: "Lancashire",
-            colour: "#D6000A",
+            colour: "#dd0a34",
         },
     };
 
@@ -164,12 +164,10 @@ export class WardmapComponent implements OnInit, OnChanges {
         this.width = document.getElementById("wardMapMain").getBoundingClientRect().width;
         this.allwardDetails = this.wardDetails;
         this.apiService.getWardDistricts().subscribe((res: any[]) => {
-            if (res.length > 0) {
-                this.ICSboundaries = res[0];
-                this.drawGraph();
-                this.trigger = true;
-                this.loading = false;
-            }
+            this.ICSboundaries = res;
+            this.drawGraph();
+            this.trigger = true;
+            this.loading = false;
         });
         this.apiService.getGPPracticesPopMini().subscribe((data: any[]) => {
             this.gpPractices = data;

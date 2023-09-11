@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { DoBootstrap, NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DiuComponentLibraryComponent } from "./diu-component-library.component";
 import { InputComponent } from "./_components/_form/input/input.component";
@@ -25,7 +25,6 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { DivRowComponent } from "./_components/_layouts/div-row.component";
 import { DivColComponent } from "./_components/_layouts/div-col.component";
 import { ProfileFullComponent } from "./_components/profile-full/profile-full.component";
-import { CarouselModule as MdbCarouselModule } from "angular-bootstrap-md";
 import { CarouselComponent } from "./_components/carousel/carousel.component";
 import { TabsComponent } from "./_components/tabs/tabs.component";
 import { FormWithTableComponent } from "./_components/form-with-table/form-with-table.component";
@@ -35,7 +34,6 @@ import { DashboardTwitterComponent } from "./_components/dashboard-twitter/dashb
 import { SizeDetectorComponent } from "./_components/size-detector/size-detector.component";
 import { ResizeService } from "../lib/_services/resize.service";
 import { DashboardPopulationComponent } from "./_components/dashboard-population/dashboard-population.component";
-import { WardmapComponent } from "./_components/dashboard-population/wardmap/wardmap.component";
 import { AcuteHospitalStatsComponent } from "./_components/dashboard-hospital-stats/dashboard-hospital-stats.component";
 import { NewsStandComponent } from "./_components/newsstand/newsstand.component";
 import { ScreenshotsComponent } from "./_components/screenshots/screenshots.component";
@@ -76,7 +74,6 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         DashboardTwitterComponent,
         SizeDetectorComponent,
         DashboardPopulationComponent,
-        WardmapComponent,
         AcuteHospitalStatsComponent,
         NewsStandComponent,
         ScreenshotsComponent,
@@ -93,7 +90,6 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         HttpClientModule,
         CommonModule,
         FlexLayoutModule,
-        MdbCarouselModule,
         GalleryModule,
     ],
     exports: [
@@ -123,7 +119,6 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         DashboardTwitterComponent,
         SizeDetectorComponent,
         DashboardPopulationComponent,
-        WardmapComponent,
         AcuteHospitalStatsComponent,
         NewsStandComponent,
         ScreenshotsComponent,
@@ -132,6 +127,7 @@ import { InputChipListComponent } from "./_components/input-chiplist/input-chipl
         ResponsiblePersonComponent,
         InputChipListComponent,
     ],
-    providers: [ResizeService, BrokerService]
+    providers: [ResizeService, BrokerService],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DiuComponentLibraryModule {}

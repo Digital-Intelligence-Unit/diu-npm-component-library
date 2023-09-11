@@ -1370,6 +1370,7 @@ export class APIService extends BaseService {
 
     public getWardDistricts() {
         return this.http.get(this.baseUrl + "wards/districts");
+        // return this.http.get("http://localhost:8079/wards/districts");
     }
 
     // ATOMICFORMDATA

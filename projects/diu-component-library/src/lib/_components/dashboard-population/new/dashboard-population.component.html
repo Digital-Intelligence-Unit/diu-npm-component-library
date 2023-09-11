@@ -1,0 +1,32 @@
+<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-df2">
+    <div class="tw-flex-auto tw-w-full sm:tw-w-1/4">
+        <canvas #cfChartElementMale style="height: 70vh; min-height: 250px;"></canvas>
+    </div>
+    <div class="tw-flex-auto tw-w-full sm:tw-w-1/2">
+        <app-wardmap [data]="data" (areaSelected)="filterData($event)"></app-wardmap>
+    </div>
+    <div class="tw-flex-auto tw-w-full sm:tw-w-1/4">
+        <canvas #cfChartElementFemale style="height: 70vh; min-height: 250px;"></canvas>
+    </div>
+</div>
+
+<div class="tw-w-full tw-mt-df2 tw-relative">
+    <canvas #cfChartElementDeprivation style="height: 100px;"></canvas>
+</div>
+
+<div *ngIf="areaDetails" class="area-details" [ngStyle]="{'background-color': areaDetails.parent?.colour}">
+    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-items-center tw-gap-df2">
+        <div *ngIf="areaDetails.image">
+            <img src="/assets/images/{{areaDetails.image}}" class="tw-rounded" style="max-width: 225px" />
+        </div>
+        <div class="tw-flex-auto" [ngStyle]="{
+            'color': areaDetails.parent?.colour ? '#fff' : 'var(--color-black-default)'
+        }">
+            <h4>
+                <strong>Electoral Ward:</strong>&nbsp;&nbsp;{{ areaDetails.name }}&nbsp;[{{ areaDetails.code }}]
+            </h4>
+            <p [innerHTML]="areaDetails.text"></p>
+            <a *ngIf="areaDetails.link" target="_blank" [href]="areaDetails.link">More Information...</a>
+        </div>
+    </div>
+</div>
