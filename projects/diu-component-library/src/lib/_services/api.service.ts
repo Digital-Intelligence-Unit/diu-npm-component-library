@@ -338,10 +338,10 @@ export class APIService extends BaseService {
     }
 
     /**
-     * POST: Method to retrieve a patients NHS number
+     * GET: Method to retrieve a patients nhs number
      */
-    public findNHSNumber(payload: any) {
-        return this.http.post(this.baseUrl + "demographics/findMyNHSNumber/", payload);
+    public getPatientNhsNumber(digest: string) {
+        return this.http.get(this.baseUrl + "patient/" + digest + "/nhs-number");
     }
 
     // DOCOBO
