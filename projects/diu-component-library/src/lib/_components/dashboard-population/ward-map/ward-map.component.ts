@@ -10,8 +10,8 @@ import {
 } from "@angular/core";
 import { WardChart } from "../shared/ward.chart";
 import { FAB_BUTTONS, ICSBoundaries } from "../shared/helper";
-import { APIService } from "../../../../_services/api.service";
-import { speedDialFabAnimations } from "../../speed-dial.animation";
+import { APIService } from "../../../_services/api.service";
+import { speedDialFabAnimations } from "../speed-dial.animation";
 
 @Component({
     selector: "app-wardmap",
