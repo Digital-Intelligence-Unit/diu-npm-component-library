@@ -1,6 +1,6 @@
 import Chart from "chart.js/auto";
 import { DeprivationColorCodes } from "./helper";
-import { createTooltip } from "../../../../_functions/helper_charts";
+import { createTooltip } from "../../../_functions/helper_charts";
 
 export class DeprivationChart {
 

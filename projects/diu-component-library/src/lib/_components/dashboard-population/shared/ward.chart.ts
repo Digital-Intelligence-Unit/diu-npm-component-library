@@ -11,7 +11,7 @@ import {
     PlaceColorCodes
 } from "./helper";
 import { Subject, forkJoin } from "rxjs";
-import { APIService } from "../../../../_services/api.service";
+import { APIService } from "../../../_services/api.service";
 import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
 
