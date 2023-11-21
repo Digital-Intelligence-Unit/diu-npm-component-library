@@ -1,13 +1,7 @@
-<div class="tw-w-full tw-text-right tw-my-df">
-    <a class="tw-text-sm" href="javascript:;" (click)="setVersion(version == 'new' ? 'legacy' : 'new')">
-        Switch to {{version == 'new' ? 'legacy' : 'new'}} version
-    </a>
-</div>
-
 <mat-card>
     <mat-card-header class="tw-justify-center">
         <mat-card-title>Population Map</mat-card-title>
     </mat-card-header>
 
-    <div #mapContainer class="tw-w-full"></div>
+    <app-population-map-new></app-population-map-new>
 </mat-card>

@@ -1,8 +1,9 @@
 <div *ngIf="app" class="content">
     <div class="icon">
         <img style="height: 110px;" class="tw-p-3 tw-m-auto" src="/assets/icons/apps/{{ app.icon }}" (click)="open()" />
-        <h4 class="tw-text-xl tw-my-base">{{ app.name.split("_").join(" ") }}</h4>
     </div>
+
+    <h4 class="title">{{ app.name.split("_").join(" ") }}</h4>
 
     <div class="actions">
         <button (click)="open()" class="btn btn-sm btn-blue rounded-lg tw-mr-df">
