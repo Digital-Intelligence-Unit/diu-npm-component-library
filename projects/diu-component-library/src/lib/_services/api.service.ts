@@ -344,40 +344,6 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "patient/" + digest + "/nhs-number");
     }
 
-    // DOCOBO
-
-    public getAllDocoboAcknowledgements() {
-        return this.http.get(this.baseUrl + "docobo/acknowledgements/");
-    }
-
-    public reportDocoboAcknowledgements(payload: any) {
-        return this.http.post(this.baseUrl + "docobo/acknowledgements/report/", payload);
-    }
-
-    // DOCOBOOUTBOUND
-
-    public getDocoboOutboundPatientsByOrg(orgcode: string) {
-        return this.http.post(this.baseUrl + "docobooutbound/getpatientsbyorg/", { orgcode });
-    }
-
-    public getDocoboOutboundPatientData(patientid: string) {
-        return this.http.post(this.baseUrl + "docobooutbound/getpatientdata/", { patientid });
-    }
-
-    public getProcessForDocoboOutbound() {
-        return this.http.get(this.baseUrl + "docobooutbound/processDocoboInfo/");
-    }
-
-    // GOVUKNOTIFY
-
-    public govukCallback(payload) {
-        return this.http.post(this.baseUrl + "govuknotify/callback", payload);
-    }
-
-    public govukMainCallback(payload) {
-        return this.http.post(this.baseUrl + "govuknotify/maincallback", payload);
-    }
-
     // GPINPATIENTS
 
     /**
@@ -1492,6 +1458,22 @@ export class APIService extends BaseService {
         return this.http.delete(`${this.baseUrl}pbi/views/delete`, {
             body: { id },
         });
+    }
+
+    public createPBIUpload(payload = {}) {
+        return this.http.post(`${this.baseUrl}pbi/uploads/create`, payload);
+    }
+
+    public getPBIUploadMetrics() {
+        return this.http.get(`${this.baseUrl}pbi/uploads/metrics`);
+    }
+
+    public deletePBIUploadMetric(metricId) {
+        return this.http.delete(`${this.baseUrl}pbi/uploads/metrics/` + encodeURIComponent(metricId));
+    }
+
+    public getUserSystemJobs(params = {}) {
+        return this.http.get(this.baseUrl + "jobs", { params: this.createHttpParams(params) });
     }
 
     public retrieveFile(payload = { bucket_name: "", file_name: "" }) {
