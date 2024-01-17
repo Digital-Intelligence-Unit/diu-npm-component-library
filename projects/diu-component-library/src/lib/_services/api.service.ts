@@ -1135,24 +1135,10 @@ export class APIService extends BaseService {
     }
 
     /**
-     * POST: Method to add a new user profile
-     */
-    public addUserProfile(payload: any) {
-        return this.http.post(this.baseUrl + "userprofiles/create/", payload);
-    }
-
-    /**
      * PUT: Method to update user profile by ID + updated profile JSON object
      */
-    public updateUserProfiles(payload: iFullUser) {
+    public updateUserProfiles(payload) {
         return this.http.put(this.baseUrl + "userprofiles/update", payload);
-    }
-
-    /**
-     * PUT: Method to remove user profile by id
-     */
-    public removeUserProfiles(payload: iFullUser) {
-        return this.http.delete(this.baseUrl + "userprofiles/delete/", { body: payload });
     }
 
     // USERS

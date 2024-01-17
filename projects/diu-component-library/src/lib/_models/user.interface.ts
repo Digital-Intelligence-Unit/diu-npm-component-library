@@ -79,13 +79,9 @@ export interface iFullUser {
      */
     linemanager?: string;
     /**
-     * User's Instant Messaging preferences
+     * User's professional role
      */
-    impreference?: string;
-    /**
-     * User's Instant Messaging UNID
-     */
-    im_id?: string;
+    professional_role?: string;
     /**
      * User's last noted activity on the system
      */
