@@ -206,6 +206,10 @@ export interface PatientLinked {
     household_group?: string;
     frailty_text?: string;
     deprivation_decile?: string;
+    bmi?: string;
+    bloodpressurediastolic?: string;
+    bloodpressuresystolic?: string;
+    bloodpressurereadingtype?: string;
 }
 
 export interface VirtualWardPatient {
