@@ -1,19 +1,21 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable no-underscore-dangle */
 import * as helpers from "chart.js/helpers";
 
 export const createTooltip = (context) => {
     const { chart, tooltip } = context;
-    let tooltipEl = chart.canvas.parentNode.querySelector("div");
+    let tooltipEl: any = document.body.querySelector("#chartjs-tooltip");
 
     if (!tooltipEl) {
         // Create tooltip
         tooltipEl = document.createElement("div");
         tooltipEl.style.pointerEvents = "none";
-        tooltipEl.style.position = "absolute";
+        tooltipEl.style.position = "fixed";
         tooltipEl.style["z-index"] = "100";
-        tooltipEl.style.transform = "translate(0, -50%)";
         tooltipEl.style.transition = "all .1s ease";
         tooltipEl.style.overflow = "auto";
         tooltipEl.style["border-radius"] = "15px";
+        tooltipEl.setAttribute("id", "chartjs-tooltip");
 
         // Create content div
         const bodyDiv = document.createElement("DIV");
@@ -21,11 +23,15 @@ export const createTooltip = (context) => {
         tooltipEl.appendChild(bodyDiv);
 
         // Add to chart
-        chart.canvas.parentNode.appendChild(tooltipEl);
+        document.body.appendChild(tooltipEl);
     }
 
     // Set position
-    tooltipEl.style.top = String(tooltip.y) + "px";
+    const chartPosition = chart.canvas.getBoundingClientRect();
+    const tooltipXPosition = chartPosition.x + tooltip._eventPosition.x;
+    tooltipEl.style.top = String(chartPosition.y + tooltip._eventPosition.y) + "px";
+    tooltipEl.style.left = String(tooltipXPosition) + "px";
+    tooltipEl.style.transform = "translate(" + ((tooltipXPosition * 1.2) > window.innerWidth ? "-110%" : "10%") + ", -50%)";
     return tooltipEl;
 }
 
