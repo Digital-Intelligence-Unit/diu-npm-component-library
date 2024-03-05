@@ -1413,6 +1413,10 @@ export class APIService extends BaseService {
         return this.http.get(`${this.baseUrl}pbi/metric-levels/${encodeURIComponent(id)}/data`, { params: this.createHttpParams(filters) });
     }
 
+    public getPBIMetricLevelAddresses(id, filters = {}) {
+        return this.http.get(`${this.baseUrl}pbi/metric-levels/${encodeURIComponent(id)}/addresses`, { params: this.createHttpParams(filters) });
+    }
+
     public getPBIMetricLevelSpineData(id: string) {
         return this.cacheHttpRequest(
             this.http.get(`${this.baseUrl}pbi/metric-levels/${encodeURIComponent(id)}/spine-data`),
