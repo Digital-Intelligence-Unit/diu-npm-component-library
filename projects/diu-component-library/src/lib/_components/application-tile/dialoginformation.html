@@ -2,7 +2,7 @@
 <div mat-dialog-actions style="display: inherit !important">
     <ng-container *ngIf="loadedData">
         <p>{{ loadedData?.description }}</p>
-        <p>If you require more information prior to requesting access, please contact {{loadedData.ownerEmail}}</p>
+        <p>If you require more information prior to requesting access, please get in touch <a href="/support/contact" target="_blank" class="btn-blue-link">here</a></p>
     </ng-container>
 
     <div *ngIf="!loadedData">No Application selected.</div>
