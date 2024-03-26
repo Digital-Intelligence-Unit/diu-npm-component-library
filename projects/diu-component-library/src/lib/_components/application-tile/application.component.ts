@@ -48,7 +48,12 @@ export class ApplicationTileComponent implements OnInit {
 
                 // Install app
                 this.apiService
-                    .createCapabiltiesLink(this.app.capability, userId, "user", "allow")
+                    .createCapabiltiesLink({
+                        capability_name: this.app.capability,
+                        link_id: userId,
+                        link_type: "user",
+                        valuejson: "allow"
+                    })
                     .subscribe(
                         () => {
                             this.status = "installed";
@@ -93,7 +98,11 @@ export class ApplicationTileComponent implements OnInit {
     }
 
     uninstall() {
-        this.apiService.deleteCapabilitiesLink(this.app.capability, `${this.user.username}#${this.user.organisation}`, "user").subscribe(
+        this.apiService.deleteCapabilitiesLink({
+            capability_name: this.app.capability,
+            link_id: `${this.user.username}#${this.user.organisation}`,
+            link_type: "user"
+        }).subscribe(
             () => {
                 this.status = "uninstalled";
                 this.changed.emit({ action: "uninstalled", app: this.app });

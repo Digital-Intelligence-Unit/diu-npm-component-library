@@ -153,18 +153,44 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "capabilities?links=" + capabilityIDs);
     }
 
-    public createCapabiltiesLink(capability_id: number, link_id: string, link_type: string, valuejson: any = null) {
+    public createCapabiltiesLink({
+        capability_id = null,
+        capability_name = null,
+        link_id,
+        link_type,
+        valuejson = null
+    }: {
+        capability_id?: number,
+        capability_name?: string,
+        link_id: string,
+        link_type: string,
+        valuejson: any
+    }) {
         return this.http.post(this.baseUrl + "capabilities/links/create", {
-            capability_id,
             link_id,
             link_type,
+            ...(capability_id == null ? { capability_name } : { capability_id }),
             ...(valuejson !== null && { valuejson }),
         });
     }
 
-    public deleteCapabilitiesLink(capability_id: number, link_id: string, link_type: string) {
+    public deleteCapabilitiesLink({
+        capability_id = null,
+        capability_name = null,
+        link_id,
+        link_type
+    }: {
+        capability_id?: number,
+        capability_name?: string,
+        link_id: string,
+        link_type: string
+    }) {
         return this.http.delete(this.baseUrl + "capabilities/links/delete", {
-            body: { capability_id, link_id, link_type },
+            body: {
+                link_id,
+                link_type,
+                ...(capability_id == null ? { capability_name } : { capability_id })
+            },
         });
     }
 
