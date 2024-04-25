@@ -261,16 +261,6 @@ export class APIService extends BaseService {
         return this.http.delete(this.baseUrl + "cohorts/delete", { body: payload });
     }
 
-    // CONFLUENCE
-
-    public searchConfluenceContent(keyword: string) {
-        return this.http.get(this.baseUrl + "confluence/content/search?keyword=" + keyword);
-    }
-
-    public getConfluenceContent(id: string) {
-        return this.http.get(this.baseUrl + "confluence/content/" + id);
-    }
-
     // CVICohorts
 
     /**
@@ -368,78 +358,6 @@ export class APIService extends BaseService {
      */
     public getPatientNhsNumber(digest: string) {
         return this.http.get(this.baseUrl + "patient/" + digest + "/nhs-number");
-    }
-
-    // GPINPATIENTS
-
-    /**
-     * POST: Method to create a token if the JWT is authorised to include in other calls
-     */
-    public authenticate() {
-        return this.http.post(this.baseUrl + "gpinpatients/authenticate", null);
-    }
-
-    /**
-     * POST: Method to retrieve inpatient count
-     */
-    public inpatientCounts(token: string) {
-        return this.http.post(this.baseUrl + "gpinpatients/inpatientcounts", {
-            token,
-        });
-    }
-
-    /**
-     * POST: Method to retrieve outpatient count
-     */
-    public outpatientCounts(token: string) {
-        return this.http.post(this.baseUrl + "gpinpatients/outpatientcounts", {
-            token,
-        });
-    }
-
-    /**
-     * POST: Method to retrieve accident & emergency patient count
-     */
-    public aeCounts(token: string) {
-        return this.http.post(this.baseUrl + "gpinpatients/aecounts", {
-            token,
-        });
-    }
-
-    /**
-     * POST: Method to retrieve enhanced care service patient count
-     */
-    public ecsCounts(token: string) {
-        return this.http.post(this.baseUrl + "gpinpatients/ecscounts", {
-            token,
-        });
-    }
-
-    /**
-     * POST: Method to retrieve enhanced primary care patient count
-     */
-    public epcCounts(token: string) {
-        return this.http.post(this.baseUrl + "gpinpatients/epccounts", {
-            token,
-        });
-    }
-
-    /**
-     * POST: Method to retrieve inpatient GP summary
-     */
-    public inpatientGPSummary(token: string) {
-        return this.http.post(this.baseUrl + "gpinpatients/inpatientgpsummary", {
-            token,
-        });
-    }
-
-    /**
-     * POST: Method to retrieve Accident & Emergency GP summary
-     */
-    public aeGPSummary(token: string) {
-        return this.http.post(this.baseUrl + "gpinpatients/aegpsummary", {
-            token,
-        });
     }
 
     // GPPRACTICES
@@ -570,35 +488,6 @@ export class APIService extends BaseService {
 
     public getCodefromPostCode(code: string) {
         return this.http.get(this.baseUrl + "mosaic?postcode=" + code);
-    }
-
-    // NEWSFEEDS
-
-    /**
-     * GET: Method to retrieve news feeds
-     */
-    public getNewsFeeds() {
-        return this.http.get(this.baseUrl + "newsfeeds/");
-    }
-    public addNewsFeed(payload: iNewsFeed) {
-        return this.http.post(this.baseUrl + "newsfeeds/create/", payload);
-    }
-    public updateNewsFeed(payload: iNewsFeed) {
-        return this.http.put(this.baseUrl + "newsfeeds/update", payload);
-    }
-    public archiveNewsFeed(payload: iNewsFeed) {
-        return this.http.delete(this.baseUrl + "newsfeeds/delete", {
-            body: payload,
-        });
-    }
-
-    // NICEEVIDENCE
-
-    /**
-     * POST: Method to search guidance from NICE
-     */
-    public searchNICEEvidence(search_query: string, search_length?: number) {
-        return this.http.post(this.baseUrl + "niceevidence/evidencesearch", { search_query, search_length });
     }
 
     // OPENSOURCE
@@ -923,17 +812,6 @@ export class APIService extends BaseService {
         });
     }
 
-    // SHIELDINGLIST
-
-    /**
-     * GET: Method to retrieve all shielding citizens
-     */
-    public getCitizens(limit = null) {
-        return this.http.get(this.baseUrl + "shielding", {
-            params: { limit },
-        });
-    }
-
     // SPIINCIDENTMETHODS
 
     /**
@@ -971,15 +849,6 @@ export class APIService extends BaseService {
     }
     public getActiveSystemAlerts() {
         return this.http.get(this.baseUrl + "systemalerts/getActive/");
-    }
-    public updateSystemAlert(payload: any) {
-        return this.http.put(this.baseUrl + "systemalerts/update", payload);
-    }
-    public addSystemAlert(payload: any) {
-        return this.http.post(this.baseUrl + "systemalerts/create/", payload);
-    }
-    public removeSystemAlert(payload: any) {
-        return this.http.delete(this.baseUrl + "systemalerts/delete", { body: payload });
     }
 
     // TEAMMEMBERS
@@ -1127,16 +996,6 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "teams/getTeamsByPartialTeamNameAndOrgCode?partialteam=" + partialteam + "&orgcode=" + orgcode);
     }
 
-    // TRIALS
-
-    public getAllClinicalTrials() {
-        return this.http.get(this.baseUrl + "trials");
-    }
-
-    public searchClinicalTrials(search: string, phases: string, min_date: string) {
-        return this.http.post(this.baseUrl + "trials/search-top-100", { search, phases, min_date });
-    }
-
     // USERPROFILES
 
     /**
@@ -1238,22 +1097,6 @@ export class APIService extends BaseService {
         return this.http.delete(this.baseUrl + "usersettings/store", {
             params,
         });
-    }
-
-    // VIRTUALWARDS
-
-    /**
-     * GET: Method to get a list of all Lighter Touch Pathway patients
-     */
-    public getAllLTPPatients(limit: string) {
-        return this.http.get(this.baseUrl + "virtualward/?Limit=" + limit);
-    }
-
-    /**
-     * POST: Method to update a Lighter Touch Pathway patient
-     */
-    public updateLTPPatient(payload: any) {
-        return this.http.put(this.baseUrl + "virtualward/update", payload);
     }
 
     // WARDDETAILS
