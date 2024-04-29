@@ -1,8 +1,12 @@
 {
-    "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-    "dest": "../../dist/diu-component-library",
-    "lib": {
-        "entryFile": "src/public-api.ts"
-    },
-    "assets": ["_styles.scss", "tailwind.scss"]
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/diu-component-library",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "allowedNonPeerDependencies": [
+    "@angular/animations",
+    "@angular/material",
+    "jwt-decode"
+  ]
 }
