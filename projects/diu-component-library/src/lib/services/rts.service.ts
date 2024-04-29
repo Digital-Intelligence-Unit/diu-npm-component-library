@@ -9,9 +9,7 @@ declare const window: any;
 /**
  * Real Time Surveillance Service Class
  */
-@Injectable({
-    providedIn: "root",
-})
+@Injectable()
 export class RTSService extends CrossFilterService {
     constructor(protected http: HttpClient, @Inject("environment") environment) {
         super(http, environment);

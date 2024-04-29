@@ -9,9 +9,7 @@ declare const window: any;
 /**
  * Population Management Service Class
  */
-@Injectable({
-    providedIn: "root",
-})
+@Injectable()
 export class PopulationManagementService extends CrossFilterService {
     constructor(protected http: HttpClient, @Inject("environment") environment) {
         super(http, environment);

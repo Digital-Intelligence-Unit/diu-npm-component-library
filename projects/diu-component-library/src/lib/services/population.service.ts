@@ -9,9 +9,7 @@ declare const window: any;
 /**
  * Population Service Class
  */
-@Injectable({
-    providedIn: "root",
-})
+@Injectable()
 export class PopulationService extends CrossFilterService {
     miniUrl = "";
     /**

@@ -10,9 +10,7 @@ import { iApplication } from "../types/installations.interface";
 /**
  * API Service Class
  */
-@Injectable({
-    providedIn: "root",
-})
+@Injectable()
 export class APIService extends BaseService {
     /**
      * Authentication API Service Constructor
