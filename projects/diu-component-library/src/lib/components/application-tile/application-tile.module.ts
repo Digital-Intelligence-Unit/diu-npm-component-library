@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatLegacyDialogModule } from "@angular/material/legacy-dialog";
 import { MatLegacyButtonModule } from "@angular/material/legacy-button";
-import { MatLegacyTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 
 import { DiuSharedServicesModule } from "../../modules/services.module";
@@ -16,7 +16,7 @@ import { ApplicationInfoDialogComponent } from "./dialog-information/dialoginfor
         CommonModule,
         MatLegacyButtonModule,
         MatLegacyDialogModule,
-        MatLegacyTooltipModule,
+        MatTooltipModule,
         MatIconModule,
         DiuSharedServicesModule
     ],

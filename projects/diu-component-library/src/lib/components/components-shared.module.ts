@@ -5,7 +5,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyTooltipModule } from "@angular/material/legacy-tooltip";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatLegacyDialogModule } from "@angular/material/legacy-dialog";
 import { MatLegacyButtonModule } from "@angular/material/legacy-button";
 import { MatLegacyListModule } from "@angular/material/legacy-list";
@@ -24,7 +24,7 @@ import { DiuSharedServicesModule } from "../modules/services.module";
 
         DiuSharedServicesModule,
         MatIconModule,
-        MatLegacyTooltipModule,
+        MatTooltipModule,
         MatLegacyButtonModule,
         MatLegacyDialogModule,
         MatLegacyListModule,
@@ -39,7 +39,7 @@ import { DiuSharedServicesModule } from "../modules/services.module";
         
         DiuSharedServicesModule,
         MatIconModule,
-        MatLegacyTooltipModule,
+        MatTooltipModule,
         MatLegacyButtonModule,
         MatLegacyDialogModule,
         MatLegacyListModule,
