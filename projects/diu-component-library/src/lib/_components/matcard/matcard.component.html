@@ -1,6 +1,0 @@
-<mat-card *ngIf="config">
-    <mat-card-content [fxLayoutAlign]="config.layout">
-        <p *ngIf="config.text">{{ config.text }}</p>
-        <ng-container *ngFor="let child of Handler.children" dynamicComponent [config]="child.config"></ng-container>
-    </mat-card-content>
-</mat-card>

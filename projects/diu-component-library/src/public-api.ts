@@ -1,100 +1,45 @@
-/*
- * Public API Surface of diu-component-library
+/**
+ * Components
  */
+export * from './lib/components/user-search/user-search.index'
+export * from './lib/components/application-tile/application-tile.component.index'
+export * from './lib/components/dashboard-population/dashboard-population.index'
 
 /**
- * Component List
+ * Functions List
  */
-export * from "./lib/_components/_form/input/input.component";
-export * from "./lib/_components/_form/select/select.component";
-export * from "./lib/_components/_form/date/date.component";
-export * from "./lib/_components/dynamic-form/dynamic-form.component";
-export * from "./lib/_components/_form/radiobutton/radiobutton.component";
-export * from "./lib/_components/user-search/user-search.component";
-export * from "./lib/_components/user-search/dialogusersearch";
-export * from "./lib/diu-component-library.component";
-export * from "./lib/_components/autocomplete/autocomplete.component";
-export * from "./lib/_components/display-applications/display-applications.component";
-export * from "./lib/_components/_form/file-upload/file-upload.component";
-export * from "./lib/_components/_form/generate-password/generate-password.component";
-export * from "./lib/_components/image-gallery/image-gallery.component";
-export * from "./lib/_components/display-table/display-table.component";
-export * from "./lib/_components/matcard/matcard.component";
-export * from "./lib/_components/_layouts/div-row.component";
-export * from "./lib/_components/_layouts/div-col.component";
-export * from "./lib/_components/profile-full/profile-full.component";
-export * from "./lib/_components/carousel/carousel.component";
-export * from "./lib/_components/tabs/tabs.component";
-export * from "./lib/_components/form-with-table/form-with-table.component";
-export * from "./lib/_components/profile-full/profile-installs.component";
-export * from "./lib/_components/profile-full/profile-teams.component";
-export * from "./lib/_components/dashboard-twitter/dashboard-twitter.component";
-export * from "./lib/_components/size-detector/size-detector.component";
-export * from "./lib/_components/dashboard-population/dashboard-population.component";
-export * from "./lib/_components/dashboard-population/ward-map/ward-map.component";
-export * from "./lib/_components/dashboard-hospital-stats/dashboard-hospital-stats.component";
-export * from "./lib/_components/newsstand/newsstand.component";
-export * from "./lib/_components/screenshots/screenshots.component";
-export * from "./lib/_components/application-tile/dialoginformation";
-export * from "./lib/_components/application-tile/application.component";
-export * from "./lib/_components/_form/responsible-person/responsible-person.component";
-export * from "./lib/_components/input-chiplist/input-chiplist.component";
-
-/**
- * Directives List
- */
-export * from "./lib/_components/_form/dynamic-field/dynamic-field.directive";
-export * from "./lib/_components/dynamic-component/dynamic-component.directive";
-
-/**
- * Interfaces List
- */
-export * from "./lib/_models/cohort.interface";
-export * from "./lib/_models/field.interface";
-export * from "./lib/_models/header.interface";
-export * from "./lib/_models/hospitalstats.interface";
-export * from "./lib/_models/images.interface";
-export * from "./lib/_models/installations.interface";
-export * from "./lib/_models/matcard.interface";
-export * from "./lib/_models/menu-items.interface";
-export * from "./lib/_models/newsitem.interface";
-export * from "./lib/_models/organisation.interface";
-export * from "./lib/_models/roles.interface";
-export * from "./lib/_models/teams.interface";
-export * from "./lib/_models/user.interface";
-export * from "./lib/_models/features.interface";
-export * from "./lib/_models/mosaiccode.interface";
-export * from "./lib/_models/niceresponse.interface";
-export * from "./lib/_models/regional.interface";
-export * from "./lib/_models/gp-inpatients.interface";
-export * from "./lib/_models/patient.interface";
-export * from "./lib/_models/postcodesio.interface";
-export * from "./lib/_models/population.interface";
-export * from "./lib/_models/chart.interface";
-export * from "./lib/_models/acorn.interface";
-export * from "./lib/_components/dashboard-population/shared/helper";
-
-/**
- * Services List
- */
-export * from "./lib/_services/broker.service";
-export * from "./lib/_services/population.service";
-export * from "./lib/_services/populationmanagement.service";
-export * from "./lib/_services/rts.service";
-export * from "./lib/_services/resize.service";
-export * from "./lib/_services/api.service";
-export * from "./lib/_services/_crossfilterclass.service";
-export * from "./lib/_services/_baseclass.service";
-export * from "./lib/_services/outbreak.service";
+export * from './lib/functions/charts.helper';
+export * from './lib/functions/generic.helper';
 
 /**
  * Modules List
  */
-export * from "./lib/diu-component-library.module";
-export * from "./lib/_modules/material.module";
-export * from "./lib/_modules/services.module";
+export * from './lib/modules/services.module'
 
 /**
- * Helpers List
+ * Services List
  */
-export * from "./lib/_functions/helper_charts";
+export * from './lib/services/api.service';
+export * from './lib/services/base.service';
+export * from './lib/services/crossfilter.service';
+export * from './lib/services/population.service';
+export * from './lib/services/populationmanagement.service';
+export * from './lib/services/rts.service';
+
+
+/**
+ * Types List
+ */
+export * from './lib/types/componentHandler';
+export * from './lib/types/eventactions';
+export * from './lib/types/header.interface';
+export * from './lib/types/installations.interface';
+export * from './lib/types/organisation.interface';
+export * from './lib/types/teams.interface';
+export * from './lib/types/user.interface';
+export * from './lib/types/cohort.interface';
+export * from './lib/types/mosaiccode.interface';
+export * from './lib/types/acorn.interface';
+export * from './lib/types/postcodesio.interface';
+export * from './lib/types/menu-items.interface';
+export * from './lib/types/patient.interface';

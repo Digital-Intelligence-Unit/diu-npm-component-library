@@ -1,9 +1,0 @@
-<mat-card *ngIf="Handler">
-    <mat-card-content>
-        <mat-tab-group [ngClass]="{ leftTabGroup: leftTabGroup }">
-            <mat-tab *ngFor="let tab of tabs" [label]="tab.label">
-                <ng-container *ngFor="let component of tab.components" dynamicComponent [config]="component.config"></ng-container>
-            </mat-tab>
-        </mat-tab-group>
-    </mat-card-content>
-</mat-card>
