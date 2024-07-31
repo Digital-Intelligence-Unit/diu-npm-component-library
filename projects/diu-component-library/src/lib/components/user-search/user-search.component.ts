@@ -3,7 +3,7 @@ import { cComponentHandler } from "../../types/componentHandler";
 import { iOrganisation } from "../../types/organisation.interface";
 import { iFullUser, iSearchResults, iSection } from "../../types/user.interface";
 import { BrokerService } from "./legacy-broker.service";
-import jwtDecode from "jwt-decode"
+import { jwtDecode } from "jwt-decode";
 import { APIService } from "../../services/api.service";
 
 /**

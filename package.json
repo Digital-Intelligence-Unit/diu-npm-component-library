@@ -1,6 +1,6 @@
 {
   "name": "diu-component-library",
-  "version": "0.2.20",
+  "version": "0.2.21",
   "description": "NPM Repository for Digital Intelligence Unit @ NHS Blackpool CCG's Angular Component Library",
   "homepage": "https://github.com/Digital-Intelligence-Unit/diu-npm-component-library",
   "bugs": {
@@ -45,7 +45,7 @@
     "d3-zoom": "^1.8.3",
     "dc": "^3.0.12",
     "hammerjs": "^2.0.8",
-    "jwt-decode": "^3.1.2",
+    "jwt-decode": "^4.0.0",
     "moment-timezone": "^0.5.33",
     "ng-gallery": "^5.1.1",
     "ngx-image-uploader-next": "^1.0.4",
