@@ -10,16 +10,19 @@
             "prefix": "lib",
             "architect": {
                 "build": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "project": "projects/diu-component-library/ng-package.json"
+                    },
                     "configurations": {
                         "production": {
                             "tsConfig": "projects/diu-component-library/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "projects/diu-component-library/tsconfig.lib.json"
                         }
                     },
-                    "builder": "@angular-devkit/build-ng-packagr:build",
-                    "options": {
-                        "tsConfig": "projects/diu-component-library/tsconfig.lib.json",
-                        "project": "projects/diu-component-library/ng-package.json"
-                    }
+                    "defaultConfiguration": "production"
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
@@ -30,9 +33,9 @@
                     }
                 }
             }
-        }
-    },
+        }},
     "cli": {
       "analytics": false
-    }
+    },
+    "defaultProject": "diu-component-library"
 }
