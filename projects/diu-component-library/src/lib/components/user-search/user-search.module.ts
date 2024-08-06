@@ -5,6 +5,7 @@ import { CommonModule } from "@angular/common";
 import { ComponentsSharedModule } from "../components-shared.module";
 import { UserSearchComponent } from "./user-search.component";
 import { UserSearchDialogComponent } from "./dialog-user-search/dialogusersearch";
+import { BrokerService } from "./legacy-broker.service";
 
 @NgModule({
     imports: [
@@ -15,8 +16,11 @@ import { UserSearchDialogComponent } from "./dialog-user-search/dialogusersearch
         UserSearchComponent,
         UserSearchDialogComponent
     ],
+    providers: [
+        BrokerService // TO-DO: remove
+    ],
     exports: [
-        UserSearchDialogComponent
+        UserSearchDialogComponent,
     ]
 })
 export class DiuUserSearchComponentModule {}

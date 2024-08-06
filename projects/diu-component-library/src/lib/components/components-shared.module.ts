@@ -6,7 +6,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { MatLegacyDialogModule } from "@angular/material/legacy-dialog";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatLegacyInputModule } from "@angular/material/legacy-input";
 import { MatLegacyButtonModule } from "@angular/material/legacy-button";
 import { MatLegacyListModule } from "@angular/material/legacy-list";
 import { MatLegacyProgressSpinnerModule } from "@angular/material/legacy-progress-spinner";
@@ -26,12 +27,13 @@ import { DiuSharedServicesModule } from "../modules/services.module";
         MatIconModule,
         MatTooltipModule,
         MatLegacyButtonModule,
-        MatLegacyDialogModule,
+        MatDialogModule,
         MatLegacyListModule,
         MatLegacyProgressSpinnerModule,
         MatLegacySelectModule,
         MatLegacyCardModule,
         MatLegacyFormFieldModule,
+        MatLegacyInputModule
     ],
     exports: [
         FormsModule, 
@@ -41,12 +43,13 @@ import { DiuSharedServicesModule } from "../modules/services.module";
         MatIconModule,
         MatTooltipModule,
         MatLegacyButtonModule,
-        MatLegacyDialogModule,
+        MatDialogModule,
         MatLegacyListModule,
         MatLegacyProgressSpinnerModule,
         MatLegacySelectModule,
         MatLegacyCardModule,
         MatLegacyFormFieldModule,
+        MatLegacyInputModule
     ]
 })
 export class ComponentsSharedModule {}
