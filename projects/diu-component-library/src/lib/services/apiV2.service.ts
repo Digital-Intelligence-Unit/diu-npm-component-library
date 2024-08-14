@@ -12,10 +12,9 @@ export class APIV2Service extends BaseService {
         super(http, environment);
 
         // Set base url
-        this.baseUrl = `http${environment.cmsURL.includes("localhost") ? "://" : `s://`}` + environment.apiURL;
+        this.baseUrl = `http${environment.apiURL.includes("localhost") ? "://" : `s://`}` + environment.apiURL;
     }
 
-    // NEW METHODS TO DEPRECATE MOST NAMED METHODS
     public request(routeUrl, params = {}) {
         return this.http.get(this.baseUrl + routeUrl, {
             params: this.createHttpParams(params)
@@ -24,5 +23,11 @@ export class APIV2Service extends BaseService {
 
     public requestPost(routeUrl, params = {}) {
         return this.http.post(this.baseUrl + routeUrl, params);
+    }
+
+    public requestDelete(routeUrl, params = {}) {
+        return this.http.delete(this.baseUrl + routeUrl, {
+            params: this.createHttpParams(params)
+        });
     }
 }
