@@ -98,19 +98,17 @@ export class UserSearchComponent implements OnInit {
      * Function that runs once the search input box has been changed
      */
     onSearchChangeTeamList(searchValue: string) {
-        if (this.organisation.authmethod !== "Demo") {
-            if (searchValue.length > 4) {
-                this.searching = true;
-                this.apiService.searchOrgUserProfiles(searchValue, this.organisation.name).subscribe((response: iSearchResults[]) => {
-                    this.searching = false;
-                    this.teamresults = response[0].results.map((user) => {
-                        user.organisation = this.organisation.name;
-                        return user;
-                    });
+        if (searchValue.length > 4) {
+            this.searching = true;
+            this.apiService.searchOrgUserProfiles(searchValue, this.organisation.name).subscribe((response: iSearchResults[]) => {
+                this.searching = false;
+                this.teamresults = response[0].results.map((user) => {
+                    user.organisation = this.organisation.name;
+                    return user;
                 });
-            } else {
-                this.teamresults = [];
-            }
+            });
+        } else {
+            this.teamresults = [];
         }
     }
 
