@@ -1,7 +1,9 @@
-<h4>Search for Staff</h4>
+<h1 mat-dialog-title class="!tw-mb-df">Search for Staff</h1>
 
-<lib-user-search [config]="usersearchConfig" (selectedUser)="selectUser($event)"></lib-user-search>
+<mat-dialog-content>
+    <lib-user-search [config]="usersearchConfig" (selectedUser)="selectUser($event)"></lib-user-search>    
+</mat-dialog-content>
 
-<div mat-dialog-actions>
+<mat-dialog-actions>
     <button mat-button color="warn" style="width: 100%; padding-left: 5px; padding-right: 5px" (click)="onNoClick()">Close</button>
-</div>
+</mat-dialog-actions>

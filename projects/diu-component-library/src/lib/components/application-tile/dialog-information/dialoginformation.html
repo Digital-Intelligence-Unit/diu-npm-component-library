@@ -1,12 +1,17 @@
-<h1 mat-dialog-title class="m-b-10">{{ loadedData.name.replace("_", " ") }}</h1>
-<div mat-dialog-actions style="display: inherit !important">
+<h1 mat-dialog-title class="!tw-mb-df">{{ loadedData.name.replace("_", " ") }}</h1>
+
+<mat-dialog-content>
     <ng-container *ngIf="loadedData">
         <p>{{ loadedData?.description }}</p>
         <p>If you require more information prior to requesting access, please get in touch <a href="/support/contact" target="_blank" class="btn-blue-link">here</a></p>
     </ng-container>
 
     <div *ngIf="!loadedData">No Application selected.</div>
+</mat-dialog-content>
 
-    <button mat-raised-button color="primary" (click)="close('install')">Install</button>
-    <button mat-raised-button color="warn" (click)="close()">Close</button>
-</div>
+<mat-dialog-actions>
+    <button class="btn btn-blue"class="btn btn-blue" (click)="close('install')">Install</button>
+    <button class="btn btn-pink" (click)="close()">Close</button>    
+</mat-dialog-actions>
+    
+
