@@ -20,6 +20,7 @@ export * from './lib/modules/services.module'
  * Services List
  */
 export * from './lib/services/api.service';
+export * from './lib/services/apiV2.service';
 export * from './lib/services/base.service';
 export * from './lib/services/crossfilter.service';
 export * from './lib/services/population.service';

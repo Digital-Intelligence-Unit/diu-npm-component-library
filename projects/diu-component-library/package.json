@@ -1,6 +1,6 @@
 {
   "name": "diu-component-library",
-  "version": "0.2.23",
+  "version": "0.2.24",
   "peerDependencies": {
     "@angular/common": "^15.2.10",
     "@angular/core": "^15.2.10"
