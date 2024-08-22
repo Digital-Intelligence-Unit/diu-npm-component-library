@@ -10,17 +10,6 @@
     />
 </mat-form-field>
 
-<button
-    *ngIf="organisation && organisation.authmethod === 'Demo'"
-    mat-raised-button
-    style="width: 100%; margin-bottom: 10px"
-    type="button"
-    color="primary"
-    (click)="searchButtonClicked()"
->
-    Search
-</button>
-
 <mat-form-field class="example-full-width">
     <mat-select [(ngModel)]="organisation" placeholder="Select an Organisation...">
         <mat-option *ngFor="let org of organisations" [value]="org">{{ org.name }}</mat-option>
