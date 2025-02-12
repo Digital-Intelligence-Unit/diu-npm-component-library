@@ -34,36 +34,26 @@ export class APIService extends BaseService {
     }
 
     // Authentication
-    public register(payload: any) {
-        return this.http.post(this.baseUrl + "users/register/", payload);
-    }
-
-    public login(credentials: iCredentials) {
-        return this.http.post(this.baseUrl + "users/authenticate", credentials).pipe(map((response: any) => response));
-    }
-
     public refreshAuthenticatedUser() {
         return this.http.post(this.baseUrl + "users/authentication-refresh", null);
     }
 
-    public logout(redirect: string) {
-        document.location.href = redirect;
-    }
-
     // ACCESS LOGS
-
+    /** @deprecated use apiV2Service.request('/access-logs') */
     public getAllAccessLogs(filters: { date?: string; type?: string; pageKey?: string }) {
         return this.http.get(this.baseUrl + "access-logs", {
             params: filters,
         });
     }
 
+    /** @deprecated use apiV2Service.request('/{userId}/access-logs') */
     public getAllAccessLogsByUser(filters: { user: string; date?: string; pageKey?: string }) {
         return this.http.get(`${this.baseUrl}${encodeURIComponent(filters.user)}/access-logs`, {
             params: filters,
         });
     }
 
+    /** @deprecated use apiV2Service.request('/access-logs/statistics') */
     public getAllAccessLogsStatistics(date_from?: string, date_to?: string) {
         return this.http.get(this.baseUrl + "access-logs/statistics", {
             params: {
@@ -73,26 +63,9 @@ export class APIService extends BaseService {
         });
     }
 
+    /** @deprecated use apiV2Service.requestPost('/access-logs/statistics/store', params) */
     public createAccessLog(payload: any) {
         return this.http.post(this.baseUrl + "access-logs/create", payload);
-    }
-
-    // APPLICATION
-
-    public getApps() {
-        return this.http.get(this.baseUrl + "apps/");
-    }
-
-    public addApp(payload: iApplication) {
-        return this.http.post(this.baseUrl + "apps/create/", payload);
-    }
-
-    public updateApp(payload: iApplication) {
-        return this.http.put(this.baseUrl + "apps/update", payload);
-    }
-
-    public archiveApp(payload: iApplication) {
-        return this.http.delete(this.baseUrl + "apps/delete", { body: payload });
     }
 
     // CAPABILITIES
@@ -102,6 +75,7 @@ export class APIService extends BaseService {
      *
      * @returns HTTP GET Promise
      */
+    /** @deprecated use apiV2Service.request('/capabilities') */
     public getCapabilities() {
         return this.http.get(this.baseUrl + "capabilities");
     }
@@ -111,6 +85,7 @@ export class APIService extends BaseService {
      *
      * @returns HTTP GET Promise
      */
+    /** @deprecated use apiV2Service.request('/capabilities/{id}') */
     public getCapabilityById(id: string | number) {
         return this.http.get(`${this.baseUrl}capabilities/${id}`);
     }
@@ -162,6 +137,7 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "capabilities?links=" + capabilityIDs);
     }
 
+    /** @deprecated use apiV2Service.requestPost('/capabilities/links/create', params) */
     public createCapabiltiesLink({
         capability_id = null,
         capability_name = null,
@@ -183,6 +159,7 @@ export class APIService extends BaseService {
         });
     }
 
+    /** @deprecated use apiV2Service.requestDelete('/capabilities/links/delete', { id }) */
     public deleteCapabilitiesLink({
         capability_id = null,
         capability_name = null,
@@ -217,6 +194,7 @@ export class APIService extends BaseService {
      *
      * @returns HTTP POST Promise
      */
+     /** @deprecated use apiV2Service.requestPost('/capabilities/links/sync', params) */
     public syncCapabilityLinks(ids, linkType, linkId, managed_capabilities) {
         return this.http.post(this.baseUrl + "capabilities/links/sync", {
             capabilities: ids,
@@ -226,55 +204,12 @@ export class APIService extends BaseService {
         });
     }
 
-    // Cohorts
-
-    /**
-     * GET: Method to return all PHMv1 cohorts
-     */
-    public getCohorts() {
-        return this.http.get(this.baseUrl + "cohorts/");
-    }
-
-    /**
-     * GET: Method to return all PHMv1 cohorts assigned to a user
-     */
-    public getCohortsByUsername(username: string) {
-        return this.http.get(this.baseUrl + "cohorts/?username=" + username);
-    }
-
-    /**
-     * GET: Method to return all PHMv1 cohorts assigned to a team
-     */
-    public getCohortsByTeamcode(teamcode: string) {
-        return this.http.get(this.baseUrl + "cohorts/?teamcode=" + teamcode);
-    }
-
-    /**
-     * POST: Method to create a new PHMv1 cohort
-     */
-    public createCohort(payload) {
-        return this.http.post(this.baseUrl + "cohorts/create", payload);
-    }
-
-    /**
-     * PUT: Method to update an existing PHMv1 cohort
-     */
-    public updateCohort(payload) {
-        return this.http.put(this.baseUrl + "cohorts/update", payload);
-    }
-
-    /**
-     * DELETE: Method to delete an PHMv1 cohort
-     */
-    public deleteCohort(payload) {
-        return this.http.delete(this.baseUrl + "cohorts/delete", { body: payload });
-    }
-
     // CVICohorts
 
     /**
      * GET: Method to return all PHMv2 cohorts
      */
+    /** @deprecated no replacement */
     public getCVICohorts() {
         return this.http.get(this.baseUrl + "cvicohorts/");
     }
@@ -282,6 +217,7 @@ export class APIService extends BaseService {
     /**
      * GET: Method to return all PHMv2 cohorts assigned to a user
      */
+    /** @deprecated use apiV2Service.request('/cohorts/user'); Username does not need to be provided */
     public getCVICohortsByUsername(username: string, app: string) {
         return this.http.get(this.baseUrl + "cvicohorts/?username=" + username + "&app=" + app);
     }
@@ -289,6 +225,7 @@ export class APIService extends BaseService {
     /**
      * GET: Method to return all PHMv2 cohorts assigned to a team
      */
+    /** @deprecated use apiV2Service.request('/cohorts/user-teams'); Teams do not need to be provided */
     public getCVICohortsByTeamcode(teamcode: string, app: string) {
         return this.http.get(this.baseUrl + "cvicohorts/?teamcode=" + teamcode + "&app=" + app);
     }
@@ -296,6 +233,7 @@ export class APIService extends BaseService {
     /**
      * GET: Method to return all PHMv2 cohorts assigned to a team
      */
+    /** @deprecated use apiV2Service.request('/cohorts'); Retrieves all user, team and global cohorts */
     public getCVICohortsByUsernameAndTeamcode(username: string, teamcode: string, app:string, global?: boolean) {
         return this.http.get(this.baseUrl + "cvicohorts", {
             params: this.createHttpParams({
@@ -310,6 +248,7 @@ export class APIService extends BaseService {
     /**
      * POST: Method to create a new PHMv2 cohort
      */
+    /** @deprecated use apiV2Service.requestPost('/cohorts/store', params); Provide no id to create new */
     public createCVICohort(payload) {
         return this.http.post(this.baseUrl + "cvicohorts/create", payload);
     }
@@ -317,6 +256,7 @@ export class APIService extends BaseService {
     /**
      * PUT: Method to update an existing PHMv2 cohort
      */
+    /** @deprecated use apiV2Service.requestPost('/cohorts/store', params); Provide id to update */
     public updateCVICohort(payload) {
         return this.http.put(this.baseUrl + "cvicohorts/update", payload);
     }
@@ -324,49 +264,9 @@ export class APIService extends BaseService {
     /**
      * DELETE: Method to delete an PHMv2 cohort
      */
+    /** @deprecated use apiV2Service.requestDelete('/cohorts/delete', params); Note (11/02/25) to be added */
     public deleteCVICohort(payload) {
         return this.http.delete(this.baseUrl + "cvicohorts/delete", { body: payload });
-    }
-
-    // DASHBOARDS
-
-    public getDashboards() {
-        return this.http.get(this.baseUrl + "dashboards/");
-    }
-
-    public addDashboard(payload: iApplication) {
-        return this.http.post(this.baseUrl + "dashboards/create/", payload);
-    }
-
-    public updateDashboard(payload: iApplication) {
-        return this.http.put(this.baseUrl + "dashboards/update", payload);
-    }
-
-    public archiveDashboard(payload: iApplication) {
-        return this.http.delete(this.baseUrl + "dashboards/delete", { body: payload });
-    }
-
-    // DEMOGRAPHICS
-
-    /**
-     * GET: Method to retrieve a patients demographics
-     */
-    public getPatientDemographics(nhsnumber: string) {
-        return this.http.get(this.baseUrl + "demographics/demographicsbynhsnumber?NHSNumber=" + nhsnumber);
-    }
-
-    /**
-     * POST: Method to validate a patient's NHS number
-     */
-    public valiateNHSNumber(payload: any) {
-        return this.http.post(this.baseUrl + "demographics/valiateNHSNumber/", payload);
-    }
-
-    /**
-     * GET: Method to retrieve a patients nhs number
-     */
-    public getPatientNhsNumber(digest: string) {
-        return this.http.get(this.baseUrl + "patient/" + digest + "/nhs-number");
     }
 
     // GPPRACTICES
@@ -387,6 +287,7 @@ export class APIService extends BaseService {
     /**
      * GET: Method to retrieve all Grand Index data for Mosaic
      */
+    /** @deprecated no replacement */
     public getGrandIndex() {
         return this.http.get(this.baseUrl + "grandindex");
     }
@@ -396,6 +297,7 @@ export class APIService extends BaseService {
     /**
      * POST: Method to retrieve all households within a given isochrone
      */
+    /** @deprecated no replacement */
     public getHouseholdIsochrone(isochrone_bounds: string) {
         return this.http.post(this.baseUrl + "isochrone/houses-within-isochrone", isochrone_bounds);
     }
@@ -409,75 +311,11 @@ export class APIService extends BaseService {
         return this.http.post(this.baseUrl + "lpresviewer/generate-validation-key", {nhsnumber: nhsnumber.toString()});
     }
 
-    // MFA
-
-    /**
-     * Function to check if logged in user has MFA setup
-     *
-     * @returns HTTP GET Promise
-     */
-    mfaDeviceAdded() {
-        return this.http.get(this.baseUrl + "mfa/checkmfa/");
-    }
-
-    /**
-     * Function to begin registration of a device for MFA
-     *
-     * @returns HTTP GET Promise
-     */
-    mfaDeviceSetup() {
-        return this.http.get(this.baseUrl + "mfa/device/setup/");
-    }
-
-    /**
-     * Function to register a device for MFA
-     *
-     * @returns HTTP POST Promise
-     */
-    mfaDeviceVerifySetup(token, tempSecret) {
-        return this.http.post(this.baseUrl + "mfa/device/verify/", {
-            token,
-            tempSecret,
-        });
-    }
-
-    /**
-     * Function to validate a device already registered for MFA
-     *
-     * @returns HTTP POST Promise
-     */
-    mfaValidate(token) {
-        return this.http.post(this.baseUrl + "mfa/validate/", {
-            token,
-        });
-    }
-
-    /**
-     * Function to validate a device already registered for MFA
-     *
-     * @returns HTTP POST Promise
-     */
-    mfaInvalidate(token) {
-        return this.http.post(this.baseUrl + "mfa/invalidate/", {
-            token,
-        });
-    }
-
-    /**
-     * Function to unregister a device for MFA
-     *
-     * @returns HTTP GET Promise
-     */
-    mfaDeviceRemove(payload) {
-        return this.http.delete(this.baseUrl + "mfa/device/remove", {
-            body: payload
-        });
-    }
-
     // Acorn
     /**
      * GET: Method to retrieve acorn data
      */
+    /** @deprecated use apiV2Service.request('/acorn') */
     public getAcorn() {
         return this.http.get(this.baseUrl + "acorn");
     }
@@ -485,22 +323,24 @@ export class APIService extends BaseService {
     /**
      * GET: Method to retrieve acorn wellbeing data
      */
+    /** @deprecated use apiV2Service.request('/acorn/wellbeing') */
     public getAcornWellbeing() {
         return this.http.get(this.baseUrl + "acorn/wellbeing");
     }
 
     // MOSAIC
-
+    /** @deprecated use apiV2Service.request('/mosaic') */
     public getMosiacs() {
         return this.http.get(this.baseUrl + "mosaic");
     }
 
+    /** @deprecated no replacement */
     public getCodefromPostCode(code: string) {
         return this.http.get(this.baseUrl + "mosaic?postcode=" + code);
     }
 
     // OPENSOURCE
-
+    /** @deprecated no replacement */
     public getOpenSourceByPage(page: string, limit: string) {
         return this.http.post(this.baseUrl + "opensource/getByPage", {
             page,
@@ -508,12 +348,13 @@ export class APIService extends BaseService {
         });
     }
 
+    /** @deprecated no replacement */
     public addOpenSourceView(payload: { page: string; parent: string }) {
         return this.http.post(this.baseUrl + "opensource/addView", payload);
     }
 
     // ORGANISATIONS
-
+    /** @deprecated use apiV2Service.request('/organisations') */
     public getOrganisations() {
         return this.http.get(this.baseUrl + "organisations");
     }
@@ -531,22 +372,13 @@ export class APIService extends BaseService {
     }
 
     // (ORG)BOUNDARIES
-
+    /** @deprecated no replacement */
     public getOrgBoundaries() {
         return this.http.get(this.baseUrl + "orgboundaries/topo-json");
     }
 
-    // OUTBREAK
-
-    /**
-     * GET: Method to retrieve all Outbreak map information
-     */
-    public getOutbreakGeoJson() {
-        return this.http.get(this.baseUrl + "outbreak/mapinfo");
-    }
-
     // PASSWORD
-
+    /** @deprecated use apiV2Service.requestPost('/user/password/update', params); */
     public updatePassword(username: any, authmethod: any, newPassword: any, code: any = null) {
         return this.http.put(this.baseUrl + "password/update", {
             username,
@@ -556,41 +388,12 @@ export class APIService extends BaseService {
         });
     }
 
-    //  /**
-    //  * POST: Method to generate a password for a new starter
-    //  */
-    //      public generatePassword(payload: any) {
-    //       return this.http.post(this.baseUrl + "password/generate", payload);
-    //   }
-
-    //   /**
-    //    * POST: Method to validate a password for a new starter
-    //    */
-    //   public verifyPassword(payload: any) {
-    //       return this.http.post(this.baseUrl + "password/verify", payload);
-    //   }
-
-    // PATIENTHISTORY
-
-    /**
-     * GET: Method to retrieve a patients history
-     */
-    public getPatientHistory(nhsnumber: string) {
-        return this.http.get(this.baseUrl + "patienthistory/patienthistorybynhsnumber?NHSNumber=" + nhsnumber);
-    }
-
-    /**
-     * GET: Method to retrieve a patients council data
-     */
-    public getDistrictHistory(nhsnumber: string) {
-        return this.http.get(this.baseUrl + "patienthistory/districthistorybynhsnumber?NHSNumber=" + nhsnumber);
-    }
-
     // PATIENTLISTS
 
     /**
      * GET: Method to retrieve all patients
      */
+    /** @deprecated no replacement */
     public getPatients(limit: string) {
         return this.http.get(this.baseUrl + "patientlists/?Limit=" + limit);
     }
@@ -598,6 +401,7 @@ export class APIService extends BaseService {
     /**
      * GET: Method to retrieve all patients from a cohort
      */
+    /** @deprecated no replacement */
     public getPatientsByCohort(limit: string, cohort: string) {
         return this.http.get(this.baseUrl + "patientlists/getPatientsByCohort?limit=" + limit + "&orderBy=nhs_number&cohort=" + cohort);
     }
@@ -605,6 +409,7 @@ export class APIService extends BaseService {
     /**
      * GET: Method to retrieve all patients from a cohort
      */
+    /** @deprecated no replacement */
     public getPatientsByCohortCount(cohort: string) {
         return this.http.get(this.baseUrl + "patientlists/getPatientsByCohort?count=true&cohort=" + cohort);
     }
@@ -623,20 +428,6 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "patientlists/patientdetailsbydigest?digest=" + digest);
     }
 
-    // PCNINFORMATION
-
-    public getTopoJSON() {
-        return this.http.get(this.baseUrl + "pcninformation/topo-json");
-    }
-
-    public getPCNInformation() {
-        return this.http.get(this.baseUrl + "pcninformation");
-    }
-
-    public getHexGeojson() {
-        return this.http.get(this.baseUrl + "pcninformation/hexgeo-json");
-    }
-
     // POINTSOFINTEREST
 
     public getPointsOfInterest() {
@@ -644,7 +435,7 @@ export class APIService extends BaseService {
     }
 
     // POSTCODES
-
+    /** @deprecated no replacement */
     public getAllPostcodes() {
         return this.http.get(this.baseUrl + "postcodes/");
     }
@@ -652,6 +443,7 @@ export class APIService extends BaseService {
     /**
      * GET: Method to retrieve all Postcode map lookups
      */
+    /* @deprecated no replacement */
     public getPostcodeLookup() {
         return this.http.get(this.baseUrl + "postcodes/postcode-lookup");
     }
@@ -713,6 +505,7 @@ export class APIService extends BaseService {
      *
      * @returns HTTP GET Promise
      */
+    /** @deprecated use apiV2Service.request('/roles'); */
     public getRoles() {
         return this.http.get(this.baseUrl + "roles");
     }
@@ -722,6 +515,7 @@ export class APIService extends BaseService {
      *
      * @returns HTTP GET Promise
      */
+    /** @deprecated use apiV2Service.request('/roles/{id}'); */
     public getRoleById(id: string) {
         return this.http.get(this.baseUrl + "roles/" + id);
     }
@@ -812,15 +606,6 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "searchusers/org-profiles?searchterm=" + searchterm + "&organisation=" + organisation);
     }
 
-    // SERVICEACCOUNTS
-
-    public checkServiceAccounts(org: string, key: string) {
-        return this.http.post(this.baseUrl + "serviceaccounts/check", {
-            org,
-            key,
-        });
-    }
-
     // SPIINCIDENTMETHODS
 
     /**
@@ -849,15 +634,6 @@ export class APIService extends BaseService {
      */
     public deleteSpiIncident(payload) {
         return this.http.delete(this.baseUrl + "spi_incidentmethods/delete", { body: payload });
-    }
-
-    // SYSTEMALERTS
-
-    public getSystemAlerts() {
-        return this.http.get(this.baseUrl + "systemalerts/");
-    }
-    public getActiveSystemAlerts() {
-        return this.http.get(this.baseUrl + "systemalerts/getActive/");
     }
 
     // TEAMMEMBERS
@@ -964,6 +740,7 @@ export class APIService extends BaseService {
     /**
      * GET: Method to return all teams
      */
+    /** @deprecated use apiV2Service.request('/teams'); */
     public getTeams() {
         return this.http.get(this.baseUrl + "teams/");
     }
@@ -1066,6 +843,7 @@ export class APIService extends BaseService {
     /**
      * POST: Method to send code
      */
+    /** @deprecated use apiV2Service.requestPost('/user/otp/send'); */
     public sendVerificationCode(username) {
         return this.http.post(this.baseUrl + "users/send-code", {
             email: username,
@@ -1074,6 +852,7 @@ export class APIService extends BaseService {
     /**
      * POST: Method to verify code
      */
+    /** @deprecated use apiV2Service.requestPost('/user/otp/verify'); */
     public checkVerificationCode(username, code) {
         return this.http.post(this.baseUrl + "users/verify-code", {
             email: username,
@@ -1086,6 +865,7 @@ export class APIService extends BaseService {
     /**
      * GET: Method to get the currently authenticated user's settings
      */
+    /** @deprecated use apiV2Service.request('/user/settings') */
     public getUserSetting(filters = { name: null }) {
         return this.http.get(this.baseUrl + "usersettings", {
             params: filters,
@@ -1095,6 +875,7 @@ export class APIService extends BaseService {
     /**
      * POST: Method to store settings for a user
      */
+    /** @deprecated use apiV2Service.requestPost('/user/settings/store', params) */
     public storeUserSetting(setting = { name: "", value: {} }) {
         return this.http.post(this.baseUrl + "usersettings/store", setting);
     }
@@ -1102,6 +883,7 @@ export class APIService extends BaseService {
     /**
      * DELETE: Method to delete settings for a user
      */
+    /** @deprecated use apiV2Service.requestDelete('/user/settings/delete', { id }) */
     public deleteUserSetting(params = { name: null }) {
         return this.http.delete(this.baseUrl + "usersettings/store", {
             params,
@@ -1125,72 +907,6 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "population_activity/?" + data);
     }
 
-    // WARDS
-
-    /**
-     * GET: Method to retrieve virtual ward decisions
-     */
-    public getVWDecisionPatients(limit: string) {
-        return this.http.get(this.baseUrl + "virtualward_decision/?Limit=" + limit);
-    }
-
-    /**
-     * GET: Method to retrieve all virtual ward decisions that have been actioned
-     */
-    public getVWDecisionActioned(limit: string) {
-        return this.http.get(this.baseUrl + "virtualward_decision/getAllActioned?Limit=" + limit);
-    }
-
-    /**
-     * POST: Method to retrieve virtual ward decisions by patient and status
-     */
-    public getVWDecisionPatientsByStatus(status, limit) {
-        return this.http.post(this.baseUrl + "virtualward_decision/getAllByStatus", { status, limit });
-    }
-
-    /**
-     * POST: Method to update virtual ward status (option to pass a reason)
-     */
-    public updateVWStatus(id, status, reason?) {
-        if (reason && reason !== null) {
-            return this.http.post(this.baseUrl + "virtualward_decision/status/update", {
-                id,
-                status,
-                nonreferral_reason: reason,
-            });
-        } else {
-            return this.http.post(this.baseUrl + "virtualward_decision/status/update", { id, status });
-        }
-    }
-
-    /**
-     * POST: Method to update virtual ward contact
-     */
-    public updateVWContact(id, contact) {
-        return this.http.post(this.baseUrl + "virtualward_decision/contact/update", { id, contact });
-    }
-
-    /**
-     * POST: Method to clear virtual ward contact
-     */
-    public clearVWContact(id) {
-        return this.http.post(this.baseUrl + "virtualward_decision/contact/clear", { id });
-    }
-
-    /**
-     * POST: Method to clear virtual ward notes
-     */
-    public clearVWNotes(id) {
-        return this.http.post(this.baseUrl + "virtualward_decision/notes/clear", { id });
-    }
-
-    /**
-     * POST: Method to update virtual ward notes
-     */
-    public updateVWNotes(id, notes) {
-        return this.http.post(this.baseUrl + "virtualward_decision/notes/update", { id, notes });
-    }
-
     /**
      * GET: Method to retrieve all Wards
      */
@@ -1198,6 +914,7 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "wards");
     }
 
+    /** @deprecated use apiV2Service.request('/wards/districts') */
     public getWardDistricts() {
         return this.http.get(this.baseUrl + "wards/districts");
         // return this.http.get("http://localhost:8079/wards/districts");
@@ -1230,10 +947,12 @@ export class APIService extends BaseService {
     /**
      * Method to get Payloads by ID
      */
+    /** @deprecated use apiV2Service.request('/atomic/payloads/{id}') */
     public getPayloadById(payloadID: string) {
         return this.http.get(this.baseUrl + "atomic/payloads/" + payloadID);
     }
 
+    /** @deprecated use apiV2Service.request('/atomic/payloads/{type}/{id}') */
     public getPayloadByIdType(type: string, id: string) {
         return this.cacheHttpRequest(
             this.http.get(`${this.baseUrl}atomic/payloads/${encodeURIComponent(type)}/${encodeURIComponent(id)}`),
@@ -1242,14 +961,17 @@ export class APIService extends BaseService {
         );
     }
 
+    /** @deprecated use apiV2Service.request('/atomic/payloads') */
     public getAllPayloads() {
         return this.http.get(this.baseUrl + "atomic/payloads");
     }
 
+    /** @deprecated use apiV2Service.requestPost('/atomic/payloads/store', params); */
     public addPayload(payload: any) {
         return this.http.post(this.baseUrl + "atomic/payloads/create", payload);
     }
 
+    /** @deprecated use apiV2Service.requestPost('/atomic/payloads/store', params); Provide id to update */
     public updatePayload(payload: any) {
         return this.http.put(this.baseUrl + "atomic/payloads/update", payload);
     }
@@ -1344,13 +1066,6 @@ export class APIService extends BaseService {
         return this.http.get(this.baseUrl + "jobs", { params: this.createHttpParams(params) });
     }
 
-    public retrieveFile(payload = { bucket_name: "", file_name: "" }) {
-        return this.http.get(this.baseUrl + "files/retrieve", { params: this.createHttpParams(payload) });
-    }
-
-    public uploadFile(payload = { bucket_name: "", file_name: "", file_type: "" }) {
-        return this.http.post(this.baseUrl + "files/upload", payload);
-    }
 
     // GENERIC HTTP REST METHODS
 
