@@ -15,7 +15,6 @@ export class APIService extends BaseService {
     /**
      * Authentication API Service Constructor
      */
-    baseUrl: string;
     constructor(protected http: HttpClient, @Inject("environment") environment) {
         super(http, environment);
         const origin = window.location.href;

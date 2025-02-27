@@ -7,13 +7,13 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatDialogModule } from "@angular/material/dialog";
-import { MatLegacyInputModule } from "@angular/material/legacy-input";
-import { MatLegacyButtonModule } from "@angular/material/legacy-button";
-import { MatLegacyListModule } from "@angular/material/legacy-list";
-import { MatLegacyProgressSpinnerModule } from "@angular/material/legacy-progress-spinner";
-import { MatLegacyCardModule } from "@angular/material/legacy-card";
-import { MatLegacySelectModule } from "@angular/material/legacy-select";
-import { MatLegacyFormFieldModule } from "@angular/material/legacy-form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { MatListModule } from "@angular/material/list";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatCardModule } from "@angular/material/card";
+import { MatSelectModule } from "@angular/material/select";
+import { MatFormFieldModule } from "@angular/material/form-field";
 import { DiuSharedServicesModule } from "../modules/services.module";
 
 @NgModule({
@@ -26,14 +26,14 @@ import { DiuSharedServicesModule } from "../modules/services.module";
         DiuSharedServicesModule,
         MatIconModule,
         MatTooltipModule,
-        MatLegacyButtonModule,
+        MatButtonModule,
         MatDialogModule,
-        MatLegacyListModule,
-        MatLegacyProgressSpinnerModule,
-        MatLegacySelectModule,
-        MatLegacyCardModule,
-        MatLegacyFormFieldModule,
-        MatLegacyInputModule
+        MatListModule,
+        MatProgressSpinnerModule,
+        MatSelectModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule
     ],
     exports: [
         FormsModule, 
@@ -42,14 +42,14 @@ import { DiuSharedServicesModule } from "../modules/services.module";
         DiuSharedServicesModule,
         MatIconModule,
         MatTooltipModule,
-        MatLegacyButtonModule,
+        MatButtonModule,
         MatDialogModule,
-        MatLegacyListModule,
-        MatLegacyProgressSpinnerModule,
-        MatLegacySelectModule,
-        MatLegacyCardModule,
-        MatLegacyFormFieldModule,
-        MatLegacyInputModule
+        MatListModule,
+        MatProgressSpinnerModule,
+        MatSelectModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule
     ]
 })
 export class ComponentsSharedModule {}

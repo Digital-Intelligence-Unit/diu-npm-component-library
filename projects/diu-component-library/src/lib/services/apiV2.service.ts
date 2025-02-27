@@ -7,7 +7,6 @@ export class APIV2Service extends BaseService {
     /**
      * Authentication API Service Constructor
      */
-    baseUrl: string;
     constructor(protected http: HttpClient, @Inject("environment") environment) {
         super(http, environment);
 
