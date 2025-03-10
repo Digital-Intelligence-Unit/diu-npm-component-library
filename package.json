@@ -81,7 +81,6 @@
     "karma-jasmine": "4.0.1",
     "karma-jasmine-html-reporter": "1.7.0",
     "ng-packagr": "17.3.0",
-    "node-sass": "6.0.1",
     "postcss": "^8.4.24",
     "prettier": "^2.6.2",
     "protractor": "7.0.0",
