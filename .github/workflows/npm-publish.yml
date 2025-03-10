@@ -16,8 +16,11 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 20
-                  python-version: '3.12'
                   registry-url: https://registry.npmjs.org/
+            - uses: actions/setup-python@v5
+              with:
+                   python-version: '3.13'
+
             - run: npm install --force
             - run: npm run build -- --configuration production
             - run: npm run publish-npm
