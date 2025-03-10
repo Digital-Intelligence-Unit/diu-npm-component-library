@@ -16,6 +16,7 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 20
+                  python-version: '3.12'
                   registry-url: https://registry.npmjs.org/
             - run: npm install --force
             - run: npm run build -- --configuration production
