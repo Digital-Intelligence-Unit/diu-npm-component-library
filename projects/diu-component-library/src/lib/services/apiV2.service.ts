@@ -14,9 +14,10 @@ export class APIV2Service extends BaseService {
         this.baseUrl = `http${environment.apiURL.includes("localhost") ? "://" : `s://`}` + environment.apiURL;
     }
 
-    public request(routeUrl, params = {}) {
+    public request(routeUrl, params = {}, options: { observe?: string } = null) {
         return this.http.get(this.baseUrl + routeUrl, {
-            params: this.createHttpParams(params)
+            params: this.createHttpParams(params),
+            observe: options?.observe as any || "body",
         });
     }
 
